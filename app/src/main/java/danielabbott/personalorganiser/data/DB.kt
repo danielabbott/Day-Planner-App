@@ -1,0 +1,1105 @@
+package danielabbott.personalorganiser.data
+
+import android.content.ContentValues
+import android.content.Context
+import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteOpenHelper
+import android.provider.BaseColumns
+import androidx.core.database.getIntOrNull
+import androidx.core.database.getLongOrNull
+import androidx.core.database.getStringOrNull
+import danielabbott.personalorganiser.Notifications
+import java.io.File
+import java.io.OutputStream
+
+// All functions can throw exceptions
+object DB {
+
+    class DBHelper(context: Context) : SQLiteOpenHelper(
+        context, "po.db", null,
+        1 /*Increment whenever db structure changes*/
+    ) {
+        override fun onCreate(db: SQLiteDatabase) {
+            db.execSQL(
+                "CREATE TABLE TBL_TIMETABLE (_id INTEGER PRIMARY KEY, " +
+                        "name TEXT NOT NULL)"
+            )
+
+            db.execSQL(
+                "CREATE TABLE TBL_TIMETABLE_EVENT (_id INTEGER PRIMARY KEY," +
+                        "timetable_id INTEGER NOT NULL," +
+                        "startTime INTEGER NOT NULL, duration INTEGER NOT NULL, days INTEGER NOT NULL CHECK(days <> 0)," +
+                        "name TEXT NOT NULL, notes TEXT DEFAULT NULL, " +
+                        "remind30Mins INT NOT NULL DEFAULT 0, remind1Hr INT NOT NULL DEFAULT 0," +
+                        "remind2Hrs INT NOT NULL DEFAULT 0," +
+                        "remindMorning INT NOT NULL DEFAULT 0," +
+                        "goal_id INT DEFAULT NULL," +
+                        "CONSTRAINT timetable_event_timetable" +
+                        "    FOREIGN KEY (timetable_id)" +
+                        "    REFERENCES TBL_TIMETABLE (_id)" +
+                        "    ON DELETE CASCADE," +
+                        "CONSTRAINT timetable_event_goal" +
+                        "    FOREIGN KEY (goal_id)" +
+                        "    REFERENCES TBL_GOAL (_id)" +
+                        "    ON DELETE CASCADE)"
+            )
+            db.execSQL(
+                // dateTime can be null
+                // dateTime is the number of milliseconds since the epoch
+                // Repeat:
+                //      0 = Do not repeat
+                //      1 = Repeat daily
+                //      2 = Repeat every other day
+                //      3 = Repeat weekly
+                //      4 = Repeat monthly
+                "CREATE TABLE TBL_TODO_LIST_TASK (_id INTEGER PRIMARY KEY," +
+                        "dateTime INTEGER, has_time INT DEFAULT 1 NOT NULL, name TEXT NOT NULL, notes TEXT DEFAULT NULL, " +
+                        "remind30Mins INT NOT NULL DEFAULT 0, remind1Hr INT NOT NULL DEFAULT 0," +
+                        "remind2Hrs INT NOT NULL DEFAULT 0," +
+                        "remindMorning INT NOT NULL DEFAULT 0, repeat INT NOT NULL DEFAULT 0," +
+                        "goal_id INT DEFAULT NULL," +
+                        "CONSTRAINT todo_list_task_goal" +
+                        "    FOREIGN KEY (goal_id)" +
+                        "    REFERENCES TBL_GOAL (_id)" +
+                        "    ON DELETE CASCADE)"
+            )
+            db.execSQL(
+                "CREATE TABLE TBL_GOAL (_id INTEGER PRIMARY KEY, name TEXT NOT NULL," +
+                        "colour INT NOT NULL DEFAULT 16744576," +
+                        "notes TEXT DEFAULT NULL)"
+            )
+            db.execSQL(
+                "CREATE TABLE TBL_MILESTONE (_id INTEGER PRIMARY KEY," +
+                        "name TEXT NOT NULL," +
+                        "deadline INT," +
+                        "goal_id INT NOT NULL," +
+                        "CONSTRAINT milestone_goal" +
+                        "    FOREIGN KEY (goal_id)" +
+                        "    REFERENCES TBL_GOAL (_id)" +
+                        "    ON DELETE CASCADE)"
+            )
+
+
+            db.execSQL(
+                "CREATE TABLE TBL_PHOTO (_id INTEGER PRIMARY KEY, url TEXT NOT NULL, UNIQUE (url))"
+            )
+
+            db.execSQL(
+                "CREATE TABLE TBL_TIMETABLE_EVENT_PHOTOS (event_id INTEGER, photo_id INT, PRIMARY KEY (event_id, photo_id)," +
+                        "CONSTRAINT timetable_event_photos_timetable_event" +
+                        "    FOREIGN KEY (event_id)" +
+                        "    REFERENCES TBL_TIMETABLE_EVENT (_id)" +
+                        "    ON DELETE CASCADE)"
+            )
+            db.execSQL(
+                "CREATE TABLE TBL_TODO_LIST_TASK_PHOTOS (task_id INTEGER, photo_id INT, PRIMARY KEY (task_id, photo_id)," +
+                        "CONSTRAINT todo_list_task_photos_todo_list_task" +
+                        "    FOREIGN KEY (task_id)" +
+                        "    REFERENCES TBL_TODO_LIST_TASK (_id)" +
+                        "    ON DELETE CASCADE)"
+            )
+            db.execSQL(
+                "CREATE TABLE TBL_GOAL_PHOTOS (goal_id INTEGER, photo_id INT, PRIMARY KEY (goal_id, photo_id)," +
+                        "CONSTRAINT goal_photos_goal" +
+                        "    FOREIGN KEY (goal_id)" +
+                        "    REFERENCES TBL_GOAL (_id)" +
+                        "    ON DELETE CASCADE)"
+            )
+
+            db.execSQL(
+                // time_saved = System.currentTimeMillis when timer was last saved in DB
+                // time is in seconds. if null then timer is stopped
+                // paused = boolean. ignored if time=null
+                "CREATE TABLE TBL_TIMER (_id INTEGER PRIMARY KEY, name TEXT DEFAULT NULL, " +
+                        "initial_time INT NOT NULL," +
+                        "time_saved INT NOT NULL, time INT DEFAULT NULL, paused INT)"
+            )
+
+            db.execSQL(
+                "CREATE TABLE TBL_NOTIFICATIONS (_id INTEGER PRIMARY KEY, " +
+                        "content TEXT NOT NULL, channel INT NOT NULL, task_or_event_id LONG NOT NULL," +
+                        "time LONG NOT NULL)"
+            )
+        }
+
+        override fun onOpen(db: SQLiteDatabase?) {
+            db?.execSQL("PRAGMA foreign_keys = ON")
+        }
+
+        override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+            //db.execSQL("DROP TABLE IF EXISTS TBL_")
+            onCreate(db)
+        }
+
+        override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+            onUpgrade(db, oldVersion, newVersion)
+        }
+
+    }
+
+
+    var initDone = false
+    lateinit var dbHelper: DBHelper
+    lateinit var context: Context
+
+    // Opens the database file
+    fun init(context_: Context) {
+        if (initDone) {
+            return
+        }
+        initDone = true
+
+        context = context_.applicationContext
+        dbHelper = DBHelper(context)
+    }
+
+    fun close() {
+        dbHelper.close()
+    }
+
+    fun createNewTimetable(name: String): Long {
+
+        // Open database for writing
+        val db = dbHelper.writableDatabase
+
+        // coumn name -> value
+        val values = ContentValues().apply {
+            put("name", name)
+        }
+
+        // returns id of the inserted row or throws an exception
+        val newRowId = db?.insert("TBL_TIMETABLE", null, values)
+
+        return newRowId!!
+    }
+
+    fun renameTimetable(id: Long, name: String) {
+        val db = dbHelper.writableDatabase
+        val values = ContentValues().apply {
+            put("name", name)
+        }
+        db.update("TBL_TIMETABLE", values, "_id=?", arrayOf(id.toString()))
+    }
+
+    // Returns list of Pair<id,name>
+    fun getTimetables(): List<Pair<Long, String>> {
+        val db = dbHelper.readableDatabase
+
+        // Columns to load
+        val projection = arrayOf(BaseColumns._ID, "name")
+
+        val cursor = db.query(
+            "TBL_TIMETABLE",
+            projection,
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+
+        var timetables = ArrayList<Pair<Long, String>>()
+
+        while (cursor.moveToNext()) {
+            val id = cursor.getLong(cursor.getColumnIndexOrThrow(android.provider.BaseColumns._ID))
+            val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+
+            timetables.add(Pair<Long, String>(id, name))
+        }
+        return timetables
+    }
+
+    fun isDBEmpty(): Boolean {
+        val db = dbHelper.readableDatabase
+        arrayOf(
+            "TBL_TIMETABLE",
+            "TBL_TIMETABLE_EVENT",
+            "TBL_TODO_LIST_TASK",
+            "TBL_GOAL",
+            "TBL_MILESTONE"
+        ).forEach {
+
+            val cursor = db.rawQuery(
+                "SELECT COUNT(*) FROM $it",
+                arrayOf()
+            )
+
+            if (cursor.moveToNext()) {
+                val count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNT(*)"))
+                if (count > 0) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+
+    // Probably the oldest timetable in the database
+    // No guarantee of which timetable will be loaded
+    fun getFirstTimetable(): Pair<Long, String> {
+        val db = dbHelper.readableDatabase
+
+
+        val cursor = db.rawQuery(
+            "SELECT * FROM TBL_TIMETABLE LIMIT 1",
+            null
+        )
+
+        if (cursor.moveToNext()) {
+            val id =
+                cursor.getLong(cursor.getColumnIndexOrThrow(android.provider.BaseColumns._ID))
+            val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+
+            return Pair<Long, String>(id, name)
+        } else {
+            throw Exception("No timetables")
+        }
+
+    }
+
+    fun getTimetableName(id: Long): String {
+        val db = dbHelper.readableDatabase
+
+
+        val cursor = db.rawQuery(
+            "SELECT name FROM TBL_TIMETABLE WHERE _id=?",
+            arrayOf(id.toString())
+        )
+
+        if (cursor.moveToNext()) {
+            val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+
+            return name
+        } else {
+            throw Exception("Record not found")
+        }
+    }
+
+    fun clearTimetable(id: Long) {
+        val db = dbHelper.writableDatabase
+
+        db.delete("TBL_TIMETABLE_EVENT", "timetable_id=?", arrayOf(id.toString()))
+
+    }
+
+    fun getTimetableEvents(timetableId: Long): List<TimetableEvent> {
+        val list = ArrayList<TimetableEvent>()
+
+        val db = dbHelper.readableDatabase
+
+        val cursor = db.rawQuery(
+            "SELECT *,(SELECT colour FROM TBL_GOAL WHERE _id=goal_id) as gcol FROM TBL_TIMETABLE_EVENT WHERE timetable_id=?",
+            arrayOf(timetableId.toString())
+        )
+
+        while (cursor.moveToNext()) {
+            list.add(
+                TimetableEvent(
+                    cursor.getLong(cursor.getColumnIndexOrThrow("_id")),
+                    cursor.getLong(cursor.getColumnIndexOrThrow("timetable_id")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("startTime")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("duration")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("days")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("name")),
+                    cursor.getStringOrNull(cursor.getColumnIndexOrThrow("notes")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("remind30Mins")) != 0,
+                    cursor.getInt(cursor.getColumnIndexOrThrow("remind1Hr")) != 0,
+                    cursor.getInt(cursor.getColumnIndexOrThrow("remind2Hrs")) != 0,
+                    cursor.getInt(cursor.getColumnIndexOrThrow("remindMorning")) != 0,
+                    cursor.getLong(cursor.getColumnIndexOrThrow("goal_id")),
+                    cursor.getIntOrNull(cursor.getColumnIndexOrThrow("gcol"))
+                )
+            )
+        }
+
+        return list
+    }
+
+    fun cloneTimetable(oldId: Long, newName: String): Long {
+        val newId = createNewTimetable(newName)
+
+        val db = dbHelper.writableDatabase
+
+        val cursor = db.rawQuery(
+            "SELECT * FROM TBL_TIMETABLE_EVENT WHERE timetable_id=$oldId",
+            arrayOf()
+        )
+
+        while (cursor.moveToNext()) {
+            val values = ContentValues().apply {
+                put("timetable_id", newId)
+                put("startTime", cursor.getInt(cursor.getColumnIndexOrThrow("startTime")))
+                put("duration", cursor.getInt(cursor.getColumnIndexOrThrow("duration")))
+                put("days", cursor.getInt(cursor.getColumnIndexOrThrow("days")))
+                put("name", cursor.getString(cursor.getColumnIndexOrThrow("name")))
+                put("notes", cursor.getStringOrNull(cursor.getColumnIndexOrThrow("notes")))
+                put("remind30Mins", cursor.getInt(cursor.getColumnIndexOrThrow("remind30Mins")))
+                put("remind1Hr", cursor.getInt(cursor.getColumnIndexOrThrow("remind1Hr")))
+                put("remind2Hrs", cursor.getInt(cursor.getColumnIndexOrThrow("remind2Hrs")))
+                put("remindMorning", cursor.getInt(cursor.getColumnIndexOrThrow("remindMorning")))
+                put("goal_id", cursor.getIntOrNull(cursor.getColumnIndexOrThrow("goal_id")))
+            }
+            db?.insert("TBL_TIMETABLE_EVENT", null, values)
+        }
+
+        return newId
+    }
+
+    fun getTimetableEvent(id: Long): TimetableEvent {
+        val db = dbHelper.readableDatabase
+
+        val cursor = db.rawQuery(
+            "SELECT * FROM TBL_TIMETABLE_EVENT WHERE _id=?",
+            arrayOf(id.toString())
+        )
+
+        if (cursor.moveToNext()) {
+            return TimetableEvent(
+                cursor.getLong(cursor.getColumnIndexOrThrow("_id")),
+                cursor.getLong(cursor.getColumnIndexOrThrow("timetable_id")),
+                cursor.getInt(cursor.getColumnIndexOrThrow("startTime")),
+                cursor.getInt(cursor.getColumnIndexOrThrow("duration")),
+                cursor.getInt(cursor.getColumnIndexOrThrow("days")),
+                cursor.getString(cursor.getColumnIndexOrThrow("name")),
+                cursor.getStringOrNull(cursor.getColumnIndexOrThrow("notes")),
+                cursor.getInt(cursor.getColumnIndexOrThrow("remind30Mins")) != 0,
+                cursor.getInt(cursor.getColumnIndexOrThrow("remind1Hr")) != 0,
+                cursor.getInt(cursor.getColumnIndexOrThrow("remind2Hrs")) != 0,
+                cursor.getInt(cursor.getColumnIndexOrThrow("remindMorning")) != 0,
+                cursor.getLongOrNull(cursor.getColumnIndexOrThrow("goal_id"))
+
+            )
+        } else {
+            throw Exception("Record not found")
+        }
+
+    }
+
+    fun deleteTimetable(id: Long) {
+        val db = dbHelper.writableDatabase
+
+        db.delete("TBL_TIMETABLE", "_id=?", arrayOf(id.toString()))
+
+
+    }
+
+    fun updateOrCreateTimetableEvent(e: TimetableEvent): Long {
+        val db = dbHelper.writableDatabase
+        val values = ContentValues().apply {
+            put("timetable_id", e.timetable_id)
+            put("startTime", e.startTime)
+            put("duration", e.duration)
+            put("days", e.days)
+            put("name", e.name)
+            put("notes", e.notes)
+            put("remind30Mins", if (e.remind30Mins) 1 else 0)
+            put("remind1Hr", if (e.remind1Hr) 1 else 0)
+            put("remind2Hrs", if (e.remind2Hrs) 1 else 0)
+            put("remindMorning", if (e.remindMorning) 1 else 0)
+            put("goal_id", e.goal_id)
+        }
+
+        if (e.id < 0) {
+            return db?.insert("TBL_TIMETABLE_EVENT", null, values)!!
+        } else {
+            db.update("TBL_TIMETABLE_EVENT", values, "_id=?", arrayOf(e.id.toString()))
+            return e.id
+        }
+    }
+
+    fun deleteTimetableEvent(eventId: Long) {
+        val db = dbHelper.writableDatabase
+        db.execSQL("DELETE FROM TBL_TIMETABLE_EVENT WHERE _id=$eventId")
+
+    }
+
+    fun getPhoto(photoUrl: String): Long? {
+        val db = dbHelper.readableDatabase
+
+        val cursor = db.rawQuery(
+            "SELECT * FROM TBL_PHOTO WHERE url=?",
+            arrayOf(photoUrl)
+        )
+
+        if (cursor.moveToNext()) {
+            return cursor.getLong(cursor.getColumnIndexOrThrow("_id"))
+        } else {
+            return null
+        }
+    }
+
+    fun addPhoto(photoUrl: String): Long {
+        val values = ContentValues().apply {
+            put("url", photoUrl)
+        }
+        return dbHelper.writableDatabase?.insert("TBL_PHOTO", null, values)!!
+    }
+
+    fun addOrGetPhoto(photoUrl: String): Long {
+        val id = getPhoto(photoUrl)
+        if (id != null) {
+            return id
+        }
+        return addPhoto(photoUrl)
+    }
+
+    fun addTimetableEventPhoto(eventId: Long, photoUrl: String) {
+        val db = dbHelper.writableDatabase
+
+        val values = ContentValues().apply {
+            put("event_id", eventId)
+            put("photo_id", addOrGetPhoto(photoUrl))
+        }
+
+        db?.insert("TBL_TIMETABLE_EVENT_PHOTOS", null, values)
+
+
+    }
+
+    fun removeTimetableEventPhoto(eventId: Long, photoUrl: String) {
+        val db = dbHelper.writableDatabase
+
+        db.execSQL(
+            "DELETE FROM TBL_TIMETABLE_EVENT_PHOTOS WHERE event_id=${eventId} AND photo_id=" +
+                    "(SELECT _id FROM TBL_PHOTO WHERE url=?)", arrayOf(photoUrl)
+        )
+
+    }
+
+    fun getTimetableEventPhotos(eventId: Long): List<String> {
+        val list = ArrayList<String>()
+
+        val db = dbHelper.readableDatabase
+
+        val cursor = db.rawQuery(
+            "SELECT url FROM TBL_PHOTO WHERE _id IN " +
+                    "(SELECT photo_id FROM TBL_TIMETABLE_EVENT_PHOTOS WHERE event_id=$eventId)",
+            arrayOf()
+        )
+
+        while (cursor.moveToNext()) {
+            list.add(cursor.getString(cursor.getColumnIndexOrThrow("url")))
+        }
+
+        return list
+    }
+
+
+    fun getToDoListTasks(): List<ToDoListTaskListData> {
+        val list = ArrayList<ToDoListTaskListData>()
+
+        val db = dbHelper.readableDatabase
+
+
+        val cursor = db.rawQuery(
+            "SELECT *,(SELECT colour FROM TBL_GOAL WHERE _id=goal_id) AS gcol " +
+                    "FROM TBL_TODO_LIST_TASK ORDER BY dateTime ASC",
+            arrayOf()
+        )
+
+        while (cursor.moveToNext()) {
+            list.add(
+                ToDoListTaskListData(
+                    cursor.getLong(cursor.getColumnIndexOrThrow("_id")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("name")),
+                    cursor.getLongOrNull(cursor.getColumnIndexOrThrow("dateTime")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("has_time")) != 0,
+                    cursor.getIntOrNull(cursor.getColumnIndexOrThrow("gcol"))
+                )
+            )
+        }
+
+
+        return list
+    }
+
+
+    fun readToDoTaskList(
+        projection: Array<out String>?,
+        selection: String?,
+        selectionArgs: Array<out String>?,
+        sortOrder: String?
+    ): Cursor? {
+        val db = dbHelper.readableDatabase
+        return db.query(
+            "TBL_TODO_LIST_TASK",
+            projection,
+            selection,
+            selectionArgs,
+            null,
+            null,
+            sortOrder
+        )
+    }
+
+    fun getToDoListTasksNotificationData(): List<ToDoListTaskNotificationData> {
+        val list = ArrayList<ToDoListTaskNotificationData>()
+
+        val db = dbHelper.readableDatabase
+
+        val cursor = db.rawQuery(
+            "SELECT _id,dateTime,has_time,name,remind30Mins,remind1Hr,remind2Hrs,remindMorning,repeat" +
+                    " FROM TBL_TODO_LIST_TASK",
+            arrayOf()
+        )
+
+        while (cursor.moveToNext()) {
+            list.add(
+                ToDoListTaskNotificationData(
+                    cursor.getLong(cursor.getColumnIndexOrThrow("_id")),
+                    cursor.getLongOrNull(cursor.getColumnIndexOrThrow("dateTime")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("has_time")) != 0,
+                    cursor.getString(cursor.getColumnIndexOrThrow("name")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("remind30Mins")) != 0,
+                    cursor.getInt(cursor.getColumnIndexOrThrow("remind1Hr")) != 0,
+                    cursor.getInt(cursor.getColumnIndexOrThrow("remind2Hrs")) != 0,
+                    cursor.getInt(cursor.getColumnIndexOrThrow("remindMorning")) != 0,
+                    Repeat.fromInt(cursor.getInt(cursor.getColumnIndexOrThrow("repeat")))
+                )
+            )
+        }
+
+
+        return list
+    }
+
+    fun getToDoListTask(id: Long): ToDoListTask {
+        val db = dbHelper.readableDatabase
+
+
+        val cursor = db.rawQuery(
+            "SELECT *, (SELECT colour FROM TBL_GOAL WHERE _id=goal_id) AS gcol FROM TBL_TODO_LIST_TASK WHERE _id=?",
+            arrayOf(id.toString())
+        )
+
+        if (cursor.moveToNext()) {
+            return ToDoListTask(
+                cursor.getLong(cursor.getColumnIndexOrThrow("_id")),
+                cursor.getLongOrNull(cursor.getColumnIndexOrThrow("dateTime")),
+                cursor.getInt(cursor.getColumnIndexOrThrow("has_time")) != 0,
+                cursor.getString(cursor.getColumnIndexOrThrow("name")),
+                cursor.getStringOrNull(cursor.getColumnIndexOrThrow("notes")),
+                cursor.getInt(cursor.getColumnIndexOrThrow("remind30Mins")) != 0,
+                cursor.getInt(cursor.getColumnIndexOrThrow("remind1Hr")) != 0,
+                cursor.getInt(cursor.getColumnIndexOrThrow("remind2Hrs")) != 0,
+                cursor.getInt(cursor.getColumnIndexOrThrow("remindMorning")) != 0,
+                Repeat.fromInt(cursor.getInt(cursor.getColumnIndexOrThrow("repeat"))),
+                cursor.getLongOrNull(cursor.getColumnIndexOrThrow("goal_id")),
+                cursor.getIntOrNull(cursor.getColumnIndexOrThrow("gcol"))
+
+            )
+        } else {
+            throw Exception("Record not found")
+        }
+
+    }
+
+    fun updateOrCreateToDoListTask(e: ToDoListTask): Long {
+        val db = dbHelper.writableDatabase
+
+        val values = ContentValues().apply {
+            put("dateTime", e.dateTime)
+            put("has_time", e.hasTime)
+            put("name", e.name)
+            put("notes", e.notes)
+            put("remind30Mins", if (e.remind30Mins) 1 else 0)
+            put("remind1Hr", if (e.remind1Hr) 1 else 0)
+            put("remind2Hrs", if (e.remind2Hrs) 1 else 0)
+            put("remindMorning", if (e.remindMorning) 1 else 0)
+            put("repeat", e.repeat.n)
+            put("goal_id", e.goal_id)
+        }
+
+        if (e.id < 0) {
+            return db?.insert("TBL_TODO_LIST_TASK", null, values)!!
+        } else {
+            db.update("TBL_TODO_LIST_TASK", values, "_id=?", arrayOf(e.id.toString()))
+            return e.id
+        }
+
+    }
+
+    fun deleteToDoListTask(eventId: Long) {
+        val db = dbHelper.writableDatabase
+
+        db.execSQL("DELETE FROM TBL_TODO_LIST_TASK WHERE _id=$eventId")
+
+    }
+
+    fun addToDoListTaskPhoto(eventId: Long, photoUrl: String) {
+        val db = dbHelper.writableDatabase
+
+        val values = ContentValues().apply {
+            put("task_id", eventId)
+            put("photo_id", addOrGetPhoto(photoUrl))
+        }
+
+        db?.insert("TBL_TODO_LIST_TASK_PHOTOS", null, values)
+
+
+    }
+
+    fun removeToDoListTaskPhoto(eventId: Long, photoUrl: String) {
+        val db = dbHelper.writableDatabase
+
+        db.execSQL(
+            "DELETE FROM TBL_TODO_LIST_TASK_PHOTOS WHERE task_id=${eventId} AND photo_id=" +
+                    "(SELECT _id FROM TBL_PHOTO WHERE url=?)", arrayOf(photoUrl)
+        )
+
+    }
+
+    fun getToDoListTaskPhotos(eventId: Long): List<String> {
+        val list = ArrayList<String>()
+
+        val db = dbHelper.readableDatabase
+
+        val cursor = db.rawQuery(
+            "SELECT url FROM TBL_PHOTO WHERE _id IN " +
+                    "(SELECT photo_id FROM TBL_TODO_LIST_TASK_PHOTOS WHERE task_id=$eventId)",
+            arrayOf()
+        )
+
+        while (cursor.moveToNext()) {
+            list.add(cursor.getString(cursor.getColumnIndexOrThrow("url")))
+        }
+
+        return list
+    }
+
+    fun numberOfToDoListTasks(): Int {
+        val db = dbHelper.readableDatabase
+
+        val cursor = db.rawQuery(
+            "SELECT COUNT(*) FROM TBL_TODO_LIST_TASK",
+            arrayOf()
+        )
+
+        if (cursor.moveToNext()) {
+            return cursor.getInt(cursor.getColumnIndexOrThrow("COUNT(*)"))
+        } else {
+            return 0
+        }
+
+
+    }
+
+    fun getGoals(): List<GoalListData> {
+        val list = ArrayList<GoalListData>()
+
+        val db = dbHelper.readableDatabase
+
+
+        val cursor = db.rawQuery(
+            "SELECT _id,name,colour FROM TBL_GOAL",
+            arrayOf()
+        )
+
+        while (cursor.moveToNext()) {
+            list.add(
+                GoalListData(
+                    cursor.getLong(cursor.getColumnIndexOrThrow("_id")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("name")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("colour"))
+                )
+            )
+        }
+
+
+        return list
+    }
+
+    fun getGoal(goalId: Long): Goal {
+        val db = dbHelper.readableDatabase
+
+
+        val cursor = db.rawQuery(
+            "SELECT * FROM TBL_GOAL WHERE _id=?",
+            arrayOf(goalId.toString())
+        )
+
+        if (cursor.moveToNext()) {
+            return Goal(
+                cursor.getLong(cursor.getColumnIndexOrThrow("_id")),
+                cursor.getString(cursor.getColumnIndexOrThrow("name")),
+                cursor.getInt(cursor.getColumnIndexOrThrow("colour")),
+                cursor.getStringOrNull(cursor.getColumnIndexOrThrow("notes"))
+            )
+        } else {
+            throw Exception("Record not found")
+        }
+
+    }
+
+    fun getMilestones(goalId: Long): List<Milestone> {
+        val list = ArrayList<Milestone>()
+
+        val db = dbHelper.readableDatabase
+
+
+        val cursor = db.rawQuery(
+            "SELECT * FROM TBL_MILESTONE WHERE goal_id=? ORDER BY deadline",
+            arrayOf(goalId.toString())
+        )
+
+        while (cursor.moveToNext()) {
+            list.add(
+                Milestone(
+                    cursor.getLong(cursor.getColumnIndexOrThrow("_id")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("name")),
+                    cursor.getLongOrNull(cursor.getColumnIndexOrThrow("deadline")),
+                    cursor.getLong(cursor.getColumnIndexOrThrow("goal_id"))
+                )
+            )
+        }
+
+
+        return list
+    }
+
+    fun updateOrCreateGoal(e: Goal): Long {
+        val db = dbHelper.writableDatabase
+
+        val values = ContentValues().apply {
+            put("name", e.name)
+            put("colour", e.colour)
+            put("notes", e.notes)
+        }
+
+        if (e.id < 0) {
+            return db?.insert("TBL_GOAL", null, values)!!
+        } else {
+            db.update("TBL_GOAL", values, "_id=?", arrayOf(e.id.toString()))
+            return e.id
+        }
+
+    }
+
+
+    fun changeGoalColour(id: Long, colour: Int) {
+        val db = dbHelper.writableDatabase
+
+        val values = ContentValues().apply {
+            put("colour", colour)
+        }
+
+        db.update("TBL_GOAL", values, "_id=?", arrayOf(id.toString()))
+    }
+
+    // If deleteEvents then all associated events/tasks get deleted
+    // If false then they are assigned to no goal
+    fun deleteGoal(goalId: Long, deleteEvents: Boolean) {
+        val db = dbHelper.writableDatabase
+
+        if (!deleteEvents) {
+            val newGoalId: Long? = null
+            val values = ContentValues().apply {
+                put("goal_id", newGoalId)
+            }
+            try {
+                db.update("TBL_TIMETABLE_EVENT", values, "goal_id=?", arrayOf(goalId.toString()))
+            } catch (_: Exception) {
+            }
+            try {
+                db.update("TBL_TODO_LIST_TASK", values, "goal_id=?", arrayOf(goalId.toString()))
+            } catch (_: Exception) {
+            }
+        }
+
+        db.execSQL("DELETE FROM TBL_GOAL WHERE _id=$goalId")
+
+    }
+
+    fun addGoalPhoto(goalId: Long, photoUrl: String) {
+        val db = dbHelper.writableDatabase
+
+        val values = ContentValues().apply {
+            put("goal_id", goalId)
+            put("photo_id", addOrGetPhoto(photoUrl))
+        }
+
+        db?.insert("TBL_GOAL_PHOTOS", null, values)
+    }
+
+    fun removeGoalPhoto(goalId: Long, photoUrl: String) {
+        val db = dbHelper.writableDatabase
+
+        db.execSQL(
+            "DELETE FROM TBL_GOAL_PHOTOS WHERE goal_id=${goalId} AND photo_id=" +
+                    "(SELECT _id FROM TBL_PHOTO WHERE url=?)", arrayOf(photoUrl)
+        )
+    }
+
+    fun getGoalPhotos(goalId: Long): List<String> {
+        val list = ArrayList<String>()
+
+        val db = dbHelper.readableDatabase
+
+        val cursor = db.rawQuery(
+            "SELECT url FROM TBL_PHOTO WHERE _id IN " +
+                    "(SELECT photo_id FROM TBL_GOAL_PHOTOS WHERE goal_id=$goalId)",
+            arrayOf()
+        )
+
+        while (cursor.moveToNext()) {
+            list.add(cursor.getString(cursor.getColumnIndexOrThrow("url")))
+        }
+
+        return list
+    }
+
+    fun addMilestone(m: Milestone) {
+        val db = dbHelper.writableDatabase
+
+        val values = ContentValues().apply {
+            put("name", m.name)
+            put("deadline", m.deadline)
+            put("goal_id", m.goal_id)
+        }
+
+        db?.insert("TBL_MILESTONE", null, values)
+
+    }
+
+    fun removeMilestone(m: Milestone) {
+        val db = dbHelper.writableDatabase
+
+        db.execSQL("DELETE FROM TBL_MILESTONE WHERE _id=${m.id}")
+
+    }
+
+    fun updateMilestone(m: Milestone) {
+        val db = dbHelper.writableDatabase
+
+        val values = ContentValues().apply {
+            put("name", m.name)
+            put("deadline", m.deadline)
+        }
+
+        db.update("TBL_MILESTONE", values, "_id=?", arrayOf(m.id.toString()))
+
+    }
+
+    // Optimise database
+    fun vacuum() {
+        val db = dbHelper.writableDatabase
+        db.execSQL("VACUUM")
+    }
+
+
+    fun goalHasAssociatedEventsOrTasks(goalId: Long): Boolean {
+        val db = dbHelper.readableDatabase
+
+        try {
+            val cursor = db.rawQuery(
+                "SELECT COUNT(*) FROM TBL_TODO_LIST_TASK WHERE goal_id=$goalId",
+                arrayOf()
+            )
+
+            if (cursor.moveToNext()) {
+                if (cursor.getInt(cursor.getColumnIndexOrThrow("COUNT(*)")) > 0) {
+                    return true
+                }
+            }
+        } finally {
+        }
+
+        val cursor2 = db.rawQuery(
+            "SELECT COUNT(*) FROM TBL_TIMETABLE_EVENT WHERE goal_id=$goalId",
+            arrayOf()
+        )
+
+        if (cursor2.moveToNext()) {
+            if (cursor2.getInt(cursor2.getColumnIndexOrThrow("COUNT(*)")) > 0) {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    fun allUsedGoalColours(): List<Int> {
+        val db = dbHelper.readableDatabase
+        val colours = ArrayList<Int>()
+
+        val cursor = db.rawQuery(
+            "SELECT colour FROM TBL_GOAL",
+            arrayOf()
+        )
+
+        while (cursor.moveToNext()) {
+            colours.add(cursor.getInt(cursor.getColumnIndexOrThrow("colour")) and 0xffffff)
+        }
+
+        return colours
+    }
+
+    fun optimise() {
+        val db = dbHelper.writableDatabase
+
+        // Get IDs of all unused photos
+        val cursor = db.rawQuery(
+            "SELECT _id FROM TBL_PHOTO WHERE _id " +
+                    "NOT IN (SELECT photo_id FROM  TBL_TIMETABLE_EVENT_PHOTOS) " +
+                    "AND _id NOT IN (SELECT photo_id FROM  TBL_TODO_LIST_TASK_PHOTOS) " +
+                    "AND _id NOT IN (SELECT photo_id FROM  TBL_GOAL_PHOTOS)",
+            arrayOf()
+        )
+
+        while (cursor.moveToNext()) {
+            val id = cursor.getLong(cursor.getColumnIndexOrThrow("_id"))
+            try {
+                val file = File("${context.applicationContext.cacheDir}/img$id")
+                file.delete()
+            } finally {
+            }
+        }
+
+        db.execSQL(
+            "DELETE FROM TBL_PHOTO WHERE _id " +
+                    "NOT IN (SELECT photo_id FROM  TBL_TIMETABLE_EVENT_PHOTOS) " +
+                    "AND _id NOT IN (SELECT photo_id FROM  TBL_TODO_LIST_TASK_PHOTOS) " +
+                    "AND _id NOT IN (SELECT photo_id FROM  TBL_GOAL_PHOTOS)",
+            arrayOf()
+        )
+
+
+        vacuum()
+    }
+
+    fun getDBFileBytes(): ByteArray {
+        close()
+        val dbFile = context.getDatabasePath("po.db")
+
+        val stream = dbFile.inputStream()
+        val bytes = ByteArray(dbFile.length().toInt())
+        stream.read(bytes)
+        stream.close()
+        return bytes
+    }
+
+    fun getOutputStream(): OutputStream {
+        close()
+
+        val dbFile = context.getDatabasePath("po.db")
+        return dbFile.outputStream()
+    }
+
+    fun saveOrUpdateTimer(t: Timer): Long {
+        val db = dbHelper.writableDatabase
+
+        val values = ContentValues().apply {
+            put("name", t.name)
+            put("initial_time", t.initialTime)
+            put("time_saved", t.time_saved)
+            put("time", t.time)
+            put("paused", if (t.isPaused) 1 else 0)
+        }
+
+        if (t.id == null) {
+            return db?.insert("TBL_TIMER", null, values)!!
+        } else {
+            db.update("TBL_TIMER", values, "_id=?", arrayOf(t.id.toString()))
+            return t.id
+        }
+    }
+
+    fun getTimers(): List<Timer> {
+        val db = dbHelper.readableDatabase
+
+        // Columns to load
+        val projection =
+            arrayOf(BaseColumns._ID, "name", "initial_time", "time_saved", "time", "paused")
+
+        val cursor = db.query(
+            "TBL_TIMER",
+            projection,
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+
+        var timers = ArrayList<Timer>()
+
+        while (cursor.moveToNext()) {
+            val id = cursor.getLong(cursor.getColumnIndexOrThrow(android.provider.BaseColumns._ID))
+            val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
+            val initialTime = cursor.getInt(cursor.getColumnIndexOrThrow("initial_time"))
+            val timeSaved = cursor.getLong(cursor.getColumnIndexOrThrow("time_saved"))
+            val time = cursor.getIntOrNull(cursor.getColumnIndexOrThrow("time"))
+            val paused = cursor.getInt(cursor.getColumnIndexOrThrow("paused")) != 0
+
+            timers.add(Timer(id, name, time, initialTime, timeSaved, paused))
+        }
+        return timers
+    }
+
+    fun deleteTimer(id: Long) {
+        val db = dbHelper.writableDatabase
+        db.delete("TBL_TIMER", "_id=?", arrayOf(id.toString()))
+    }
+
+    fun addNotification(n: NotificationData) {
+        val db = dbHelper.writableDatabase
+
+        val values = ContentValues().apply {
+            put("content", n.content)
+            put("channel", n.channel.id_int)
+            put("task_or_event_id", n.taskOrEventId)
+            put("time", n.time)
+        }
+
+        db?.insert("TBL_NOTIFICATIONS", null, values)!!
+    }
+
+    fun getNotificationsToShow(): List<NotificationData> {
+        val db = dbHelper.writableDatabase
+
+        val projection =
+            arrayOf("content", "channel", "task_or_event_id", "time")
+
+        val maxTime = (System.currentTimeMillis() + 30000).toString()
+
+        val cursor = db.query(
+            "TBL_NOTIFICATIONS",
+            projection,
+            "time <= ?",
+            arrayOf(maxTime),
+            null,
+            null,
+            null
+        )
+
+        var notifications = ArrayList<NotificationData>()
+
+        while (cursor.moveToNext()) {
+            val content = cursor.getString(cursor.getColumnIndexOrThrow("content"))
+            val channel = cursor.getInt(cursor.getColumnIndexOrThrow("channel"))
+            val task_or_event_id = cursor.getLong(cursor.getColumnIndexOrThrow("task_or_event_id"))
+            val time = cursor.getLong(cursor.getColumnIndexOrThrow("time"))
+
+            notifications.add(
+                NotificationData(
+                    content,
+                    Notifications.Channel.fromInt(channel),
+                    task_or_event_id,
+                    time
+                )
+            )
+        }
+
+        db.delete("TBL_NOTIFICATIONS", "time <= ?", arrayOf(maxTime))
+
+        return notifications
+    }
+
+    fun clearNotifications() {
+        val db = dbHelper.writableDatabase
+        db.delete("TBL_NOTIFICATIONS", null, null)
+    }
+
+}

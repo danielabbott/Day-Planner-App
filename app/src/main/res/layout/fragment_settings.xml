@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Morning reminder time:" />
+
+            <danielabbott.personalorganiser.ui.TimeSelectView
+                android:id="@+id/morningTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="30sp" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Timetable start time:" />
+
+            <Button
+                android:id="@+id/startTimeBack"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="&lt;" />
+
+            <TextView
+                android:id="@+id/startTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="7:00"
+                android:textSize="20sp"
+                android:focusable="true" />
+
+            <Button
+                android:id="@+id/startTimeForwards"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="&gt;" />
+
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Timetable end time:" />
+
+            <Button
+                android:id="@+id/endTimeBack"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="&lt;" />
+
+            <TextView
+                android:id="@+id/endTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:clickable="true"
+                android:gravity="center"
+                android:text="7:00"
+                android:textSize="20sp"
+                android:focusable="true" />
+
+            <Button
+                android:id="@+id/endTimeForwards"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="&gt;" />
+
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Timetable font size:" />
+
+            <Spinner
+                android:id="@+id/timetableFontSize"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:entries="@array/timetable_font_sizes" />
+
+        </LinearLayout>
+
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Enable alarms:" />
+
+            <CheckBox
+                android:id="@+id/enableAlarms"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Enable alarm vibration:" />
+
+            <CheckBox
+                android:id="@+id/enableAlarmVibration"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <Button
+            android:id="@+id/optimiseDB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Optimise Database"/>
+
+        <Button
+            android:id="@+id/exportDB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Export Database"/>
+
+        <Button
+            android:id="@+id/importDB"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Import Database"/>
+
+
+    </LinearLayout>
+</ScrollView>
