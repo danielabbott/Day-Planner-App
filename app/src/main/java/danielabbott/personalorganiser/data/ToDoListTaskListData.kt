@@ -5,5 +5,6 @@ class ToDoListTaskListData(
     var name: String,
     var dateTime: Long?,
     var hasTime: Boolean,
-    var colour: Int?
+    var colour: Int?,
+    val hasNotes: Boolean
 )

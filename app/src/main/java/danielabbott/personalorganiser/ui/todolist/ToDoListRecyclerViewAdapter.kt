@@ -34,7 +34,8 @@ class ToDoListRecyclerViewAdapter(
         val name: String?,
         val dateTime: Long?,
         val hasTime: Boolean,
-        val colour: Int
+        val colour: Int,
+        val hasNotes: Boolean
     )
 
     private var items = ArrayList<Item>()
@@ -57,7 +58,7 @@ class ToDoListRecyclerViewAdapter(
 
             if (it.dateTime == null) {
                 if (!addedNoTimeHeader) {
-                    items.add(Item(it.id, "No Deadline", null, null, false, 0))
+                    items.add(Item(it.id, "No Deadline", null, null, false, 0, false))
                     addedNoTimeHeader = true
                 }
             } else {
@@ -65,22 +66,22 @@ class ToDoListRecyclerViewAdapter(
 
                 if (it.dateTime!! < System.currentTimeMillis()) {
                     if (!addedOverdueHeader) {
-                        items.add(Item(it.id, "Overdue", null, null, false, 0))
+                        items.add(Item(it.id, "Overdue", null, null, false, 0, false))
                         addedOverdueHeader = true
                     }
                 } else if (taskDay == today) {
                     if (!addedTodayHeader) {
-                        items.add(Item(it.id, "Today", null, null, false, 0))
+                        items.add(Item(it.id, "Today", null, null, false, 0, false))
                         addedTodayHeader = true
                     }
                 } else if (taskDay == today + 1) {
                     if (!addedTomorrowHeader) {
-                        items.add(Item(it.id, "Tomorrow", null, null, false, 0))
+                        items.add(Item(it.id, "Tomorrow", null, null, false, 0, false))
                         addedTomorrowHeader = true
                     }
                 } else {
                     if (!addedLaterHeader) {
-                        items.add(Item(it.id, "Later", null, null, false, 0))
+                        items.add(Item(it.id, "Later", null, null, false, 0, false))
                         addedLaterHeader = true
                     }
                 }
@@ -93,7 +94,8 @@ class ToDoListRecyclerViewAdapter(
                     it.name,
                     it.dateTime,
                     it.hasTime,
-                    (colour and 0xffffff) or 0x80000000.toInt()
+                    (colour and 0xffffff) or 0x80000000.toInt(),
+                    it.hasNotes
                 )
             )
         }
@@ -123,6 +125,7 @@ class ToDoListRecyclerViewAdapter(
             holder.name.text = "";
             holder.dateTime?.text = ""
             holder.divider?.visibility = View.INVISIBLE
+            holder.dots?.visibility = View.INVISIBLE
             holder.layout.setOnClickListener(null)
             holder.layout.setOnLongClickListener(null)
             return
@@ -147,6 +150,10 @@ class ToDoListRecyclerViewAdapter(
                 } else {
                     holder.dateTime!!.text = date
                 }
+            }
+
+            if(holder.dots != null) {
+                holder.dots.visibility = if(item.hasNotes) View.VISIBLE else View.INVISIBLE;
             }
 
             holder.layout.setOnClickListener {
@@ -214,6 +221,7 @@ class ToDoListRecyclerViewAdapter(
         val layout: LinearLayout = mView.layout
         val name: TextView = mView.name
         val dateTime: TextView? = mView.date_time
+        val dots: TextView? = mView.dots
         val divider: View? = mView.divider
     }
 }

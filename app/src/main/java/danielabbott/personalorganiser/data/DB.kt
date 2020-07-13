@@ -494,10 +494,11 @@ object DB {
 
 
         val cursor = db.rawQuery(
-            "SELECT *,(SELECT colour FROM TBL_GOAL WHERE _id=goal_id) AS gcol " +
+            "SELECT *,(SELECT colour FROM TBL_GOAL WHERE _id=goal_id) AS gcol, (LENGTH(notes)) AS notesLength " +
                     "FROM TBL_TODO_LIST_TASK ORDER BY dateTime ASC",
             arrayOf()
         )
+
 
         while (cursor.moveToNext()) {
             list.add(
@@ -506,7 +507,8 @@ object DB {
                     cursor.getString(cursor.getColumnIndexOrThrow("name")),
                     cursor.getLongOrNull(cursor.getColumnIndexOrThrow("dateTime")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("has_time")) != 0,
-                    cursor.getIntOrNull(cursor.getColumnIndexOrThrow("gcol"))
+                    cursor.getIntOrNull(cursor.getColumnIndexOrThrow("gcol")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("notesLength")) > 0
                 )
             )
         }

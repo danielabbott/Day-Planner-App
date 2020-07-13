@@ -197,12 +197,23 @@ class TimetableView : View, GestureDetector.OnGestureListener {
             rectPaint.color = it.colour or 0xff000000.toInt()
             canvas.drawRect(it.ui_x, it.ui_y, it.ui_x + it.ui_w, it.ui_y + it.ui_h, rectPaint)
 
+
             // Text
 
             canvas.save() // push default clip area to stack
             canvas.clipRect(it.ui_x, it.ui_y, it.ui_x + it.ui_w, it.ui_y + it.ui_h)
 
 
+
+            if(it.hasNotes) {
+                val scale = resources.displayMetrics.density
+                val x = it.ui_x + it.ui_w - 10*scale;
+                val y = it.ui_y+4*scale;
+                rectPaint.color = 0xff000000.toInt()
+                canvas.drawRect(x, y, x + 4*scale, y + 4*scale, rectPaint)
+                canvas.drawRect(x-10*scale, y, x + (4-10)*scale, y + 4*scale, rectPaint)
+                canvas.drawRect(x-20*scale, y, x + (4-20)*scale, y + 4*scale, rectPaint)
+            }
 
             val staticLayout = StaticLayout(
                 it.e.name,

@@ -75,7 +75,8 @@ class TimetableFragment : Fragment(), OnBackPressed {
                         TimetableEventUI(
                             it.goal_colour ?: 0xffc0c0c0.toInt(),
                             it,
-                            day
+                            day,
+                            it.notes != null && it.notes!!.isNotEmpty()
                         )
                     )
                 }
