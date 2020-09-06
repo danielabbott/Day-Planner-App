@@ -8,6 +8,7 @@
     app:layout_constraintTop_toTopOf="parent">
 
     <LinearLayout
+        android:id="@+id/settingsContents"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -217,6 +218,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Import Database"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <TextView
+            android:id="@+id/appVersion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"/>
 
 
     </LinearLayout>

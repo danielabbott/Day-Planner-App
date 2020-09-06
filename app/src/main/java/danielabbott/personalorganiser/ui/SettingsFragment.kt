@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
+import danielabbott.personalorganiser.BuildConfig
 import danielabbott.personalorganiser.MainActivity
 import danielabbott.personalorganiser.Notifications
 import danielabbott.personalorganiser.R
@@ -27,6 +28,8 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_settings, container, false)
+
+        root.findViewById<TextView>(R.id.appVersion).text = "App version ${BuildConfig.VERSION_NAME}"
 
         val morningTime = root.findViewById<TimeSelectView>(R.id.morningTime)
         val time = Settings.getMorningReminderTime(context!!)
@@ -137,8 +140,9 @@ class SettingsFragment : Fragment() {
                 activity!!.startActivityForResult(intent, MainActivity.OPEN_FILE_REQUEST_CODE)
             }
         } else {
-            root.findViewById<Button>(R.id.exportDB).visibility = View.INVISIBLE
-            root.findViewById<Button>(R.id.importDB).visibility = View.INVISIBLE
+            val c = (root.findViewById<LinearLayout>(R.id.settingsContents) as ViewGroup)
+            c.removeView(root.findViewById<TextView>(R.id.exportDB))
+            c.removeView(root.findViewById<TextView>(R.id.importDB))
         }
 
         (activity as MainActivity).setToolbarTitle("Settings")
