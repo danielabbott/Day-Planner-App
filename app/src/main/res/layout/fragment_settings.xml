@@ -231,6 +231,31 @@
             android:layout_width="match_parent"
             android:layout_height="30dp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Accurate notification times" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/accurateNotificationTimes"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:background="@null" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+
         <Button
             android:id="@+id/optimiseDB"
             android:layout_width="match_parent"

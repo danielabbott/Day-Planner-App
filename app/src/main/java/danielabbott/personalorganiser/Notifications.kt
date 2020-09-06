@@ -92,7 +92,7 @@ object Notifications {
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
-        EventSchedule.scheduleEvent(context.applicationContext, timeMs, intent2)
+        EventSchedule.scheduleEvent(context.applicationContext, timeMs, intent2, false)
     }
 
     // Tell android to cancel every scheduled alarm

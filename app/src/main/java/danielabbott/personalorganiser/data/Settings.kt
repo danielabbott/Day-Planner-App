@@ -207,4 +207,14 @@ object Settings {
         setBool(context, "menuSwipeOpenEnabled", e)
     }
 
+
+    fun getAccurateNotificationsEnabled(context: Context): Boolean {
+        return getBool(context, "accurateNotificationsEnabled", true)
+    }
+
+    fun setAccurateNotificationsEnabled(context: Context, e: Boolean) {
+        setBool(context, "accurateNotificationsEnabled", e)
+    }
+
+
 }

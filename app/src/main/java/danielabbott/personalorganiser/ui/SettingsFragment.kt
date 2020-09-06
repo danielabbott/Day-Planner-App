@@ -132,6 +132,13 @@ class SettingsFragment : Fragment() {
         enableMenuSwipeToOpen.isChecked = Settings.getMenuSwipeOpenEnabled(context!!)
 
 
+        val accurateNotificationTimes = root.findViewById<SwitchCompat>(R.id.accurateNotificationTimes)
+        accurateNotificationTimes.setOnCheckedChangeListener { _, checked: Boolean ->
+            Settings.setAccurateNotificationsEnabled(context!!, checked)
+        }
+        accurateNotificationTimes.isChecked = Settings.getAccurateNotificationsEnabled(context!!)
+
+
         root.findViewById<Button>(R.id.disableAllReminders).setOnClickListener {
             AlertDialog.Builder(context)
                 .setTitle("Disable Reminders")

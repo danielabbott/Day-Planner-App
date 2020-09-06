@@ -44,6 +44,7 @@ object DB {
                         "    REFERENCES TBL_GOAL (_id)" +
                         "    ON DELETE CASCADE)"
             )
+
             db.execSQL(
                 // dateTime can be null
                 // dateTime is the number of milliseconds since the epoch
@@ -392,7 +393,7 @@ object DB {
             put("duration", e.duration)
             put("days", e.days)
             put("name", e.name)
-            put("notes", e.notes)
+            put("notes", e.notes?.ifBlank{null}?.trim())
             put("remind30Mins", if (e.remind30Mins) 1 else 0)
             put("remind1Hr", if (e.remind1Hr) 1 else 0)
             put("remind2Hrs", if (e.remind2Hrs) 1 else 0)
@@ -604,7 +605,7 @@ object DB {
             put("dateTime", e.dateTime)
             put("has_time", e.hasTime)
             put("name", e.name)
-            put("notes", e.notes)
+            put("notes", e.notes?.ifBlank{null}?.trim())
             put("remind30Mins", if (e.remind30Mins) 1 else 0)
             put("remind1Hr", if (e.remind1Hr) 1 else 0)
             put("remind2Hrs", if (e.remind2Hrs) 1 else 0)
@@ -766,7 +767,7 @@ object DB {
         val values = ContentValues().apply {
             put("name", e.name)
             put("colour", e.colour)
-            put("notes", e.notes)
+            put("notes", e.notes?.ifBlank{null}?.trim())
         }
 
         if (e.id < 0) {
