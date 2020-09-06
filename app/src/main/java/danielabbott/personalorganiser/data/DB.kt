@@ -22,12 +22,12 @@ object DB {
     ) {
         override fun onCreate(db: SQLiteDatabase) {
             db.execSQL(
-                "CREATE TABLE TBL_TIMETABLE (_id INTEGER PRIMARY KEY, " +
+                "CREATE TABLE IF NOT EXISTS TBL_TIMETABLE (_id INTEGER PRIMARY KEY, " +
                         "name TEXT NOT NULL)"
             )
 
             db.execSQL(
-                "CREATE TABLE TBL_TIMETABLE_EVENT (_id INTEGER PRIMARY KEY," +
+                "CREATE TABLE IF NOT EXISTS TBL_TIMETABLE_EVENT (_id INTEGER PRIMARY KEY," +
                         "timetable_id INTEGER NOT NULL," +
                         "startTime INTEGER NOT NULL, duration INTEGER NOT NULL, days INTEGER NOT NULL CHECK(days <> 0)," +
                         "name TEXT NOT NULL, notes TEXT DEFAULT NULL, " +
@@ -53,7 +53,7 @@ object DB {
                 //      2 = Repeat every other day
                 //      3 = Repeat weekly
                 //      4 = Repeat monthly
-                "CREATE TABLE TBL_TODO_LIST_TASK (_id INTEGER PRIMARY KEY," +
+                "CREATE TABLE IF NOT EXISTS TBL_TODO_LIST_TASK (_id INTEGER PRIMARY KEY," +
                         "dateTime INTEGER, has_time INT DEFAULT 1 NOT NULL, name TEXT NOT NULL, notes TEXT DEFAULT NULL, " +
                         "remind30Mins INT NOT NULL DEFAULT 0, remind1Hr INT NOT NULL DEFAULT 0," +
                         "remind2Hrs INT NOT NULL DEFAULT 0," +
@@ -65,12 +65,12 @@ object DB {
                         "    ON DELETE CASCADE)"
             )
             db.execSQL(
-                "CREATE TABLE TBL_GOAL (_id INTEGER PRIMARY KEY, name TEXT NOT NULL," +
+                "CREATE TABLE IF NOT EXISTS TBL_GOAL (_id INTEGER PRIMARY KEY, name TEXT NOT NULL," +
                         "colour INT NOT NULL DEFAULT 16744576," +
                         "notes TEXT DEFAULT NULL)"
             )
             db.execSQL(
-                "CREATE TABLE TBL_MILESTONE (_id INTEGER PRIMARY KEY," +
+                "CREATE TABLE IF NOT EXISTS TBL_MILESTONE (_id INTEGER PRIMARY KEY," +
                         "name TEXT NOT NULL," +
                         "deadline INT," +
                         "goal_id INT NOT NULL," +
@@ -82,25 +82,25 @@ object DB {
 
 
             db.execSQL(
-                "CREATE TABLE TBL_PHOTO (_id INTEGER PRIMARY KEY, url TEXT NOT NULL, UNIQUE (url))"
+                "CREATE TABLE IF NOT EXISTS TBL_PHOTO (_id INTEGER PRIMARY KEY, url TEXT NOT NULL, UNIQUE (url))"
             )
 
             db.execSQL(
-                "CREATE TABLE TBL_TIMETABLE_EVENT_PHOTOS (event_id INTEGER, photo_id INT, PRIMARY KEY (event_id, photo_id)," +
+                "CREATE TABLE IF NOT EXISTS TBL_TIMETABLE_EVENT_PHOTOS (event_id INTEGER, photo_id INT, PRIMARY KEY (event_id, photo_id)," +
                         "CONSTRAINT timetable_event_photos_timetable_event" +
                         "    FOREIGN KEY (event_id)" +
                         "    REFERENCES TBL_TIMETABLE_EVENT (_id)" +
                         "    ON DELETE CASCADE)"
             )
             db.execSQL(
-                "CREATE TABLE TBL_TODO_LIST_TASK_PHOTOS (task_id INTEGER, photo_id INT, PRIMARY KEY (task_id, photo_id)," +
+                "CREATE TABLE IF NOT EXISTS TBL_TODO_LIST_TASK_PHOTOS (task_id INTEGER, photo_id INT, PRIMARY KEY (task_id, photo_id)," +
                         "CONSTRAINT todo_list_task_photos_todo_list_task" +
                         "    FOREIGN KEY (task_id)" +
                         "    REFERENCES TBL_TODO_LIST_TASK (_id)" +
                         "    ON DELETE CASCADE)"
             )
             db.execSQL(
-                "CREATE TABLE TBL_GOAL_PHOTOS (goal_id INTEGER, photo_id INT, PRIMARY KEY (goal_id, photo_id)," +
+                "CREATE TABLE IF NOT EXISTS TBL_GOAL_PHOTOS (goal_id INTEGER, photo_id INT, PRIMARY KEY (goal_id, photo_id)," +
                         "CONSTRAINT goal_photos_goal" +
                         "    FOREIGN KEY (goal_id)" +
                         "    REFERENCES TBL_GOAL (_id)" +
@@ -111,13 +111,13 @@ object DB {
                 // time_saved = System.currentTimeMillis when timer was last saved in DB
                 // time is in seconds. if null then timer is stopped
                 // paused = boolean. ignored if time=null
-                "CREATE TABLE TBL_TIMER (_id INTEGER PRIMARY KEY, name TEXT DEFAULT NULL, " +
+                "CREATE TABLE IF NOT EXISTS TBL_TIMER (_id INTEGER PRIMARY KEY, name TEXT DEFAULT NULL, " +
                         "initial_time INT NOT NULL," +
                         "time_saved INT NOT NULL, time INT DEFAULT NULL, paused INT)"
             )
 
             db.execSQL(
-                "CREATE TABLE TBL_NOTIFICATIONS (_id INTEGER PRIMARY KEY, " +
+                "CREATE TABLE IF NOT EXISTS TBL_NOTIFICATIONS (_id INTEGER PRIMARY KEY, " +
                         "content TEXT NOT NULL, channel INT NOT NULL, task_or_event_id LONG NOT NULL," +
                         "time LONG NOT NULL)"
             )
@@ -128,7 +128,6 @@ object DB {
         }
 
         override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-            //db.execSQL("DROP TABLE IF EXISTS TBL_")
             onCreate(db)
         }
 
@@ -1102,6 +1101,18 @@ object DB {
     fun clearNotifications() {
         val db = dbHelper.writableDatabase
         db.delete("TBL_NOTIFICATIONS", null, null)
+    }
+
+    fun disableAllReminders() {
+        val db = dbHelper.writableDatabase
+        val values = ContentValues().apply {
+            put("remind30Mins", 0)
+            put("remind1Hr", 0)
+            put("remind2Hrs", 0)
+            put("remindMorning", 0)
+        }
+        db.update("TBL_TIMETABLE_EVENT", values, null, null)
+        db.update("TBL_TODO_LIST_TASK", values, null, null)
     }
 
 }

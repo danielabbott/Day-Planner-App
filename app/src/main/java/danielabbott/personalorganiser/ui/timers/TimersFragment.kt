@@ -220,6 +220,12 @@ class TimersFragment : Fragment() {
                 timerObj.lastPlayTimeValue = timerObj.time
                 bDelete.isEnabled = false
                 bDelete.alpha = 0.3f
+                timer.setTextColor(0xff000000.toInt())
+                timerName.setTextColor(0xff000000.toInt())
+            }
+            else {
+                timer.setTextColor(0xff606060.toInt())
+                timerName.setTextColor(0xff606060.toInt())
             }
 
             if (timerObj.stopped) {
@@ -227,8 +233,6 @@ class TimersFragment : Fragment() {
                 timerObj.stopped = false
                 bStop.isEnabled = true
                 bStop.alpha = 1.0f
-                timer.setTextColor(0xff000000.toInt())
-                timerName.setTextColor(0xff000000.toInt())
             } else {
                 timerObj.paused = !timerObj.paused
             }

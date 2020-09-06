@@ -1,5 +1,6 @@
 package danielabbott.personalorganiser.ui
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -16,6 +17,7 @@ import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.Settings
 import danielabbott.personalorganiser.ui.timers.TimersFragment
+import danielabbott.personalorganiser.ui.timetable.TimetableFragment
 
 
 class SettingsFragment : Fragment() {
@@ -128,6 +130,20 @@ class SettingsFragment : Fragment() {
             Settings.setMenuSwipeOpenEnabled(context!!, checked)
         }
         enableMenuSwipeToOpen.isChecked = Settings.getMenuSwipeOpenEnabled(context!!)
+
+
+        root.findViewById<Button>(R.id.disableAllReminders).setOnClickListener {
+            AlertDialog.Builder(context)
+                .setTitle("Disable Reminders")
+                .setMessage("This will disable reminders for all To-Do list tasks and all timetable events (for every timetable). Continue?")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton("Disable Reminders") { _, _ ->
+                    DB.disableAllReminders()
+                    Notifications.scheduleAllNotifications(context!!)
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             root.findViewById<Button>(R.id.exportDB).setOnClickListener {

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Timer name..."
-        android:inputType="textCapSentences|text"/>
+        android:inputType="textCapSentences|text" />
 
     <!--    Top row of buttons-->
 
@@ -31,7 +31,7 @@
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="2"/>
+            android:layout_weight="2" />
 
         <danielabbott.personalorganiser.ui.HoldableImageButton
             android:id="@+id/bMinAdd"
@@ -39,12 +39,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="8"
             android:background="#00ffffff"
-            app:srcCompat="@drawable/ic_up"/>
+            app:srcCompat="@drawable/ic_up" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="2"/>
+            android:layout_weight="2" />
 
         <danielabbott.personalorganiser.ui.HoldableImageButton
             android:id="@+id/bSecAdd"
@@ -63,12 +63,14 @@
         android:orientation="horizontal"
         android:weightSum="30">
 
-        <TextView
+        <EditText
             android:id="@+id/hours"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="9"
             android:gravity="center"
+            android:inputType="number"
+            android:maxLength="2"
             android:text="00"
             android:textSize="30dp" />
 
@@ -80,12 +82,14 @@
             android:text=":"
             android:textSize="30dp" />
 
-        <TextView
+        <EditText
             android:id="@+id/minutes"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="8"
             android:gravity="center"
+            android:inputType="number"
+            android:maxLength="2"
             android:text="00"
             android:textSize="30dp" />
 
@@ -97,12 +101,14 @@
             android:text=":"
             android:textSize="30dp" />
 
-        <TextView
+        <EditText
             android:id="@+id/seconds"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="9"
             android:gravity="center"
+            android:inputType="number"
+            android:maxLength="2"
             android:text="00"
             android:textSize="30dp" />
 
@@ -122,13 +128,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="9"
             android:background="#00ffffff"
-            app:srcCompat="@drawable/ic_down"
-            />
+            app:srcCompat="@drawable/ic_down" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="2"/>
+            android:layout_weight="2" />
 
         <danielabbott.personalorganiser.ui.HoldableImageButton
             android:id="@+id/bMinSub"
@@ -141,7 +146,7 @@
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="2"/>
+            android:layout_weight="2" />
 
         <danielabbott.personalorganiser.ui.HoldableImageButton
             android:id="@+id/bSecSub"

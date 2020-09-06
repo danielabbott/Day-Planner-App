@@ -251,7 +251,17 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="20dp" />
+            android:layout_height="30dp" />
+
+        <Button
+            android:id="@+id/disableAllReminders"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Disable all reminders"/>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
 
         <TextView
             android:id="@+id/appVersion"
