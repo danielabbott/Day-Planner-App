@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.*
 import androidx.appcompat.widget.ShareActionProvider
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.MenuItemCompat
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -33,10 +34,10 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
     private lateinit var time: TimeSelectView
     private lateinit var date: DateSelectView
     private lateinit var repeat: Spinner
-    private lateinit var r30: CheckBox
-    private lateinit var r1: CheckBox
-    private lateinit var r2: CheckBox
-    private lateinit var rMorn: CheckBox
+    private lateinit var r30: SwitchCompat
+    private lateinit var r1: SwitchCompat
+    private lateinit var r2: SwitchCompat
+    private lateinit var rMorn: SwitchCompat
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,10 +52,10 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
         notes = root.findViewById<EditText>(R.id.notes)
         name = root.findViewById<EditText>(R.id.name)
         repeat = root.findViewById<Spinner>(R.id.repeat)
-        r30 = root.findViewById<CheckBox>(R.id.r30)
-        r1 = root.findViewById<CheckBox>(R.id.r1)
-        r2 = root.findViewById<CheckBox>(R.id.r2)
-        rMorn = root.findViewById<CheckBox>(R.id.rMorn)
+        r30 = root.findViewById<SwitchCompat>(R.id.r30)
+        r1 = root.findViewById<SwitchCompat>(R.id.r1)
+        r2 = root.findViewById<SwitchCompat>(R.id.r2)
+        rMorn = root.findViewById<SwitchCompat>(R.id.rMorn)
         time = root.findViewById<TimeSelectView>(R.id.time)
         date = root.findViewById<DateSelectView>(R.id.date)
         dateForwards = root.findViewById<Button>(R.id.dateForwards)

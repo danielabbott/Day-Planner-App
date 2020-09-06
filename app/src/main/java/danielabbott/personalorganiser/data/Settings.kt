@@ -199,4 +199,12 @@ object Settings {
         setBool(context, "alarmVibrationEnabled", e)
     }
 
+    fun getMenuSwipeOpenEnabled(context: Context): Boolean {
+        return getBool(context, "menuSwipeOpenEnabled", false)
+    }
+
+    fun setMenuSwipeOpenEnabled(context: Context, e: Boolean) {
+        setBool(context, "menuSwipeOpenEnabled", e)
+    }
+
 }

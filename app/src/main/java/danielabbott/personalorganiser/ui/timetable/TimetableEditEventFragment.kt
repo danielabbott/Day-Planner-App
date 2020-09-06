@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import danielabbott.personalorganiser.MainActivity
@@ -30,7 +31,7 @@ class TimetableEditEventFragment(
     private val days_: Int = 0
 ) : DataEntryFragment() {
 
-    val dayCheckboxes = ArrayList<CheckBox>(7)
+    val dayCheckboxes = ArrayList<SwitchCompat>(7)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,19 +45,19 @@ class TimetableEditEventFragment(
         val name = root.findViewById<EditText>(R.id.name)
 
         dayCheckboxes.clear()
-        dayCheckboxes.add(root.findViewById<CheckBox>(R.id.monday))
-        dayCheckboxes.add(root.findViewById<CheckBox>(R.id.tuesday))
-        dayCheckboxes.add(root.findViewById<CheckBox>(R.id.wednesday))
-        dayCheckboxes.add(root.findViewById<CheckBox>(R.id.thursday))
-        dayCheckboxes.add(root.findViewById<CheckBox>(R.id.friday))
-        dayCheckboxes.add(root.findViewById<CheckBox>(R.id.saturday))
-        dayCheckboxes.add(root.findViewById<CheckBox>(R.id.sunday))
+        dayCheckboxes.add(root.findViewById<SwitchCompat>(R.id.monday))
+        dayCheckboxes.add(root.findViewById<SwitchCompat>(R.id.tuesday))
+        dayCheckboxes.add(root.findViewById<SwitchCompat>(R.id.wednesday))
+        dayCheckboxes.add(root.findViewById<SwitchCompat>(R.id.thursday))
+        dayCheckboxes.add(root.findViewById<SwitchCompat>(R.id.friday))
+        dayCheckboxes.add(root.findViewById<SwitchCompat>(R.id.saturday))
+        dayCheckboxes.add(root.findViewById<SwitchCompat>(R.id.sunday))
 
 
-        val r30 = root.findViewById<CheckBox>(R.id.r30)
-        val r1 = root.findViewById<CheckBox>(R.id.r1)
-        val r2 = root.findViewById<CheckBox>(R.id.r2)
-        val rMorn = root.findViewById<CheckBox>(R.id.rMorn)
+        val r30 = root.findViewById<SwitchCompat>(R.id.r30)
+        val r1 = root.findViewById<SwitchCompat>(R.id.r1)
+        val r2 = root.findViewById<SwitchCompat>(R.id.r2)
+        val rMorn = root.findViewById<SwitchCompat>(R.id.rMorn)
         val tvStart = root.findViewById<TimeSelectView>(R.id.tvStart)
         val tvEnd = root.findViewById<TimeSelectView>(R.id.tvEnd)
         val goal = root.findViewById<Spinner>(R.id.goal)
@@ -123,7 +124,7 @@ class TimetableEditEventFragment(
                 // Data is valid, update/insert in database
 
                 var daysBitmask = 0
-                dayCheckboxes.forEachIndexed { i: Int, checkBox: CheckBox ->
+                dayCheckboxes.forEachIndexed { i: Int, checkBox: SwitchCompat ->
                     if (checkBox.isChecked) {
                         daysBitmask = daysBitmask or (1 shl i)
                     }

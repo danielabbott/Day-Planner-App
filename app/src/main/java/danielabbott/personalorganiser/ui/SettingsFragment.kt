@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import danielabbott.personalorganiser.BuildConfig
 import danielabbott.personalorganiser.MainActivity
@@ -103,8 +104,8 @@ class SettingsFragment : Fragment() {
             }
         }
 
-        val enableAlarms = root.findViewById<CheckBox>(R.id.enableAlarms)
-        val enableAlarmVibration = root.findViewById<CheckBox>(R.id.enableAlarmVibration)
+        val enableAlarms = root.findViewById<SwitchCompat>(R.id.enableAlarms)
+        val enableAlarmVibration = root.findViewById<SwitchCompat>(R.id.enableAlarmVibration)
 
         enableAlarms.setOnCheckedChangeListener { _, checked: Boolean ->
             Settings.setAlarmsEnabled(context!!, checked)
@@ -120,6 +121,13 @@ class SettingsFragment : Fragment() {
             Settings.setAlarmVibrationEnabled(context!!, checked)
         }
         enableAlarmVibration.isChecked = Settings.getAlarmVibrationEnabled(context!!)
+
+
+        val enableMenuSwipeToOpen = root.findViewById<SwitchCompat>(R.id.enableMenuSwipeToOpen)
+        enableMenuSwipeToOpen.setOnCheckedChangeListener { _, checked: Boolean ->
+            Settings.setMenuSwipeOpenEnabled(context!!, checked)
+        }
+        enableMenuSwipeToOpen.isChecked = Settings.getMenuSwipeOpenEnabled(context!!)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             root.findViewById<Button>(R.id.exportDB).setOnClickListener {

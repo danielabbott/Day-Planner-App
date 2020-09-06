@@ -2,11 +2,16 @@ package danielabbott.personalorganiser.ui.todolist
 
 
 import android.app.AlertDialog
+import android.graphics.BlendMode
+import android.graphics.BlendModeColorFilter
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import danielabbott.personalorganiser.DateTimeUtil
@@ -130,12 +135,15 @@ class ToDoListRecyclerViewAdapter(
             holder.layout.setOnLongClickListener(null)
             return
         }
+        holder.colourLayout.setBackgroundResource(R.drawable.rounded_corners)
 
         val item = items[position]
         if (item.header_title == null) {
             // Task (not section header)
 
-            holder.colourLayout.setBackgroundColor(item.colour)
+            //holder.colourLayout.setBackgroundColor(item.colour)
+            holder.colourLayout.background!!.colorFilter = PorterDuffColorFilter(item.colour, PorterDuff.Mode.MULTIPLY)
+
             holder.divider?.visibility = View.INVISIBLE
 
             holder.name.text = item.name
@@ -194,7 +202,8 @@ class ToDoListRecyclerViewAdapter(
             }
         } else {
             holder.name.text = item.header_title
-            holder.colourLayout.setBackgroundColor(0x00ffffff)
+            //holder.colourLayout.setBackgroundColor(0x00ffffff)
+            holder.colourLayout.background!!.colorFilter = PorterDuffColorFilter(0xffffffff.toInt(), PorterDuff.Mode.MULTIPLY)
             holder.layout.setOnClickListener(null)
             holder.layout.setOnLongClickListener(null)
             if (position == 0) {

@@ -24,7 +24,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="Morning reminder time:" />
+                android:text="Morning reminder time" />
 
             <danielabbott.personalorganiser.ui.TimeSelectView
                 android:id="@+id/morningTime"
@@ -37,7 +37,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="20dp" />
+            android:layout_height="30dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -49,7 +49,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Timetable start time:" />
+                android:text="Timetable start time" />
 
             <Button
                 android:id="@+id/startTimeBack"
@@ -81,7 +81,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="20dp" />
+            android:layout_height="30dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -93,7 +93,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Timetable end time:" />
+                android:text="Timetable end time" />
 
             <Button
                 android:id="@+id/endTimeBack"
@@ -125,7 +125,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="20dp" />
+            android:layout_height="30dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -137,7 +137,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="Timetable font size:" />
+                android:text="Timetable font size" />
 
             <Spinner
                 android:id="@+id/timetableFontSize"
@@ -151,7 +151,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="20dp" />
+            android:layout_height="30dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -163,19 +163,23 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="Enable alarms:" />
+                android:text="Enable alarms" />
 
-            <CheckBox
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/enableAlarms"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
-                android:layout_weight="2" />
+                android:layout_weight="1"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:background="@null"
+                />
 
         </LinearLayout>
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="20dp" />
+            android:layout_height="10dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -187,19 +191,45 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
-                android:text="Enable alarm vibration:" />
+                android:text="Enable alarm vibration" />
 
-            <CheckBox
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/enableAlarmVibration"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
-                android:layout_weight="2" />
+                android:layout_weight="1"
+                android:background="@null" />
 
         </LinearLayout>
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="20dp" />
+            android:layout_height="30dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Enable menu swipe to open" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/enableMenuSwipeToOpen"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:background="@null" />
+
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
 
         <Button
             android:id="@+id/optimiseDB"

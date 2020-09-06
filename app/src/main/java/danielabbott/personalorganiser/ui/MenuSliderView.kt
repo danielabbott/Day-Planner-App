@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import androidx.core.math.MathUtils
+import danielabbott.personalorganiser.data.Settings
 
 class MenuSliderView : View {
     constructor(context: Context) : super(context) {
@@ -66,11 +67,8 @@ class MenuSliderView : View {
                 }
             }
         } else {
-            if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+            if (Settings.getMenuSwipeOpenEnabled(context) && event.actionMasked == MotionEvent.ACTION_DOWN) {
                 beingDragged = true;
-//                if(menuContainerView != null) {
-//                    dragStartPos = menuContainerView!!.translationX
-//                }
             }
         }
         return true

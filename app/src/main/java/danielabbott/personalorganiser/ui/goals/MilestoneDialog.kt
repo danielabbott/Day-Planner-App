@@ -38,6 +38,7 @@ class MilestoneDialog(
         var date = DateSelectView(context!!)
         date.gravity = Gravity.CENTER_HORIZONTAL
         date.layoutParams = lp
+        date.textSize = 20.0f
 
         if (date_ != null) {
             date.setDate(date_)

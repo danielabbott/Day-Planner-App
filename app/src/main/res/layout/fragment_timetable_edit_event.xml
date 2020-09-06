@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.timetable.TimetableEditEventFragment"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    tools:context=".ui.timetable.TimetableEditEventFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Name: " />
+                    android:text="Name" />
 
                 <EditText
                     android:id="@+id/name"
@@ -36,15 +36,15 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:ems="10"
-                    android:inputType="textCapSentences"
+                    android:hint="Event name"
                     android:imeOptions="actionDone"
-                    android:hint="Event name"/>
+                    android:inputType="textCapSentences" />
 
             </LinearLayout>
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="20dp" />
+                android:layout_height="30dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -56,7 +56,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Goal:" />
+                    android:text="Goal" />
 
                 <Spinner
                     android:id="@+id/goal"
@@ -68,102 +68,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="20dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3">
-
-                <TextView
-                    android:id="@+id/textView12"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Day(s):" />
-
-                <TableLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2">
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" >
-
-                            <CheckBox
-                                android:id="@+id/monday"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Monday" />
-
-                            <CheckBox
-                                android:id="@+id/tuesday"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Tuesday" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" >
-
-                        <CheckBox
-                            android:id="@+id/wednesday"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Wednesday" />
-
-                        <CheckBox
-                            android:id="@+id/thursday"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Thursday" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" >
-
-                        <CheckBox
-                            android:id="@+id/friday"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Friday" />
-
-                        <CheckBox
-                            android:id="@+id/saturday"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Saturday" />
-                    </TableRow>
-
-                    <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <CheckBox
-                            android:id="@+id/sunday"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Sunday" />
-                    </TableRow>
-                </TableLayout>
-
-
-            </LinearLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="20dp" />
+                android:layout_height="30dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -175,7 +80,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Start:" />
+                    android:text="Start" />
 
                 <danielabbott.personalorganiser.ui.TimeSelectView
                     android:id="@+id/tvStart"
@@ -183,16 +88,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:clickable="true"
+                    android:focusable="true"
                     android:text="00:00"
-                    android:textSize="24sp"
-                    android:focusable="true" />
+                    android:textSize="24sp" />
 
                 <TextView
                     android:id="@+id/textView10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="End:" />
+                    android:text="End" />
 
                 <danielabbott.personalorganiser.ui.TimeSelectView
                     android:id="@+id/tvEnd"
@@ -200,34 +105,16 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:clickable="true"
+                    android:focusable="true"
                     android:text="00:00"
-                    android:textSize="24sp"
-                    android:focusable="true" />
+                    android:textSize="24sp" />
 
             </LinearLayout>
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="20dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:text="Notes:" />
-
-            <EditText
-                android:id="@+id/notes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:gravity="start|top"
-                android:inputType="textMultiLine|textCapSentences"
-                android:lines="6"/>
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="20dp" />
+                android:layout_height="30dp" />
 
             <TableLayout
                 android:layout_width="match_parent"
@@ -238,17 +125,178 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView15"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Remind 30 mins prior:" />
+                        android:text="Monday" />
 
-                    <CheckBox
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/monday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@null" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Tuesday" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/tuesday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@null" />
+                </TableRow>
+
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Wednesday"  />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/wednesday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@null"/>
+                </TableRow>
+
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Thursday" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/thursday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@null"/>
+                </TableRow>
+
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Friday" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/friday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@null" />
+                </TableRow>
+
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Saturday" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/saturday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@null" />
+                </TableRow>
+
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Sunday" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/sunday"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@null" />
+                </TableRow>
+            </TableLayout>
+
+
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Notes" />
+
+            <EditText
+                android:id="@+id/notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine|textCapSentences"
+                android:lines="6" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Remind 30 mins prior" />
+
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/r30"
-                        android:layout_width="70dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:background="@null" />
                 </TableRow>
 
                 <TableRow
@@ -256,17 +304,17 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView16"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Remind 1 hour prior:" />
+                        android:text="Remind 1 hour prior" />
 
-                    <CheckBox
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/r1"
-                        android:layout_width="70dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:background="@null" />
                 </TableRow>
 
                 <TableRow
@@ -274,17 +322,17 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView17"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Remind 2 hours prior:" />
+                        android:text="Remind 2 hours prior" />
 
-                    <CheckBox
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/r2"
-                        android:layout_width="70dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:background="@null" />
                 </TableRow>
 
                 <TableRow
@@ -292,24 +340,24 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView15_"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Remind in the morning:" />
+                        android:text="Remind in the morning" />
 
-                    <CheckBox
+                    <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/rMorn"
-                        android:layout_width="70dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_weight="1"
+                        android:background="@null" />
                 </TableRow>
 
             </TableLayout>
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="20dp" />
+                android:layout_height="30dp" />
 
             <Button
                 android:id="@+id/bAddPicture"
@@ -330,7 +378,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="20dp" />
+                android:layout_height="30dp" />
 
             <Button
                 android:id="@+id/bDelete"
