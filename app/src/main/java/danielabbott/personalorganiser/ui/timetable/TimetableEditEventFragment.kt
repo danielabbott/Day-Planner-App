@@ -6,7 +6,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.Spinner
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -16,7 +19,6 @@ import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.TimetableEvent
 import danielabbott.personalorganiser.ui.DataEntryFragment
-import danielabbott.personalorganiser.ui.SettingsFragment
 import danielabbott.personalorganiser.ui.SpinnerChangeDetector
 import danielabbott.personalorganiser.ui.TimeSelectView
 
@@ -70,107 +72,124 @@ class TimetableEditEventFragment(
         // Save button
         val fab: FloatingActionButton = root.findViewById(R.id.fab_save)
         fab.setOnClickListener { _ ->
-            val startTimes = tvStart.text.split(":")
-            val endTimes = tvEnd.text.split(":")
-
-            var atLeastOneDay = false
-            dayCheckboxes.forEach {
-                if (it.isChecked) {
-                    atLeastOneDay = true
-                }
-            }
-
-            var startTime = startTimes[0].toInt() * 60 + startTimes[1].toInt()
-            var endTime = endTimes[0].toInt() * 60 + endTimes[1].toInt()
-
-            val nameString = name.text.toString()
-
-            if (startTime == endTime) {
+            if (!tvStart.timeSelected) {
                 AlertDialog.Builder(context)
                     .setTitle("Invalid data")
-                    .setMessage("Start and end time cannot be the same")
+                    .setMessage("No start time selected")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton("Okay", null)
                     .show()
-            } else if (!atLeastOneDay) {
+            } else if (!tvEnd.timeSelected) {
                 AlertDialog.Builder(context)
                     .setTitle("Invalid data")
-                    .setMessage("No days selected")
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton("Okay", null)
-                    .show()
-            } else if (startTime >= endTime) {
-                AlertDialog.Builder(context)
-                    .setTitle("Invalid data")
-                    .setMessage("Start time is after end time")
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton("Okay", null)
-                    .show()
-            } else if (endTime - startTime < 10) {
-                AlertDialog.Builder(context)
-                    .setTitle("Invalid data")
-                    .setMessage("Minimum event duration is 10 minutes")
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton("Okay", null)
-                    .show()
-            } else if (nameString.isEmpty()) {
-                AlertDialog.Builder(context)
-                    .setTitle("Invalid data")
-                    .setMessage("Event name cannot be blank")
+                    .setMessage("No end time selected")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton("Okay", null)
                     .show()
             } else {
-                // Data is valid, update/insert in database
 
-                var daysBitmask = 0
-                dayCheckboxes.forEachIndexed { i: Int, checkBox: SwitchCompat ->
-                    if (checkBox.isChecked) {
-                        daysBitmask = daysBitmask or (1 shl i)
+                val startTimes = tvStart.text.split(":")
+                val endTimes = tvEnd.text.split(":")
+
+                var atLeastOneDay = false
+                dayCheckboxes.forEach {
+                    if (it.isChecked) {
+                        atLeastOneDay = true
                     }
                 }
 
-                var e = TimetableEvent(
-                    eventId ?: -1,
-                    timetableId,
-                    startTime,
-                    endTime - startTime,
-                    daysBitmask,
-                    nameString,
-                    if (notes.text.isEmpty()) null else notes.text.toString(),
-                    r30.isChecked,
-                    r1.isChecked,
-                    r2.isChecked,
-                    rMorn.isChecked,
-                    if (goal.selectedItemPosition == 0) null else goals[goal.selectedItemPosition - 1].id
-                )
+                var startTime = startTimes[0].toInt() * 60 + startTimes[1].toInt()
+                var endTime = endTimes[0].toInt() * 60 + endTimes[1].toInt()
 
-                val eventId = DB.updateOrCreateTimetableEvent(e)
+                val nameString = name.text.toString()
 
-                // Add/remove pictures
+                if (startTime == endTime) {
+                    AlertDialog.Builder(context)
+                        .setTitle("Invalid data")
+                        .setMessage("Start and end time cannot be the same")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton("Okay", null)
+                        .show()
+                } else if (!atLeastOneDay) {
+                    AlertDialog.Builder(context)
+                        .setTitle("Invalid data")
+                        .setMessage("No days selected")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton("Okay", null)
+                        .show()
+                } else if (startTime >= endTime) {
+                    AlertDialog.Builder(context)
+                        .setTitle("Invalid data")
+                        .setMessage("Start time is after end time")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton("Okay", null)
+                        .show()
+                } else if (endTime - startTime < 10) {
+                    AlertDialog.Builder(context)
+                        .setTitle("Invalid data")
+                        .setMessage("Minimum event duration is 10 minutes")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton("Okay", null)
+                        .show()
+                } else if (nameString.isEmpty()) {
+                    AlertDialog.Builder(context)
+                        .setTitle("Invalid data")
+                        .setMessage("Event name cannot be blank")
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton("Okay", null)
+                        .show()
+                } else {
+                    // Data is valid, update/insert in database
 
-                newPhotos.forEach {
-                    try {
-                        DB.addTimetableEventPhoto(eventId, it)
-                    } catch (_: Exception) {
+                    var daysBitmask = 0
+                    dayCheckboxes.forEachIndexed { i: Int, checkBox: SwitchCompat ->
+                        if (checkBox.isChecked) {
+                            daysBitmask = daysBitmask or (1 shl i)
+                        }
                     }
-                }
 
-                imagesToRemove.forEach {
-                    try {
-                        DB.removeTimetableEventPhoto(eventId, it)
-                    } catch (_: Exception) {
+                    var e = TimetableEvent(
+                        eventId ?: -1,
+                        timetableId,
+                        startTime,
+                        endTime - startTime,
+                        daysBitmask,
+                        nameString,
+                        if (notes.text.isEmpty()) null else notes.text.toString(),
+                        r30.isChecked,
+                        r1.isChecked,
+                        r2.isChecked,
+                        rMorn.isChecked,
+                        if (goal.selectedItemPosition == 0) null else goals[goal.selectedItemPosition - 1].id
+                    )
+
+                    val eventId = DB.updateOrCreateTimetableEvent(e)
+
+                    // Add/remove pictures
+
+                    newPhotos.forEach {
+                        try {
+                            DB.addTimetableEventPhoto(eventId, it)
+                        } catch (_: Exception) {
+                        }
                     }
+
+                    imagesToRemove.forEach {
+                        try {
+                            DB.removeTimetableEventPhoto(eventId, it)
+                        } catch (_: Exception) {
+                        }
+                    }
+
+                    // Reschedule all notifications
+
+                    Notifications.scheduleAllNotifications(activity!!.applicationContext)
+
+                    (activity!! as MainActivity).hideKeyboard()
+
+                    unsavedData = false
+                    (activity as MainActivity).onBackPressed()
                 }
-
-                // Reschedule all notifications
-
-                Notifications.scheduleAllNotifications(activity!!.applicationContext)
-
-                (activity!! as MainActivity).hideKeyboard()
-
-                unsavedData = false
-                (activity as MainActivity).onBackPressed()
             }
 
         }
@@ -205,7 +224,7 @@ class TimetableEditEventFragment(
             var e: TimetableEvent
             try {
                 e = DB.getTimetableEvent(eventId)
-            } catch(e: Exception) {
+            } catch (e: Exception) {
                 val fragmentTransaction = fragmentManager!!.beginTransaction()
                 fragmentTransaction.replace(R.id.fragmentView, TimetableFragment())
                 fragmentTransaction.commit()
