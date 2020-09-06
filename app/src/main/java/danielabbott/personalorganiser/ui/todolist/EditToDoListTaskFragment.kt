@@ -69,6 +69,10 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
         time.setOnClickListener {
             super.unsavedData = true
         }
+        time.setOnLongClickListener {
+            super.unsavedData = true
+            true
+        }
 
 
         date.setOnClickListener {
@@ -296,6 +300,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             dateForwards.visibility = View.INVISIBLE
             dateBack.visibility = View.INVISIBLE
             time.reset()
+            super.unsavedData = true
             true
         }
 

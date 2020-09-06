@@ -29,6 +29,7 @@ class TimeSelectView : AppCompatTextView {
 
     var initDone = false
     private var onClick: OnClickListener? = null
+    private var onLongClick: OnLongClickListener? = null
     var onTimeChanged: ((Int, Int) -> Unit)? = null
     var onTimeCleared: (() -> Unit)? = null
 
@@ -46,6 +47,7 @@ class TimeSelectView : AppCompatTextView {
             if (onTimeCleared != null) {
                 onTimeCleared!!()
             }
+            onLongClick?.onLongClick(this)
             true
         }
 
@@ -60,6 +62,13 @@ class TimeSelectView : AppCompatTextView {
             return
         }
         onClick = l
+    }
+    override fun setOnLongClickListener(l: OnLongClickListener?) {
+        if (!initDone) {
+            super.setOnLongClickListener(l)
+            return
+        }
+        onLongClick = l
     }
 
     fun setTime(h: Int, m: Int) {
