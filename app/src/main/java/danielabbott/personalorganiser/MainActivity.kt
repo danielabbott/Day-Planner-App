@@ -7,7 +7,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -25,6 +24,7 @@ import danielabbott.personalorganiser.ui.MenuSliderView
 import danielabbott.personalorganiser.ui.OnBackPressed
 import danielabbott.personalorganiser.ui.SettingsFragment
 import danielabbott.personalorganiser.ui.goals.GoalsFragment
+import danielabbott.personalorganiser.ui.notes.NotesFragment
 import danielabbott.personalorganiser.ui.timers.TimersFragment
 import danielabbott.personalorganiser.ui.timetable.TimetableEditEventFragment
 import danielabbott.personalorganiser.ui.timetable.TimetableFragment
@@ -172,13 +172,20 @@ class MainActivity : AppCompatActivity() {
                 switchToFragment(TimersFragment())
             }
         }
+        findViewById<LinearLayout>(R.id.bMenuNotes).setOnClickListener {
+            menuButtonPressed {
+                Settings.setLastPage(this, 4)
+                switchToFragment(NotesFragment())
+            }
+        }
 
         fun loadLastPage() {
             when (Settings.getLastPage(this)) {
                 0 -> switchToFragment(ToDoListFragment())
                 1 -> switchToFragment(TimetableFragment())
                 2 -> switchToFragment(GoalsFragment())
-                else -> switchToFragment(TimersFragment())
+                3 -> switchToFragment(TimersFragment())
+                else -> switchToFragment(NotesFragment())
             }
         }
 

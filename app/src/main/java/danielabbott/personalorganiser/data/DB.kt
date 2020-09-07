@@ -18,7 +18,7 @@ object DB {
 
     class DBHelper(context: Context) : SQLiteOpenHelper(
         context, "po.db", null,
-        1 /*Increment whenever db structure changes*/
+        2 /*Increment whenever db structure changes*/
     ) {
         override fun onCreate(db: SQLiteDatabase) {
             db.execSQL(
@@ -122,6 +122,17 @@ object DB {
                         "content TEXT NOT NULL, channel INT NOT NULL, task_or_event_id LONG NOT NULL," +
                         "time LONG NOT NULL)"
             )
+
+            db.execSQL("CREATE TABLE IF NOT EXISTS TBL_NOTES (_id INTEGER PRIMARY KEY, contents TEXT NOT NULL)")
+
+            db.execSQL("CREATE TABLE IF NOT EXISTS TBL_TAGS (_id INTEGER PRIMARY KEY, tag TEXT NOT NULL)")
+            db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS tag_index ON TBL_TAGS(tag)")
+
+            db.execSQL("CREATE TABLE IF NOT EXISTS TBL_NOTE_TAG (note_id INTEGER NOT NULL, tag_id INTEGER NOT NULL," +
+                    "PRIMARY KEY (note_id, tag_id)," +
+                    "CONSTRAINT notes_tag_1 FOREIGN KEY (note_id) REFERENCES TBL_NOTES(_id) ON DELETE CASCADE," +
+                    "CONSTRAINT notes_tag_2 FOREIGN KEY (tag_id) REFERENCES TBL_TAGS(_id) ON DELETE CASCADE" +
+                    ")")
         }
 
         override fun onOpen(db: SQLiteDatabase?) {
@@ -1116,4 +1127,138 @@ object DB {
         db.update("TBL_TODO_LIST_TASK", values, null, null)
     }
 
+    fun getNotesPreviews(tag: Long?): List<NotePreview> {
+        val list = ArrayList<NotePreview>()
+
+        val db = dbHelper.readableDatabase
+
+
+        val cursor = if(tag == null) {
+            db.rawQuery(
+                "SELECT _id,SUBSTR(contents,0,100) as contents_preview FROM TBL_NOTES",
+                arrayOf()
+            )
+        }
+        else {
+            db.rawQuery(
+                "SELECT _id,SUBSTR(contents,0,100) as contents_preview FROM TBL_NOTES WHERE _id IN (SELECT note_id FROM TBL_NOTE_TAG WHERE tag_id = ?)",
+                arrayOf(tag.toString())
+            )
+        }
+
+
+        while (cursor.moveToNext()) {
+            list.add(
+                NotePreview(
+                    cursor.getLong(cursor.getColumnIndexOrThrow("_id")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("contents_preview"))
+                )
+            )
+        }
+
+
+        return list
+    }
+
+    fun getTags(): List<Tag> {
+        val list = ArrayList<Tag>()
+
+        val db = dbHelper.readableDatabase
+
+
+        val cursor = db.rawQuery(
+            "SELECT _id,tag FROM TBL_TAGS",
+            arrayOf()
+        )
+
+
+        while (cursor.moveToNext()) {
+            list.add(
+                Tag(
+                    cursor.getLong(cursor.getColumnIndexOrThrow("_id")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("tag"))
+                )
+            )
+        }
+
+
+        return list
+    }
+
+    fun getNote(id: Long): Note {
+        val db = dbHelper.readableDatabase
+
+
+        val cursor = db.rawQuery(
+            "SELECT contents FROM TBL_NOTES WHERE _id=?",
+            arrayOf(id.toString())
+        )
+
+        if(!cursor.moveToNext()) {
+            throw Exception("Record not found")
+        }
+
+        val contents = cursor.getString(cursor.getColumnIndexOrThrow("contents"))
+
+
+        val cursor2 = db.rawQuery(
+            "SELECT _id,tag FROM TBL_TAGS WHERE _id IN (SELECT tag_id FROM TBL_NOTE_TAG WHERE note_id=?)",
+            arrayOf(id.toString())
+        )
+
+        var tags = ArrayList<Tag>()
+
+        while(cursor2.moveToNext()) {
+            tags.add(Tag(
+                cursor2.getLong(cursor2.getColumnIndexOrThrow("_id")),
+                cursor2.getString(cursor2.getColumnIndexOrThrow("tag"))
+            ))
+        }
+
+
+        return Note(id, contents, tags)
+    }
+
+    fun updateOrCreateNote(e: Note): Long {
+        val db = dbHelper.writableDatabase
+
+        val values = ContentValues().apply {
+            put("contents", e.contents.trim())
+        }
+
+        if (e.id < 0) {
+            return db?.insert("TBL_NOTES", null, values)!!
+        } else {
+            db.update("TBL_NOTES", values, "_id=?", arrayOf(e.id.toString()))
+            return e.id
+        }
+
+    }
+
+    fun createTag(tag: String) : Long {
+        val db = dbHelper.writableDatabase
+        return db?.insert("TBL_TAGS", null, ContentValues().apply {
+            put("tag", tag)
+        })!!
+    }
+
+    fun renameTag(id: Long, newTagName: String) {
+        val db = dbHelper.writableDatabase
+        db.update("TBL_TAGS", ContentValues().apply {
+            put("tag", newTagName)
+        }, "_id=?", arrayOf(id.toString()))
+    }
+
+    fun addTagToNote(noteId: Long, tagId: Long) {
+        val db = dbHelper.writableDatabase
+        db?.insert("TBL_NOTE_TAG", null, ContentValues().apply {
+            put("note_id", noteId)
+            put("tag_id", tagId)
+        })!!
+    }
+
+    fun removeTagFromNote(noteId: Long, tagId: Long) {
+        val db = dbHelper.writableDatabase
+        db?.delete("TBL_NOTE_TAG", "note_id=? AND tag_id=?", arrayOf(noteId.toString(), tagId.toString()))
+    }
 }
