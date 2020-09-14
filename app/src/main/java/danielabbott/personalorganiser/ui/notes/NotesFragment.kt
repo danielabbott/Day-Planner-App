@@ -9,11 +9,13 @@ import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import danielabbott.personalorganiser.MainActivity
 import danielabbott.personalorganiser.R
-import danielabbott.personalorganiser.data.DB
-import danielabbott.personalorganiser.data.NotePreview
-import danielabbott.personalorganiser.data.Tag
+import danielabbott.personalorganiser.data.*
+import danielabbott.personalorganiser.ui.SpinnerChangeDetector
+import danielabbott.personalorganiser.ui.goals.EditGoalFragment
+import danielabbott.personalorganiser.ui.goals.GoalsFragment
 
 class NotesFragment : Fragment() {
 
@@ -30,21 +32,61 @@ class NotesFragment : Fragment() {
         val recyclerView = view.findViewById<RecyclerView>(R.id.list)
         with(recyclerView) {
             layoutManager = LinearLayoutManager(context)
-            adapter = NoteRecyclerViewAdapter(DB.getNotesPreviews(null), fragmentManager!!, activity!!)
+            val selected = Settings.getSelectedTagID(context!!)
+            adapter = NoteRecyclerViewAdapter(DB.getNotesPreviews(if (selected < 0) null else selected),
+                fragmentManager!!, activity!!)
         }
 
         var tags = ArrayList<String>()
+        var tagIDs = ArrayList<Long>()
         tags.add("All")
         DB.getTags().forEach {
             tags.add(it.tag)
+            tagIDs.add(it.id)
         }
 
-        view.findViewById<Spinner>(R.id.tagSelect).adapter = ArrayAdapter<String>(
+        val tagSelect = view.findViewById<Spinner>(R.id.tagSelect)
+
+        tagSelect.adapter = ArrayAdapter<String>(
             context!!,
             android.R.layout.simple_spinner_dropdown_item,
             tags
         )
-        // TODO add functionality to spinner
+
+        val id = Settings.getSelectedTagID(context!!)
+
+        if(id > 0) {
+            var i: Int = 1
+            for(id_ in tagIDs) {
+                if(id_ == id) {
+                    tagSelect.setSelection(i)
+                    break
+                }
+                i += 1
+            }
+        }
+
+
+
+        tagSelect.onItemSelectedListener = SpinnerChangeDetector {
+            Settings.setSelectedTagID(context!!,
+                if(tagSelect.selectedItemPosition != 0) tagIDs[tagSelect.selectedItemPosition-1]
+                    else -1)
+
+            val fragmentTransaction = fragmentManager!!.beginTransaction()
+            fragmentTransaction.replace(R.id.fragmentView, NotesFragment())
+            fragmentTransaction.commit()
+        }
+
+
+        // On click listener for the add (+) button
+        view.findViewById<FloatingActionButton>(R.id.fab_new).setOnClickListener {
+            val fragment = EditNoteFragment(null)
+            val fragmentTransaction = fragmentManager!!.beginTransaction()
+            fragmentTransaction.replace(R.id.fragmentView, fragment).addToBackStack(null)
+            fragmentTransaction.commit()
+        }
+
 
         (activity as MainActivity).setToolbarTitle("Notes")
 

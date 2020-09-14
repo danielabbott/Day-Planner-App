@@ -206,11 +206,6 @@
                         </LinearLayout>
                     </LinearLayout>
                 </ScrollView>
-
-                <danielabbott.personalorganiser.ui.MenuSliderView
-                    android:id="@+id/menuSlide"
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

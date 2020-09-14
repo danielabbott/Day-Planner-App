@@ -22,7 +22,7 @@ import danielabbott.personalorganiser.data.GoalListData
 
 // Base class for timetable,task,goal edit pages
 // Implements functionality common to multiple pages ^
-open class DataEntryFragment : Fragment(), OnBackPressed {
+open class DataEntryFragment : DataEntryFragmentBasic() {
 
     companion object {
         const val TAG = "DataEntryFragment"
@@ -33,8 +33,6 @@ open class DataEntryFragment : Fragment(), OnBackPressed {
     protected lateinit var picturePreviewsView: LinearLayout
 
     private lateinit var handler: Handler
-
-    var unsavedData: Boolean = false
 
     // Not used in goals fragment
     protected lateinit var goals: List<GoalListData>
@@ -71,23 +69,6 @@ open class DataEntryFragment : Fragment(), OnBackPressed {
             android.R.layout.simple_spinner_dropdown_item,
             testArray
         )
-    }
-
-    override fun onBackPressed(onNoChangesOrDiscardChanges: () -> Unit) {
-        if (unsavedData) {
-            AlertDialog.Builder(context)
-                .setTitle("Unsaved changes")
-                .setMessage("Going back will discard changes")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton("Discard changes") { _, _ ->
-                    unsavedData = false
-                    onNoChangesOrDiscardChanges()
-                }
-                .setNegativeButton("Cancel", null)
-                .show()
-        } else {
-            onNoChangesOrDiscardChanges()
-        }
     }
 
     // Called when the user has picked an image from the gallery
@@ -193,22 +174,6 @@ open class DataEntryFragment : Fragment(), OnBackPressed {
                 }
                 i += 1
             }
-        }
-    }
-
-
-    // https://stackoverflow.com/a/26911627/11498001
-    fun hideKeyboard() {
-        val inputManager: InputMethodManager =
-            activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
-        // check if no view has focus:
-        val currentFocusedView = activity!!.currentFocus
-        if (currentFocusedView != null) {
-            inputManager.hideSoftInputFromWindow(
-                currentFocusedView.windowToken,
-                InputMethodManager.HIDE_NOT_ALWAYS
-            )
         }
     }
 

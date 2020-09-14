@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.Settings
-import danielabbott.personalorganiser.ui.MenuSliderView
 import danielabbott.personalorganiser.ui.OnBackPressed
 import danielabbott.personalorganiser.ui.SettingsFragment
 import danielabbott.personalorganiser.ui.goals.GoalsFragment
@@ -41,7 +40,6 @@ class MainActivity : AppCompatActivity() {
 
     private var menuVisible = false
     private lateinit var menu: ScrollView
-    private lateinit var menuSliderView: MenuSliderView
     private lateinit var menuContainer: LinearLayout
     private lateinit var menuBlack: View
 
@@ -123,17 +121,6 @@ class MainActivity : AppCompatActivity() {
         menuBlack = findViewById<View>(R.id.menuBlack)
 
         menuContainer.translationX = -menu.layoutParams.width.toFloat()
-
-        menuSliderView = findViewById<MenuSliderView>(R.id.menuSlide)
-        menuSliderView.menuView = menu
-        menuSliderView.menuContainerView = menuContainer
-        menuSliderView.menuBlackView = menuBlack
-        menuSliderView.showMenu = {
-            showMenu()
-        }
-        menuSliderView.hideMenu = {
-            hideMenu()
-        }
 
         findViewById<ImageButton>(R.id.bHamburgerIcon).setOnClickListener {
             // If an EditText is selected this stops the blob cursor thingy showing above the menu
@@ -304,7 +291,7 @@ class MainActivity : AppCompatActivity() {
     // If menu is open and somewhere not on the menu is tapped then hide the menu
     // and stop the touch event from reaching the UI behind the menu
     override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
-        if (event != null && menuVisible && !menuSliderView.userIsDraggingMenu()) {
+        if (event != null && menuVisible) {
             val x = event.x
             var menuPos = IntArray(2)
             menu.getLocationInWindow(menuPos)

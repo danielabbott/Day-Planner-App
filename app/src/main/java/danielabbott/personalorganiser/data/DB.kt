@@ -2,7 +2,6 @@ package danielabbott.personalorganiser.data
 
 import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.provider.BaseColumns
@@ -125,14 +124,15 @@ object DB {
 
             db.execSQL("CREATE TABLE IF NOT EXISTS TBL_NOTES (_id INTEGER PRIMARY KEY, contents TEXT NOT NULL)")
 
-            db.execSQL("CREATE TABLE IF NOT EXISTS TBL_TAGS (_id INTEGER PRIMARY KEY, tag TEXT NOT NULL)")
+            db.execSQL("CREATE TABLE IF NOT EXISTS TBL_TAGS (_id INTEGER PRIMARY KEY, tag TEXT NOT NULL COLLATE nocase)")
             db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS tag_index ON TBL_TAGS(tag)")
 
-            db.execSQL("CREATE TABLE IF NOT EXISTS TBL_NOTE_TAG (note_id INTEGER NOT NULL, tag_id INTEGER NOT NULL," +
-                    "PRIMARY KEY (note_id, tag_id)," +
+            db.execSQL("CREATE TABLE IF NOT EXISTS TBL_NOTE_TAG (tag_id INTEGER NOT NULL, note_id INTEGER NOT NULL," +
+                    "PRIMARY KEY (tag_id, note_id)," +
                     "CONSTRAINT notes_tag_1 FOREIGN KEY (note_id) REFERENCES TBL_NOTES(_id) ON DELETE CASCADE," +
                     "CONSTRAINT notes_tag_2 FOREIGN KEY (tag_id) REFERENCES TBL_TAGS(_id) ON DELETE CASCADE" +
                     ")")
+            db.execSQL("CREATE INDEX IF NOT EXISTS note_index ON TBL_NOTE_TAG(note_id)")
         }
 
         override fun onOpen(db: SQLiteDatabase?) {
@@ -150,8 +150,8 @@ object DB {
     }
 
 
-    var initDone = false
-    lateinit var dbHelper: DBHelper
+    private var initDone = false
+    private lateinit var dbHelper: DBHelper
     lateinit var context: Context
 
     // Opens the database file
@@ -210,14 +210,15 @@ object DB {
             null
         )
 
-        var timetables = ArrayList<Pair<Long, String>>()
+        val timetables = ArrayList<Pair<Long, String>>()
 
         while (cursor.moveToNext()) {
-            val id = cursor.getLong(cursor.getColumnIndexOrThrow(android.provider.BaseColumns._ID))
+            val id = cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID))
             val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
 
             timetables.add(Pair<Long, String>(id, name))
         }
+        cursor.close()
         return timetables
     }
 
@@ -228,7 +229,8 @@ object DB {
             "TBL_TIMETABLE_EVENT",
             "TBL_TODO_LIST_TASK",
             "TBL_GOAL",
-            "TBL_MILESTONE"
+            "TBL_MILESTONE",
+            "TBL_NOTES"
         ).forEach {
 
             val cursor = db.rawQuery(
@@ -239,9 +241,11 @@ object DB {
             if (cursor.moveToNext()) {
                 val count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNT(*)"))
                 if (count > 0) {
+                    cursor.close()
                     return false
                 }
             }
+            cursor.close()
         }
         return true
     }
@@ -260,11 +264,13 @@ object DB {
 
         if (cursor.moveToNext()) {
             val id =
-                cursor.getLong(cursor.getColumnIndexOrThrow(android.provider.BaseColumns._ID))
+                cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID))
             val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
 
+            cursor.close()
             return Pair<Long, String>(id, name)
         } else {
+            cursor.close()
             throw Exception("No timetables")
         }
 
@@ -282,8 +288,10 @@ object DB {
         if (cursor.moveToNext()) {
             val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
 
+            cursor.close()
             return name
         } else {
+            cursor.close()
             throw Exception("Record not found")
         }
     }
@@ -325,6 +333,7 @@ object DB {
             )
         }
 
+        cursor.close()
         return list
     }
 
@@ -355,6 +364,7 @@ object DB {
             db?.insert("TBL_TIMETABLE_EVENT", null, values)
         }
 
+        cursor.close()
         return newId
     }
 
@@ -367,7 +377,7 @@ object DB {
         )
 
         if (cursor.moveToNext()) {
-            return TimetableEvent(
+            val e = TimetableEvent(
                 cursor.getLong(cursor.getColumnIndexOrThrow("_id")),
                 cursor.getLong(cursor.getColumnIndexOrThrow("timetable_id")),
                 cursor.getInt(cursor.getColumnIndexOrThrow("startTime")),
@@ -382,7 +392,10 @@ object DB {
                 cursor.getLongOrNull(cursor.getColumnIndexOrThrow("goal_id"))
 
             )
+            cursor.close()
+            return e
         } else {
+            cursor.close()
             throw Exception("Record not found")
         }
 
@@ -412,11 +425,11 @@ object DB {
             put("goal_id", e.goal_id)
         }
 
-        if (e.id < 0) {
-            return db?.insert("TBL_TIMETABLE_EVENT", null, values)!!
+        return if (e.id < 0) {
+            db?.insert("TBL_TIMETABLE_EVENT", null, values)!!
         } else {
             db.update("TBL_TIMETABLE_EVENT", values, "_id=?", arrayOf(e.id.toString()))
-            return e.id
+            e.id
         }
     }
 
@@ -434,10 +447,13 @@ object DB {
             arrayOf(photoUrl)
         )
 
-        if (cursor.moveToNext()) {
-            return cursor.getLong(cursor.getColumnIndexOrThrow("_id"))
+        return if (cursor.moveToNext()) {
+            val id = cursor.getLong(cursor.getColumnIndexOrThrow("_id"))
+            cursor.close()
+            id
         } else {
-            return null
+            cursor.close()
+            null
         }
     }
 
@@ -448,7 +464,7 @@ object DB {
         return dbHelper.writableDatabase?.insert("TBL_PHOTO", null, values)!!
     }
 
-    fun addOrGetPhoto(photoUrl: String): Long {
+    private fun addOrGetPhoto(photoUrl: String): Long {
         val id = getPhoto(photoUrl)
         if (id != null) {
             return id
@@ -494,6 +510,7 @@ object DB {
             list.add(cursor.getString(cursor.getColumnIndexOrThrow("url")))
         }
 
+        cursor.close()
         return list
     }
 
@@ -525,27 +542,10 @@ object DB {
         }
 
 
+        cursor.close()
         return list
     }
 
-
-    fun readToDoTaskList(
-        projection: Array<out String>?,
-        selection: String?,
-        selectionArgs: Array<out String>?,
-        sortOrder: String?
-    ): Cursor? {
-        val db = dbHelper.readableDatabase
-        return db.query(
-            "TBL_TODO_LIST_TASK",
-            projection,
-            selection,
-            selectionArgs,
-            null,
-            null,
-            sortOrder
-        )
-    }
 
     fun getToDoListTasksNotificationData(): List<ToDoListTaskNotificationData> {
         val list = ArrayList<ToDoListTaskNotificationData>()
@@ -575,6 +575,7 @@ object DB {
         }
 
 
+        cursor.close()
         return list
     }
 
@@ -588,7 +589,7 @@ object DB {
         )
 
         if (cursor.moveToNext()) {
-            return ToDoListTask(
+            val e = ToDoListTask(
                 cursor.getLong(cursor.getColumnIndexOrThrow("_id")),
                 cursor.getLongOrNull(cursor.getColumnIndexOrThrow("dateTime")),
                 cursor.getInt(cursor.getColumnIndexOrThrow("has_time")) != 0,
@@ -603,7 +604,10 @@ object DB {
                 cursor.getIntOrNull(cursor.getColumnIndexOrThrow("gcol"))
 
             )
+            cursor.close()
+            return e
         } else {
+            cursor.close()
             throw Exception("Record not found")
         }
 
@@ -625,11 +629,11 @@ object DB {
             put("goal_id", e.goal_id)
         }
 
-        if (e.id < 0) {
-            return db?.insert("TBL_TODO_LIST_TASK", null, values)!!
+        return if (e.id < 0) {
+            db?.insert("TBL_TODO_LIST_TASK", null, values)!!
         } else {
             db.update("TBL_TODO_LIST_TASK", values, "_id=?", arrayOf(e.id.toString()))
-            return e.id
+            e.id
         }
 
     }
@@ -679,6 +683,7 @@ object DB {
             list.add(cursor.getString(cursor.getColumnIndexOrThrow("url")))
         }
 
+        cursor.close()
         return list
     }
 
@@ -690,10 +695,13 @@ object DB {
             arrayOf()
         )
 
-        if (cursor.moveToNext()) {
-            return cursor.getInt(cursor.getColumnIndexOrThrow("COUNT(*)"))
+        return if (cursor.moveToNext()) {
+            val n = cursor.getInt(cursor.getColumnIndexOrThrow("COUNT(*)"))
+            cursor.close()
+            n
         } else {
-            return 0
+            cursor.close()
+            0
         }
 
 
@@ -721,6 +729,7 @@ object DB {
         }
 
 
+        cursor.close()
         return list
     }
 
@@ -734,13 +743,17 @@ object DB {
         )
 
         if (cursor.moveToNext()) {
-            return Goal(
+            val g = Goal(
                 cursor.getLong(cursor.getColumnIndexOrThrow("_id")),
                 cursor.getString(cursor.getColumnIndexOrThrow("name")),
                 cursor.getInt(cursor.getColumnIndexOrThrow("colour")),
                 cursor.getStringOrNull(cursor.getColumnIndexOrThrow("notes"))
             )
+
+            cursor.close()
+            return g
         } else {
+            cursor.close()
             throw Exception("Record not found")
         }
 
@@ -769,6 +782,7 @@ object DB {
         }
 
 
+        cursor.close()
         return list
     }
 
@@ -781,11 +795,11 @@ object DB {
             put("notes", e.notes?.ifBlank{null}?.trim())
         }
 
-        if (e.id < 0) {
-            return db?.insert("TBL_GOAL", null, values)!!
+        return if (e.id < 0) {
+            db?.insert("TBL_GOAL", null, values)!!
         } else {
             db.update("TBL_GOAL", values, "_id=?", arrayOf(e.id.toString()))
-            return e.id
+            e.id
         }
 
     }
@@ -860,6 +874,7 @@ object DB {
             list.add(cursor.getString(cursor.getColumnIndexOrThrow("url")))
         }
 
+        cursor.close()
         return list
     }
 
@@ -896,7 +911,7 @@ object DB {
     }
 
     // Optimise database
-    fun vacuum() {
+    private fun vacuum() {
         val db = dbHelper.writableDatabase
         db.execSQL("VACUUM")
     }
@@ -913,9 +928,11 @@ object DB {
 
             if (cursor.moveToNext()) {
                 if (cursor.getInt(cursor.getColumnIndexOrThrow("COUNT(*)")) > 0) {
+                    cursor.close()
                     return true
                 }
             }
+            cursor.close()
         } finally {
         }
 
@@ -926,10 +943,12 @@ object DB {
 
         if (cursor2.moveToNext()) {
             if (cursor2.getInt(cursor2.getColumnIndexOrThrow("COUNT(*)")) > 0) {
+                cursor2.close()
                 return true
             }
         }
 
+        cursor2.close()
         return false
     }
 
@@ -946,6 +965,7 @@ object DB {
             colours.add(cursor.getInt(cursor.getColumnIndexOrThrow("colour")) and 0xffffff)
         }
 
+        cursor.close()
         return colours
     }
 
@@ -969,6 +989,7 @@ object DB {
             } finally {
             }
         }
+        cursor.close()
 
         db.execSQL(
             "DELETE FROM TBL_PHOTO WHERE _id " +
@@ -1011,11 +1032,11 @@ object DB {
             put("paused", if (t.isPaused) 1 else 0)
         }
 
-        if (t.id == null) {
-            return db?.insert("TBL_TIMER", null, values)!!
+        return if (t.id == null) {
+            db?.insert("TBL_TIMER", null, values)!!
         } else {
             db.update("TBL_TIMER", values, "_id=?", arrayOf(t.id.toString()))
-            return t.id
+            t.id
         }
     }
 
@@ -1036,10 +1057,10 @@ object DB {
             null
         )
 
-        var timers = ArrayList<Timer>()
+        val timers = ArrayList<Timer>()
 
         while (cursor.moveToNext()) {
-            val id = cursor.getLong(cursor.getColumnIndexOrThrow(android.provider.BaseColumns._ID))
+            val id = cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID))
             val name = cursor.getString(cursor.getColumnIndexOrThrow("name"))
             val initialTime = cursor.getInt(cursor.getColumnIndexOrThrow("initial_time"))
             val timeSaved = cursor.getLong(cursor.getColumnIndexOrThrow("time_saved"))
@@ -1048,6 +1069,7 @@ object DB {
 
             timers.add(Timer(id, name, time, initialTime, timeSaved, paused))
         }
+        cursor.close()
         return timers
     }
 
@@ -1087,7 +1109,7 @@ object DB {
             null
         )
 
-        var notifications = ArrayList<NotificationData>()
+        val notifications = ArrayList<NotificationData>()
 
         while (cursor.moveToNext()) {
             val content = cursor.getString(cursor.getColumnIndexOrThrow("content"))
@@ -1104,6 +1126,7 @@ object DB {
                 )
             )
         }
+        cursor.close()
 
         db.delete("TBL_NOTIFICATIONS", "time <= ?", arrayOf(maxTime))
 
@@ -1157,6 +1180,7 @@ object DB {
         }
 
 
+        cursor.close()
         return list
     }
 
@@ -1181,6 +1205,7 @@ object DB {
             )
         }
 
+        cursor.close()
 
         return list
     }
@@ -1200,13 +1225,14 @@ object DB {
 
         val contents = cursor.getString(cursor.getColumnIndexOrThrow("contents"))
 
+        cursor.close()
 
         val cursor2 = db.rawQuery(
             "SELECT _id,tag FROM TBL_TAGS WHERE _id IN (SELECT tag_id FROM TBL_NOTE_TAG WHERE note_id=?)",
             arrayOf(id.toString())
         )
 
-        var tags = ArrayList<Tag>()
+        val tags = ArrayList<Tag>()
 
         while(cursor2.moveToNext()) {
             tags.add(Tag(
@@ -1215,8 +1241,30 @@ object DB {
             ))
         }
 
+        cursor2.close()
 
         return Note(id, contents, tags)
+    }
+
+    fun getNoteTagIDs(noteId: Long): List<Long> {
+        val db = dbHelper.readableDatabase
+
+        val cursor = db.rawQuery(
+            "SELECT tag_id FROM TBL_NOTE_TAG WHERE note_id=?",
+            arrayOf(noteId.toString())
+        )
+
+        val tags = ArrayList<Long>()
+
+        while(cursor.moveToNext()) {
+            tags.add(
+                cursor.getLong(cursor.getColumnIndexOrThrow("tag_id"))
+            )
+        }
+
+        cursor.close()
+
+        return tags
     }
 
     fun updateOrCreateNote(e: Note): Long {
@@ -1226,26 +1274,42 @@ object DB {
             put("contents", e.contents.trim())
         }
 
-        if (e.id < 0) {
-            return db?.insert("TBL_NOTES", null, values)!!
+        return if (e.id < 0) {
+            db?.insert("TBL_NOTES", null, values)!!
         } else {
             db.update("TBL_NOTES", values, "_id=?", arrayOf(e.id.toString()))
-            return e.id
+            e.id
         }
 
     }
 
-    fun createTag(tag: String) : Long {
+    fun createOrGetTag(tag: String) : Long {
         val db = dbHelper.writableDatabase
-        return db?.insert("TBL_TAGS", null, ContentValues().apply {
-            put("tag", tag)
-        })!!
+
+        val cursor = db.rawQuery(
+            "SELECT _id FROM TBL_TAGS WHERE tag=?",
+            arrayOf(tag.trim())
+        )
+
+        if(!cursor.moveToNext()) {
+            // Add new tag
+
+            return db?.insert("TBL_TAGS", null, ContentValues().apply {
+                put("tag", tag.trim())
+            })!!
+        }
+
+        val id = cursor.getLong(cursor.getColumnIndexOrThrow("_id"))
+        cursor.close()
+        return id
+
+
     }
 
     fun renameTag(id: Long, newTagName: String) {
         val db = dbHelper.writableDatabase
         db.update("TBL_TAGS", ContentValues().apply {
-            put("tag", newTagName)
+            put("tag", newTagName.trim())
         }, "_id=?", arrayOf(id.toString()))
     }
 
@@ -1257,8 +1321,53 @@ object DB {
         })!!
     }
 
+    private fun removeTagIfUnused(tagId: Long) {
+        val db = dbHelper.writableDatabase
+        val cursor = db.rawQuery(
+            "SELECT COUNT(*) as n FROM TBL_NOTE_TAG WHERE tag_id=?",
+            arrayOf(tagId.toString())
+        )
+
+        if(cursor.moveToNext() && cursor.getInt(cursor.getColumnIndexOrThrow("n")) < 1) {
+            // Tag is unused
+
+            db.execSQL("DELETE FROM TBL_TAGS WHERE _id=?", arrayOf(tagId.toString()))
+        }
+
+        cursor.close()
+    }
+
     fun removeTagFromNote(noteId: Long, tagId: Long) {
         val db = dbHelper.writableDatabase
         db?.delete("TBL_NOTE_TAG", "note_id=? AND tag_id=?", arrayOf(noteId.toString(), tagId.toString()))
+
+        val cursor = db.rawQuery(
+            "SELECT COUNT(*) as n FROM TBL_NOTE_TAG WHERE tag_id=?",
+            arrayOf(tagId.toString())
+        )
+
+        if(cursor.moveToNext() && cursor.getInt(cursor.getColumnIndexOrThrow("n")) < 1) {
+            // Tag is unused
+
+            db.execSQL("DELETE FROM TBL_TAGS WHERE _id=?", arrayOf(tagId.toString()))
+        }
+
+        cursor.close()
+
+    }
+
+    fun deleteNote(noteId: Long) {
+        val tags = getNoteTagIDs(noteId)
+
+        val db = dbHelper.writableDatabase
+
+        db?.delete("TBL_NOTE_TAG", "note_id=?", arrayOf(noteId.toString()))
+
+        tags.forEach {
+            removeTagIfUnused(it)
+        }
+
+        db?.delete("TBL_NOTES", "_id=?", arrayOf(noteId.toString()))
+
     }
 }

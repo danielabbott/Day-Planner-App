@@ -199,14 +199,6 @@ object Settings {
         setBool(context, "alarmVibrationEnabled", e)
     }
 
-    fun getMenuSwipeOpenEnabled(context: Context): Boolean {
-        return getBool(context, "menuSwipeOpenEnabled", false)
-    }
-
-    fun setMenuSwipeOpenEnabled(context: Context, e: Boolean) {
-        setBool(context, "menuSwipeOpenEnabled", e)
-    }
-
 
     fun getAccurateNotificationsEnabled(context: Context): Boolean {
         return getBool(context, "accurateNotificationsEnabled", true)
@@ -214,6 +206,15 @@ object Settings {
 
     fun setAccurateNotificationsEnabled(context: Context, e: Boolean) {
         setBool(context, "accurateNotificationsEnabled", e)
+    }
+
+
+    fun getSelectedTagID(context: Context): Long {
+        return getLong(context, "selectedTagID", -1)
+    }
+
+    fun setSelectedTagID(context: Context, id: Long) {
+        setLong(context, "selectedTagID", id)
     }
 
 

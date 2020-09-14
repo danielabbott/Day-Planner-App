@@ -125,13 +125,6 @@ class SettingsFragment : Fragment() {
         enableAlarmVibration.isChecked = Settings.getAlarmVibrationEnabled(context!!)
 
 
-        val enableMenuSwipeToOpen = root.findViewById<SwitchCompat>(R.id.enableMenuSwipeToOpen)
-        enableMenuSwipeToOpen.setOnCheckedChangeListener { _, checked: Boolean ->
-            Settings.setMenuSwipeOpenEnabled(context!!, checked)
-        }
-        enableMenuSwipeToOpen.isChecked = Settings.getMenuSwipeOpenEnabled(context!!)
-
-
         val accurateNotificationTimes = root.findViewById<SwitchCompat>(R.id.accurateNotificationTimes)
         accurateNotificationTimes.setOnCheckedChangeListener { _, checked: Boolean ->
             Settings.setAccurateNotificationsEnabled(context!!, checked)

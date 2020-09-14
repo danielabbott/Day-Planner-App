@@ -133,7 +133,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             } else {
                 // Data is valid, update/insert in database
 
-                val notes = (root.findViewById(R.id.notes) as EditText).text
+                val notes = notes.text
 
                 if (!date.dateSelected && time.timeSelected) {
                     date.setDate(System.currentTimeMillis())

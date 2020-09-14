@@ -1,13 +1,15 @@
 package danielabbott.personalorganiser.ui.notes
 
 import android.app.Activity
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.RecyclerView
 import danielabbott.personalorganiser.R
+import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.NotePreview
 
 class NoteRecyclerViewAdapter(
@@ -34,26 +36,57 @@ class NoteRecyclerViewAdapter(
         var lines = 0
 
         for (c in s1) {
-            if(c == '\n') {
+            if (c == '\n') {
                 lines++;
 
-                if(lines > 7) {
+                if (lines > 7) {
                     break
                 }
             }
             s2 += c
 
-            if(lines > 7) {
+            if (lines > 7) {
                 break
             }
         }
 
         holder.contentView.text = s2
+
+        holder.noteClickable.setOnClickListener {
+            val fragment = EditNoteFragment(item.id)
+            val fragmentTransaction = parentFragmentManager!!.beginTransaction()
+            fragmentTransaction.replace(R.id.fragmentView, fragment).addToBackStack(null)
+            fragmentTransaction.commit()
+        }
+        holder.noteClickable.setOnLongClickListener {
+            showDeleteDialog(item.id)
+            true
+        }
     }
 
     override fun getItemCount(): Int = values.size
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val contentView: TextView = view.findViewById(R.id.content)
+        val noteClickable: LinearLayout = view.findViewById(R.id.noteClickable)
     }
+
+    private fun showDeleteDialog(noteId: Long) {
+        android.app.AlertDialog.Builder(activity)
+            .setTitle("Delete note")
+            // TODO include first 20 characters of note
+            .setMessage("Are you sure you want to delete this note? This cannot be undone.")
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setPositiveButton("Delete") { _, _ ->
+                DB.deleteNote(noteId)
+
+                // Reload notes page
+                val fragmentTransaction = parentFragmentManager.beginTransaction()
+                fragmentTransaction.replace(R.id.fragmentView, NotesFragment())
+                fragmentTransaction.commit()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
 }
