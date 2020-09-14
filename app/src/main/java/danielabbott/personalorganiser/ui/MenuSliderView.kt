@@ -70,6 +70,9 @@ class MenuSliderView : View {
             if (Settings.getMenuSwipeOpenEnabled(context) && event.actionMasked == MotionEvent.ACTION_DOWN) {
                 beingDragged = true;
             }
+            else {
+                return false
+            }
         }
         return true
     }
