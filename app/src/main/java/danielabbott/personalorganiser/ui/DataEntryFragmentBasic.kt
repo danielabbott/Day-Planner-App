@@ -1,24 +1,9 @@
 package danielabbott.personalorganiser.ui
 
-import android.animation.Animator
-import android.animation.ObjectAnimator
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.os.Handler
-import android.os.Message
-import android.util.Log
-import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
-import androidx.core.content.PermissionChecker
 import androidx.fragment.app.Fragment
-import danielabbott.personalorganiser.ImagePick
-import danielabbott.personalorganiser.R
-import danielabbott.personalorganiser.data.DB
-import danielabbott.personalorganiser.data.GoalListData
 
 // Base class for timetable,task,goal edit pages
 // Implements functionality common to multiple pages ^

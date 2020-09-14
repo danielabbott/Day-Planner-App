@@ -5,7 +5,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.Spinner
 import androidx.appcompat.widget.ShareActionProvider
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.MenuItemCompat
@@ -17,13 +20,11 @@ import danielabbott.personalorganiser.Notifications
 import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.Repeat
-import danielabbott.personalorganiser.data.TimetableEvent
 import danielabbott.personalorganiser.data.ToDoListTask
 import danielabbott.personalorganiser.ui.DataEntryFragment
 import danielabbott.personalorganiser.ui.DateSelectView
 import danielabbott.personalorganiser.ui.SpinnerChangeDetector
 import danielabbott.personalorganiser.ui.TimeSelectView
-import danielabbott.personalorganiser.ui.timetable.TimetableFragment
 
 class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
 
@@ -85,7 +86,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             var e: ToDoListTask
             try {
                 e = DB.getToDoListTask(taskId)
-            } catch(e: Exception) {
+            } catch (e: Exception) {
                 val fragmentTransaction = fragmentManager!!.beginTransaction()
                 fragmentTransaction.replace(R.id.fragmentView, ToDoListFragment())
                 fragmentTransaction.commit()

@@ -67,8 +67,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Name"
-                        android:hint="Goal name"/>
+                        android:hint="Goal name"
+                        android:text="Name" />
 
                     <EditText
                         android:id="@+id/name"
@@ -76,8 +76,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:ems="10"
-                        android:inputType="textCapSentences"
                         android:imeOptions="actionDone"
+                        android:inputType="textCapSentences"
                         tools:ignore="Autofill" />
 
                 </LinearLayout>
@@ -92,8 +92,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Set Colour"
                     android:backgroundTint="@color/buttonColour"
+                    android:text="Set Colour"
                     android:textAllCaps="false" />
 
                 <Space
@@ -116,7 +116,7 @@
                     android:ems="10"
                     android:gravity="start|top"
                     android:inputType="textMultiLine|textCapSentences"
-                    android:lines="6"/>
+                    android:lines="6" />
 
                 <Space
                     android:layout_width="match_parent"
@@ -156,9 +156,9 @@
                     android:id="@+id/bDelete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Delete Goal"
                     android:backgroundTint="@color/buttonColour"
-                    android:textAllCaps="false"/>
+                    android:text="Delete Goal"
+                    android:textAllCaps="false" />
 
                 <Space
                     android:layout_width="match_parent"
@@ -169,8 +169,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Add Milestone"
                     android:backgroundTint="@color/buttonColour"
+                    android:text="Add Milestone"
                     android:textAllCaps="false" />
 
                 <androidx.recyclerview.widget.RecyclerView

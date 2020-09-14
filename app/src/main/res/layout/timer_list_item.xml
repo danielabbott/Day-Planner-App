@@ -14,17 +14,17 @@
         android:id="@+id/timerName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Timer name"
-        android:textSize="30sp"
         android:gravity="center"
-        android:textColor="#ff606060"/>
+        android:text="Timer name"
+        android:textColor="#ff606060"
+        android:textSize="30sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginRight="4dp"
         android:orientation="horizontal"
-        android:weightSum="10"
-        android:layout_marginRight="4dp">
+        android:weightSum="10">
 
         <TextView
             android:id="@+id/timer"
@@ -34,33 +34,33 @@
             android:gravity="left"
             android:text="00:00:00"
             android:textAppearance="?attr/textAppearanceListItem"
-            android:textSize="36sp"
-            android:textColor="#ff606060" />
+            android:textColor="#ff606060"
+            android:textSize="36sp" />
 
         <ImageView
             android:id="@+id/bPlayPause"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            app:srcCompat="@drawable/ic_play"
             android:layout_gravity="center"
-            android:layout_weight="1.667" />
+            android:layout_weight="1.667"
+            app:srcCompat="@drawable/ic_play" />
 
         <ImageView
             android:id="@+id/bStop"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            app:srcCompat="@drawable/ic_stop"
             android:layout_gravity="center"
             android:layout_weight="1.667"
-            android:alpha="0.3" />
+            android:alpha="0.3"
+            app:srcCompat="@drawable/ic_stop" />
 
         <ImageView
             android:id="@+id/bDelete"
             android:layout_width="0dp"
             android:layout_height="40dp"
-            app:srcCompat="@drawable/ic_cross"
             android:layout_gravity="center"
-            android:layout_weight="1.667"/>
+            android:layout_weight="1.667"
+            app:srcCompat="@drawable/ic_cross" />
     </LinearLayout>
 
     <Space
@@ -73,6 +73,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
 </LinearLayout>

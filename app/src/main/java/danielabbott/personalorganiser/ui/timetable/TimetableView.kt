@@ -9,7 +9,6 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
-import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
@@ -205,14 +204,14 @@ class TimetableView : View, GestureDetector.OnGestureListener {
 
 
 
-            if(it.hasNotes) {
+            if (it.hasNotes) {
                 val scale = resources.displayMetrics.density
-                val x = it.ui_x + it.ui_w - 10*scale;
-                val y = it.ui_y+4*scale;
+                val x = it.ui_x + it.ui_w - 10 * scale;
+                val y = it.ui_y + 4 * scale;
                 rectPaint.color = 0xff000000.toInt()
-                canvas.drawRect(x, y, x + 4*scale, y + 4*scale, rectPaint)
-                canvas.drawRect(x-10*scale, y, x + (4-10)*scale, y + 4*scale, rectPaint)
-                canvas.drawRect(x-20*scale, y, x + (4-20)*scale, y + 4*scale, rectPaint)
+                canvas.drawRect(x, y, x + 4 * scale, y + 4 * scale, rectPaint)
+                canvas.drawRect(x - 10 * scale, y, x + (4 - 10) * scale, y + 4 * scale, rectPaint)
+                canvas.drawRect(x - 20 * scale, y, x + (4 - 20) * scale, y + 4 * scale, rectPaint)
             }
 
             val staticLayout = StaticLayout(
@@ -226,10 +225,9 @@ class TimetableView : View, GestureDetector.OnGestureListener {
             )
 
 
-            val y = if(staticLayout.height-6 > (rowHeight * (it.e.duration / 60.0f)).toInt()) {
+            val y = if (staticLayout.height - 6 > (rowHeight * (it.e.duration / 60.0f)).toInt()) {
                 it.ui_y + (2 * resources.displayMetrics.density).toInt()
-            }
-            else {
+            } else {
                 it.ui_y + rowHeight * (it.e.duration / 60.0f) * 0.5f - staticLayout.height / 2
             }
 

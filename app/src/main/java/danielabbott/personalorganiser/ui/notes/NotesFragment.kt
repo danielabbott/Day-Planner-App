@@ -12,10 +12,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import danielabbott.personalorganiser.MainActivity
 import danielabbott.personalorganiser.R
-import danielabbott.personalorganiser.data.*
+import danielabbott.personalorganiser.data.DB
+import danielabbott.personalorganiser.data.Settings
 import danielabbott.personalorganiser.ui.SpinnerChangeDetector
-import danielabbott.personalorganiser.ui.goals.EditGoalFragment
-import danielabbott.personalorganiser.ui.goals.GoalsFragment
 
 class NotesFragment : Fragment() {
 
@@ -33,8 +32,10 @@ class NotesFragment : Fragment() {
         with(recyclerView) {
             layoutManager = LinearLayoutManager(context)
             val selected = Settings.getSelectedTagID(context!!)
-            adapter = NoteRecyclerViewAdapter(DB.getNotesPreviews(if (selected < 0) null else selected),
-                fragmentManager!!, activity!!)
+            adapter = NoteRecyclerViewAdapter(
+                DB.getNotesPreviews(if (selected < 0) null else selected),
+                fragmentManager!!, activity!!
+            )
         }
 
         var tags = ArrayList<String>()
@@ -55,10 +56,10 @@ class NotesFragment : Fragment() {
 
         val id = Settings.getSelectedTagID(context!!)
 
-        if(id > 0) {
+        if (id > 0) {
             var i: Int = 1
-            for(id_ in tagIDs) {
-                if(id_ == id) {
+            for (id_ in tagIDs) {
+                if (id_ == id) {
                     tagSelect.setSelection(i)
                     break
                 }
@@ -69,9 +70,11 @@ class NotesFragment : Fragment() {
 
 
         tagSelect.onItemSelectedListener = SpinnerChangeDetector {
-            Settings.setSelectedTagID(context!!,
-                if(tagSelect.selectedItemPosition != 0) tagIDs[tagSelect.selectedItemPosition-1]
-                    else -1)
+            Settings.setSelectedTagID(
+                context!!,
+                if (tagSelect.selectedItemPosition != 0) tagIDs[tagSelect.selectedItemPosition - 1]
+                else -1
+            )
 
             val fragmentTransaction = fragmentManager!!.beginTransaction()
             fragmentTransaction.replace(R.id.fragmentView, NotesFragment())

@@ -13,10 +13,18 @@ object EventSchedule {
     // Works fine after the app is closed but not after the device is restarted
     // Time is the time in milliseconds since the epoch
     // If requireAccurate is true then accurate timing will be used regardless of the accurate notifications setting
-    fun scheduleEvent(context: Context, time: Long, intent: PendingIntent, requireAccurate: Boolean = true) {
+    fun scheduleEvent(
+        context: Context,
+        time: Long,
+        intent: PendingIntent,
+        requireAccurate: Boolean = true
+    ) {
         val alarmMgr = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && (requireAccurate || Settings.getAccurateNotificationsEnabled(context))) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && (requireAccurate || Settings.getAccurateNotificationsEnabled(
+                context
+            ))
+        ) {
             alarmMgr.setExact(
                 AlarmManager.RTC_WAKEUP,
                 time,

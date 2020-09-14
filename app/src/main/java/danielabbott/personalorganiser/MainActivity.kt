@@ -59,22 +59,24 @@ class MainActivity : AppCompatActivity() {
             val endAlpha = 0.0f
             val time = (1.0f - t) * 250.0f
 
-            if(animatorMenuTranslation != null) {
+            if (animatorMenuTranslation != null) {
                 animatorMenuTranslation!!.cancel()
             }
-            if(animatorMenuBlackAlpha != null) {
+            if (animatorMenuBlackAlpha != null) {
                 animatorMenuBlackAlpha!!.cancel()
             }
 
-            animatorMenuTranslation = ObjectAnimator.ofFloat(menuContainer, "translationX", currentPos, endPos).apply {
-                duration = time.toLong()
-                start()
-            }
+            animatorMenuTranslation =
+                ObjectAnimator.ofFloat(menuContainer, "translationX", currentPos, endPos).apply {
+                    duration = time.toLong()
+                    start()
+                }
             // Make the black rectangle fade away
-            animatorMenuBlackAlpha = ObjectAnimator.ofFloat(menuBlack, "alpha", currentAlpha, endAlpha).apply {
-                duration = time.toLong()
-                start()
-            }
+            animatorMenuBlackAlpha =
+                ObjectAnimator.ofFloat(menuBlack, "alpha", currentAlpha, endAlpha).apply {
+                    duration = time.toLong()
+                    start()
+                }
         }
         menuVisible = false
     }
@@ -90,21 +92,23 @@ class MainActivity : AppCompatActivity() {
             val endAlpha = 0.7f
             val time = (1.0f - t) * 300.0f
 
-            if(animatorMenuTranslation != null) {
+            if (animatorMenuTranslation != null) {
                 animatorMenuTranslation!!.cancel()
             }
-            if(animatorMenuBlackAlpha != null) {
+            if (animatorMenuBlackAlpha != null) {
                 animatorMenuBlackAlpha!!.cancel()
             }
 
-            animatorMenuTranslation = ObjectAnimator.ofFloat(menuContainer, "translationX", currentPos, endPos).apply {
-                duration = time.toLong()
-                start()
-            }
-            animatorMenuBlackAlpha = ObjectAnimator.ofFloat(menuBlack, "alpha", currentAlpha, endAlpha).apply {
-                duration = time.toLong()
-                start()
-            }
+            animatorMenuTranslation =
+                ObjectAnimator.ofFloat(menuContainer, "translationX", currentPos, endPos).apply {
+                    duration = time.toLong()
+                    start()
+                }
+            animatorMenuBlackAlpha =
+                ObjectAnimator.ofFloat(menuBlack, "alpha", currentAlpha, endAlpha).apply {
+                    duration = time.toLong()
+                    start()
+                }
         }
         menuVisible = true
     }

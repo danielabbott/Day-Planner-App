@@ -235,7 +235,7 @@
                                 android:paddingLeft="30dp"
                                 android:paddingTop="5dp"
                                 android:paddingBottom="5dp"
-                            android:text="@string/menu_button_notes"
+                                android:text="@string/menu_button_notes"
                                 android:textSize="22sp" />
                         </LinearLayout>
 

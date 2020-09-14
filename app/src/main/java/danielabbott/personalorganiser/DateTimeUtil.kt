@@ -1,7 +1,6 @@
 package danielabbott.personalorganiser
 
 import android.content.Context
-import android.util.Log
 import java.util.*
 
 object DateTimeUtil {

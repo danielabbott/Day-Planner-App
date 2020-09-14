@@ -26,7 +26,7 @@
         android:layout_height="200dp"
         android:layout_gravity="center"
         android:background="#00000000"
-        app:srcCompat="@drawable/ic_end_alarm"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:srcCompat="@drawable/ic_end_alarm" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.todolist.EditToDoListTaskFragment"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    tools:context=".ui.todolist.EditToDoListTaskFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -36,9 +36,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:ems="10"
-                    android:inputType="textCapSentences"
+                    android:hint="Task name"
                     android:imeOptions="actionDone"
-                    android:hint="Task name"/>
+                    android:inputType="textCapSentences" />
 
             </LinearLayout>
 
@@ -89,9 +89,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.2"
                     android:clickable="true"
+                    android:focusable="true"
                     android:text="----/--/--"
-                    android:textSize="20sp"
-                    android:focusable="true" />
+                    android:textSize="20sp" />
 
                 <Button
                     android:id="@+id/dateBack"
@@ -136,9 +136,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:clickable="true"
+                    android:focusable="true"
                     android:text="00:00"
-                    android:textSize="24sp"
-                    android:focusable="true" />
+                    android:textSize="24sp" />
 
             </LinearLayout>
 
@@ -161,7 +161,7 @@
                 android:ems="10"
                 android:gravity="start|top"
                 android:inputType="textMultiLine|textCapSentences"
-                android:lines="6"/>
+                android:lines="6" />
 
             <Space
                 android:layout_width="match_parent"
@@ -284,8 +284,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Add Picture"
                 android:backgroundTint="@color/buttonColour"
+                android:text="Add Picture"
                 android:textAllCaps="false" />
 
             <HorizontalScrollView
@@ -307,8 +307,8 @@
                 android:id="@+id/bDelete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Delete Task"
-                android:backgroundTint="@color/buttonColour" />
+                android:backgroundTint="@color/buttonColour"
+                android:text="Delete Task" />
         </LinearLayout>
     </ScrollView>
 

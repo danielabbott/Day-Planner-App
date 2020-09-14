@@ -41,14 +41,13 @@ class EditNoteFragment(val noteId: Long?) : DataEntryFragmentBasic() {
         tagsll = root.findViewById<LinearLayout>(R.id.tagsll)
 
 
-        if(noteId == null) {
+        if (noteId == null) {
             tags = ArrayList()
-        }
-        else {
+        } else {
             var e: Note
             try {
                 e = DB.getNote(noteId)
-            } catch(e: Exception) {
+            } catch (e: Exception) {
                 val fragmentTransaction = fragmentManager!!.beginTransaction()
                 fragmentTransaction.replace(R.id.fragmentView, NotesFragment())
                 fragmentTransaction.commit()
@@ -67,20 +66,20 @@ class EditNoteFragment(val noteId: Long?) : DataEntryFragmentBasic() {
             DialogAddTag { tagName ->
                 val tagUpper = tagName.toUpperCase()
                 var tagAlreadyExists = false
-                for(i in 0 until tags.size) {
-                    if(tags[i].tag.toUpperCase().equals(tagUpper)) {
+                for (i in 0 until tags.size) {
+                    if (tags[i].tag.toUpperCase().equals(tagUpper)) {
                         tagAlreadyExists = true
                         break
                     }
                 }
-                for(i in 0 until newTags.size) {
-                    if(newTags[i].tag.toUpperCase().equals(tagUpper)) {
+                for (i in 0 until newTags.size) {
+                    if (newTags[i].tag.toUpperCase().equals(tagUpper)) {
                         tagAlreadyExists = true
                         break
                     }
                 }
 
-                if(!tagAlreadyExists) {
+                if (!tagAlreadyExists) {
                     var tag = Tag(-1, tagName)
                     newTags.add(tag)
                     addTagTV(tag)
@@ -117,15 +116,14 @@ class EditNoteFragment(val noteId: Long?) : DataEntryFragmentBasic() {
     private fun addTagTV(tagObj: Tag) {
         var tv = LayoutInflater.from(context!!).inflate(R.layout.tag, tagsll, false) as TextView
         tv.text = tagObj.tag
-        tv.setOnLongClickListener {_ ->
+        tv.setOnLongClickListener { _ ->
             // Remove tag
             tagsll.removeView(tv)
 
-            if(tags.contains(tagObj)) {
+            if (tags.contains(tagObj)) {
                 tags.remove(tagObj)
                 DB.removeTagFromNote(noteId!!, tagObj.id)
-            }
-            else {
+            } else {
                 newTags.remove(tagObj)
             }
 

@@ -17,7 +17,6 @@ import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.Settings
 import danielabbott.personalorganiser.ui.timers.TimersFragment
-import danielabbott.personalorganiser.ui.timetable.TimetableFragment
 
 
 class SettingsFragment : Fragment() {
@@ -32,7 +31,8 @@ class SettingsFragment : Fragment() {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_settings, container, false)
 
-        root.findViewById<TextView>(R.id.appVersion).text = "App version ${BuildConfig.VERSION_NAME}"
+        root.findViewById<TextView>(R.id.appVersion).text =
+            "App version ${BuildConfig.VERSION_NAME}"
 
         val morningTime = root.findViewById<TimeSelectView>(R.id.morningTime)
         val time = Settings.getMorningReminderTime(context!!)
@@ -125,7 +125,8 @@ class SettingsFragment : Fragment() {
         enableAlarmVibration.isChecked = Settings.getAlarmVibrationEnabled(context!!)
 
 
-        val accurateNotificationTimes = root.findViewById<SwitchCompat>(R.id.accurateNotificationTimes)
+        val accurateNotificationTimes =
+            root.findViewById<SwitchCompat>(R.id.accurateNotificationTimes)
         accurateNotificationTimes.setOnCheckedChangeListener { _, checked: Boolean ->
             Settings.setAccurateNotificationsEnabled(context!!, checked)
         }

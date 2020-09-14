@@ -2,8 +2,6 @@ package danielabbott.personalorganiser.ui.todolist
 
 
 import android.app.AlertDialog
-import android.graphics.BlendMode
-import android.graphics.BlendModeColorFilter
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.view.LayoutInflater
@@ -11,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import danielabbott.personalorganiser.DateTimeUtil
@@ -142,7 +139,8 @@ class ToDoListRecyclerViewAdapter(
             // Task (not section header)
 
             //holder.colourLayout.setBackgroundColor(item.colour)
-            holder.colourLayout.background!!.colorFilter = PorterDuffColorFilter(item.colour, PorterDuff.Mode.MULTIPLY)
+            holder.colourLayout.background!!.colorFilter =
+                PorterDuffColorFilter(item.colour, PorterDuff.Mode.MULTIPLY)
 
             holder.divider?.visibility = View.INVISIBLE
 
@@ -160,8 +158,8 @@ class ToDoListRecyclerViewAdapter(
                 }
             }
 
-            if(holder.dots != null) {
-                holder.dots.visibility = if(item.hasNotes) View.VISIBLE else View.INVISIBLE;
+            if (holder.dots != null) {
+                holder.dots.visibility = if (item.hasNotes) View.VISIBLE else View.INVISIBLE;
             }
 
             holder.layout.setOnClickListener {
@@ -203,13 +201,13 @@ class ToDoListRecyclerViewAdapter(
         } else {
             holder.name.text = item.header_title
             //holder.colourLayout.setBackgroundColor(0x00ffffff)
-            holder.colourLayout.background!!.colorFilter = PorterDuffColorFilter(0xffffffff.toInt(), PorterDuff.Mode.MULTIPLY)
+            holder.colourLayout.background!!.colorFilter =
+                PorterDuffColorFilter(0xffffffff.toInt(), PorterDuff.Mode.MULTIPLY)
             holder.layout.setOnClickListener(null)
             holder.layout.setOnLongClickListener(null)
             if (position == 0) {
                 holder.divider?.visibility = View.INVISIBLE
-            }
-            else {
+            } else {
                 holder.divider?.visibility = View.VISIBLE
             }
         }

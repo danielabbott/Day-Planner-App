@@ -5,15 +5,10 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputType
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import danielabbott.personalorganiser.Notifications
-import danielabbott.personalorganiser.R
-import danielabbott.personalorganiser.data.DB
-import danielabbott.personalorganiser.data.Settings
 
-class DialogAddTag(val callback: (String) -> Unit): DialogFragment() {
+class DialogAddTag(val callback: (String) -> Unit) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         var textBox = EditText(context)

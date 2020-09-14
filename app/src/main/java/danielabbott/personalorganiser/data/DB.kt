@@ -127,11 +127,13 @@ object DB {
             db.execSQL("CREATE TABLE IF NOT EXISTS TBL_TAGS (_id INTEGER PRIMARY KEY, tag TEXT NOT NULL COLLATE nocase)")
             db.execSQL("CREATE UNIQUE INDEX IF NOT EXISTS tag_index ON TBL_TAGS(tag)")
 
-            db.execSQL("CREATE TABLE IF NOT EXISTS TBL_NOTE_TAG (tag_id INTEGER NOT NULL, note_id INTEGER NOT NULL," +
-                    "PRIMARY KEY (tag_id, note_id)," +
-                    "CONSTRAINT notes_tag_1 FOREIGN KEY (note_id) REFERENCES TBL_NOTES(_id) ON DELETE CASCADE," +
-                    "CONSTRAINT notes_tag_2 FOREIGN KEY (tag_id) REFERENCES TBL_TAGS(_id) ON DELETE CASCADE" +
-                    ")")
+            db.execSQL(
+                "CREATE TABLE IF NOT EXISTS TBL_NOTE_TAG (tag_id INTEGER NOT NULL, note_id INTEGER NOT NULL," +
+                        "PRIMARY KEY (tag_id, note_id)," +
+                        "CONSTRAINT notes_tag_1 FOREIGN KEY (note_id) REFERENCES TBL_NOTES(_id) ON DELETE CASCADE," +
+                        "CONSTRAINT notes_tag_2 FOREIGN KEY (tag_id) REFERENCES TBL_TAGS(_id) ON DELETE CASCADE" +
+                        ")"
+            )
             db.execSQL("CREATE INDEX IF NOT EXISTS note_index ON TBL_NOTE_TAG(note_id)")
         }
 
@@ -417,7 +419,7 @@ object DB {
             put("duration", e.duration)
             put("days", e.days)
             put("name", e.name)
-            put("notes", e.notes?.ifBlank{null}?.trim())
+            put("notes", e.notes?.ifBlank { null }?.trim())
             put("remind30Mins", if (e.remind30Mins) 1 else 0)
             put("remind1Hr", if (e.remind1Hr) 1 else 0)
             put("remind2Hrs", if (e.remind2Hrs) 1 else 0)
@@ -620,7 +622,7 @@ object DB {
             put("dateTime", e.dateTime)
             put("has_time", e.hasTime)
             put("name", e.name)
-            put("notes", e.notes?.ifBlank{null}?.trim())
+            put("notes", e.notes?.ifBlank { null }?.trim())
             put("remind30Mins", if (e.remind30Mins) 1 else 0)
             put("remind1Hr", if (e.remind1Hr) 1 else 0)
             put("remind2Hrs", if (e.remind2Hrs) 1 else 0)
@@ -792,7 +794,7 @@ object DB {
         val values = ContentValues().apply {
             put("name", e.name)
             put("colour", e.colour)
-            put("notes", e.notes?.ifBlank{null}?.trim())
+            put("notes", e.notes?.ifBlank { null }?.trim())
         }
 
         return if (e.id < 0) {
@@ -1156,13 +1158,12 @@ object DB {
         val db = dbHelper.readableDatabase
 
 
-        val cursor = if(tag == null) {
+        val cursor = if (tag == null) {
             db.rawQuery(
                 "SELECT _id,SUBSTR(contents,0,100) as contents_preview FROM TBL_NOTES",
                 arrayOf()
             )
-        }
-        else {
+        } else {
             db.rawQuery(
                 "SELECT _id,SUBSTR(contents,0,100) as contents_preview FROM TBL_NOTES WHERE _id IN (SELECT note_id FROM TBL_NOTE_TAG WHERE tag_id = ?)",
                 arrayOf(tag.toString())
@@ -1219,7 +1220,7 @@ object DB {
             arrayOf(id.toString())
         )
 
-        if(!cursor.moveToNext()) {
+        if (!cursor.moveToNext()) {
             throw Exception("Record not found")
         }
 
@@ -1234,11 +1235,13 @@ object DB {
 
         val tags = ArrayList<Tag>()
 
-        while(cursor2.moveToNext()) {
-            tags.add(Tag(
-                cursor2.getLong(cursor2.getColumnIndexOrThrow("_id")),
-                cursor2.getString(cursor2.getColumnIndexOrThrow("tag"))
-            ))
+        while (cursor2.moveToNext()) {
+            tags.add(
+                Tag(
+                    cursor2.getLong(cursor2.getColumnIndexOrThrow("_id")),
+                    cursor2.getString(cursor2.getColumnIndexOrThrow("tag"))
+                )
+            )
         }
 
         cursor2.close()
@@ -1256,7 +1259,7 @@ object DB {
 
         val tags = ArrayList<Long>()
 
-        while(cursor.moveToNext()) {
+        while (cursor.moveToNext()) {
             tags.add(
                 cursor.getLong(cursor.getColumnIndexOrThrow("tag_id"))
             )
@@ -1283,7 +1286,7 @@ object DB {
 
     }
 
-    fun createOrGetTag(tag: String) : Long {
+    fun createOrGetTag(tag: String): Long {
         val db = dbHelper.writableDatabase
 
         val cursor = db.rawQuery(
@@ -1291,7 +1294,7 @@ object DB {
             arrayOf(tag.trim())
         )
 
-        if(!cursor.moveToNext()) {
+        if (!cursor.moveToNext()) {
             // Add new tag
 
             return db?.insert("TBL_TAGS", null, ContentValues().apply {
@@ -1328,7 +1331,7 @@ object DB {
             arrayOf(tagId.toString())
         )
 
-        if(cursor.moveToNext() && cursor.getInt(cursor.getColumnIndexOrThrow("n")) < 1) {
+        if (cursor.moveToNext() && cursor.getInt(cursor.getColumnIndexOrThrow("n")) < 1) {
             // Tag is unused
 
             db.execSQL("DELETE FROM TBL_TAGS WHERE _id=?", arrayOf(tagId.toString()))
@@ -1339,14 +1342,18 @@ object DB {
 
     fun removeTagFromNote(noteId: Long, tagId: Long) {
         val db = dbHelper.writableDatabase
-        db?.delete("TBL_NOTE_TAG", "note_id=? AND tag_id=?", arrayOf(noteId.toString(), tagId.toString()))
+        db?.delete(
+            "TBL_NOTE_TAG",
+            "note_id=? AND tag_id=?",
+            arrayOf(noteId.toString(), tagId.toString())
+        )
 
         val cursor = db.rawQuery(
             "SELECT COUNT(*) as n FROM TBL_NOTE_TAG WHERE tag_id=?",
             arrayOf(tagId.toString())
         )
 
-        if(cursor.moveToNext() && cursor.getInt(cursor.getColumnIndexOrThrow("n")) < 1) {
+        if (cursor.moveToNext() && cursor.getInt(cursor.getColumnIndexOrThrow("n")) < 1) {
             // Tag is unused
 
             db.execSQL("DELETE FROM TBL_TAGS WHERE _id=?", arrayOf(tagId.toString()))

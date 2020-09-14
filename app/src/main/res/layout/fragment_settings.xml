@@ -56,8 +56,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:text="&lt;"
-                android:backgroundTint="@color/buttonColour"/>
+                android:backgroundTint="@color/buttonColour"
+                android:text="&lt;" />
 
             <TextView
                 android:id="@+id/startTime"
@@ -65,18 +65,18 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
                 android:clickable="true"
+                android:focusable="true"
                 android:gravity="center"
                 android:text="7:00"
-                android:textSize="20sp"
-                android:focusable="true" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/startTimeForwards"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:text="&gt;"
-                android:backgroundTint="@color/buttonColour" />
+                android:backgroundTint="@color/buttonColour"
+                android:text="&gt;" />
 
 
         </LinearLayout>
@@ -102,8 +102,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:text="&lt;"
-                android:backgroundTint="@color/buttonColour" />
+                android:backgroundTint="@color/buttonColour"
+                android:text="&lt;" />
 
             <TextView
                 android:id="@+id/endTime"
@@ -111,18 +111,18 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
                 android:clickable="true"
+                android:focusable="true"
                 android:gravity="center"
                 android:text="7:00"
-                android:textSize="20sp"
-                android:focusable="true" />
+                android:textSize="20sp" />
 
             <Button
                 android:id="@+id/endTimeForwards"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:text="&gt;"
-                android:backgroundTint="@color/buttonColour" />
+                android:backgroundTint="@color/buttonColour"
+                android:text="&gt;" />
 
 
         </LinearLayout>
@@ -145,8 +145,8 @@
 
             <Spinner
                 android:id="@+id/timetableFontSize"
-                android:layout_height="wrap_content"
                 android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:entries="@array/timetable_font_sizes" />
 
@@ -171,13 +171,12 @@
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/enableAlarms"
-                android:layout_height="wrap_content"
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
+                android:layout_weight="1"
                 android:background="@null"
-                />
+                android:gravity="center_horizontal" />
 
         </LinearLayout>
 
@@ -199,8 +198,8 @@
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/enableAlarmVibration"
-                android:layout_height="wrap_content"
                 android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@null" />
 
@@ -224,8 +223,8 @@
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/accurateNotificationTimes"
-                android:layout_height="wrap_content"
                 android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@null" />
 
@@ -239,26 +238,25 @@
             android:id="@+id/optimiseDB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Optimise Database"
             android:backgroundTint="@color/buttonColour"
-            android:textAllCaps="false"
-            />
+            android:text="Optimise Database"
+            android:textAllCaps="false" />
 
         <Button
             android:id="@+id/exportDB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Export Database"
             android:backgroundTint="@color/buttonColour"
-            android:textAllCaps="false"/>
+            android:text="Export Database"
+            android:textAllCaps="false" />
 
         <Button
             android:id="@+id/importDB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Import Database"
             android:backgroundTint="@color/buttonColour"
-            android:textAllCaps="false"/>
+            android:text="Import Database"
+            android:textAllCaps="false" />
 
         <Space
             android:layout_width="match_parent"
@@ -280,7 +278,7 @@
             android:id="@+id/appVersion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"/>
+            android:gravity="center_horizontal" />
 
 
     </LinearLayout>

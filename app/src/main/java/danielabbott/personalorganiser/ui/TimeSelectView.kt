@@ -63,6 +63,7 @@ class TimeSelectView : AppCompatTextView {
         }
         onClick = l
     }
+
     override fun setOnLongClickListener(l: OnLongClickListener?) {
         if (!initDone) {
             super.setOnLongClickListener(l)

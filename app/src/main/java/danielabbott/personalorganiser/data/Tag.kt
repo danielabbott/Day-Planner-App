@@ -1,6 +1,6 @@
 package danielabbott.personalorganiser.data
 
-class Tag (
+class Tag(
     var id: Long,
     var tag: String
 )
