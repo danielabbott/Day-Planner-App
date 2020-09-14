@@ -73,42 +73,53 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <TextView
                     android:id="@+id/lblStart"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Start" />
 
                 <danielabbott.personalorganiser.ui.TimeSelectView
                     android:id="@+id/tvStart"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true"
                     android:text="00:00"
                     android:textSize="24sp" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <TextView
                     android:id="@+id/textView10"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="End" />
 
                 <danielabbott.personalorganiser.ui.TimeSelectView
                     android:id="@+id/tvEnd"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true"
                     android:text="00:00"
                     android:textSize="24sp" />
-
             </LinearLayout>
 
 
@@ -122,12 +133,14 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:weightSum="6">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
+                        android:gravity="center"
                         android:text="Monday" />
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -135,18 +148,15 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@null" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                        android:background="@null"
+                        android:layout_gravity="left"/>
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Tuesday" />
+                        android:layout_weight="2"
+                        android:text="Tuesday"
+                        android:gravity="center" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/tuesday"
@@ -159,12 +169,14 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:weightSum="6">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
+                        android:gravity="center"
                         android:text="Wednesday"  />
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -173,17 +185,12 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@null"/>
-                </TableRow>
-
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
+                        android:gravity="center"
                         android:text="Thursday" />
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -197,31 +204,28 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:weightSum="6">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Friday" />
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:text="Friday"  />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/friday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@null" />
-                </TableRow>
-
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                        android:background="@null"/>
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="2"
+                        android:gravity="center"
                         android:text="Saturday" />
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -229,26 +233,28 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@null" />
+                        android:background="@null"/>
                 </TableRow>
 
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:weightSum="6">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Sunday" />
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:text="Sunday"  />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/sunday"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@null" />
+                        android:background="@null"/>
                 </TableRow>
             </TableLayout>
 
@@ -363,7 +369,9 @@
                 android:id="@+id/bAddPicture"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Add picture" />
+                android:text="Add Picture"
+                android:backgroundTint="@color/buttonColour"
+                android:textAllCaps="false" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -384,7 +392,9 @@
                 android:id="@+id/bDelete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Delete Event" />
+                android:text="Delete Event"
+                android:backgroundTint="@color/buttonColour"
+                android:textAllCaps="false" />
         </LinearLayout>
     </ScrollView>
 

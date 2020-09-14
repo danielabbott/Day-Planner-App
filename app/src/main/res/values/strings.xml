@@ -11,6 +11,7 @@
     <string name="menu_button_goals">Goals</string>
     <string name="menu_button_timers">Timers</string>
     <string name="menu_button_notes">Notes</string>
+    <string name="menu_button_settings">Settings</string>
 
     <string-array name="days_of_week">
         <item>Monday</item>

@@ -165,6 +165,10 @@ class MainActivity : AppCompatActivity() {
                 switchToFragment(NotesFragment())
             }
         }
+        findViewById<LinearLayout>(R.id.bMenuSettings).setOnClickListener {
+            hideMenu()
+            goToSettingsPage()
+        }
 
         fun loadLastPage() {
             when (Settings.getLastPage(this)) {
@@ -257,13 +261,17 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    private fun goToSettingsPage() {
+        hideKeyboard()
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.fragmentView, SettingsFragment()).addToBackStack(null)
+        fragmentTransaction.commit()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         super.onOptionsItemSelected(item)
         if (item == settingsMenuOption) {
-            hideKeyboard()
-            val fragmentTransaction = supportFragmentManager.beginTransaction()
-            fragmentTransaction.replace(R.id.fragmentView, SettingsFragment()).addToBackStack(null)
-            fragmentTransaction.commit()
+            goToSettingsPage()
         }
         return false
     }

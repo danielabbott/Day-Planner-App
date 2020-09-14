@@ -59,7 +59,7 @@ class NoteRecyclerViewAdapter(
             fragmentTransaction.commit()
         }
         holder.noteClickable.setOnLongClickListener {
-            showDeleteDialog(item.id)
+            showDeleteDialog(item.id, s2.replace('\n', ' ', false))
             true
         }
     }
@@ -71,11 +71,15 @@ class NoteRecyclerViewAdapter(
         val noteClickable: LinearLayout = view.findViewById(R.id.noteClickable)
     }
 
-    private fun showDeleteDialog(noteId: Long) {
+    private fun showDeleteDialog(noteId: Long, note: String) {
+        var noteShortened = note
+        if (noteShortened.length > 20) {
+            noteShortened = noteShortened.substring(0, 17) + "..."
+        }
+
         android.app.AlertDialog.Builder(activity)
             .setTitle("Delete note")
-            // TODO include first 20 characters of note
-            .setMessage("Are you sure you want to delete this note? This cannot be undone.")
+            .setMessage("Are you sure you want to delete the note '$noteShortened'? This cannot be undone.")
             .setIcon(android.R.drawable.ic_dialog_alert)
             .setPositiveButton("Delete") { _, _ ->
                 DB.deleteNote(noteId)

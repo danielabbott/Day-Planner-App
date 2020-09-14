@@ -19,7 +19,7 @@ class DialogAddTag(val callback: (String) -> Unit): DialogFragment() {
         var textBox = EditText(context)
         textBox.hint = "Tag name..."
         textBox.isSingleLine = true
-        textBox.inputType = InputType.TYPE_CLASS_TEXT
+        textBox.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_WORDS
 
         // TODO autocomplete in textbox (similar to URL bar in a web browser)
 

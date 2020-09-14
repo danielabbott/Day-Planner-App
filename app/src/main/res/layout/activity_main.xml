@@ -62,7 +62,7 @@
 
             <LinearLayout
                 android:id="@+id/menuContainer"
-                android:layout_width="200dp"
+                android:layout_width="300dp"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 app:layout_constraintStart_toStartOf="parent"
@@ -70,7 +70,7 @@
 
                 <ScrollView
                     android:id="@+id/menu"
-                    android:layout_width="150dp"
+                    android:layout_width="250dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/menu_shape"
                     android:orientation="vertical"
@@ -85,123 +85,187 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="30dp" />
+
                         <LinearLayout
                             android:id="@+id/bMenuToDoList"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:orientation="horizontal"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp">
 
                             <ImageView
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
                                 android:layout_gravity="center"
+                                android:layout_marginLeft="10dp"
                                 android:contentDescription="@string/condesc_menu_button_to_do_list"
-                                app:srcCompat="@drawable/ic_todolist" />
+                                app:srcCompat="@drawable/ic_check_box" />
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_horizontal"
+                                android:gravity="left"
+                                android:paddingLeft="30dp"
                                 android:paddingTop="5dp"
                                 android:paddingBottom="5dp"
                                 android:text="@string/menu_button_to_do_list"
-                                android:textAlignment="center"
                                 android:textSize="22sp" />
                         </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp" />
 
                         <LinearLayout
                             android:id="@+id/bMenuTimetable"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:orientation="horizontal"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp">
 
                             <ImageView
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
                                 android:layout_gravity="center"
+                                android:layout_marginLeft="10dp"
                                 android:contentDescription="@string/condesc_menu_button_timetable"
-                                app:srcCompat="@drawable/ic_timetable" />
+                                app:srcCompat="@drawable/ic_grid" />
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_horizontal"
+                                android:gravity="left"
+                                android:paddingLeft="30dp"
                                 android:paddingTop="5dp"
                                 android:paddingBottom="5dp"
                                 android:text="@string/menu_button_timetable"
-                                android:textAlignment="center"
                                 android:textSize="22sp" />
                         </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp" />
 
                         <LinearLayout
                             android:id="@+id/bMenuGoals"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:orientation="horizontal"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp">
 
                             <ImageView
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
                                 android:layout_gravity="center"
+                                android:layout_marginLeft="10dp"
                                 android:contentDescription="@string/condesc_menu_button_goals"
-                                android:paddingTop="20dp"
-                                app:srcCompat="@drawable/ic_goal" />
+                                app:srcCompat="@drawable/ic_trophy" />
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_horizontal"
+                                android:gravity="left"
+                                android:paddingLeft="30dp"
                                 android:paddingTop="5dp"
                                 android:paddingBottom="5dp"
                                 android:text="@string/menu_button_goals"
-                                android:textAlignment="center"
                                 android:textSize="22sp" />
                         </LinearLayout>
 
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp" />
+
                         <LinearLayout
-                        android:id="@+id/bMenuTimers"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:layout_gravity="center"
-                            android:contentDescription="@string/condesc_menu_button_goals"
-                            android:paddingTop="20dp"
-                            app:srcCompat="@drawable/ic_stopwatch" />
-
-                        <TextView
+                            android:id="@+id/bMenuTimers"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center_horizontal"
+                            android:orientation="horizontal"
                             android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:text="@string/menu_button_timers"
-                            android:textAlignment="center"
-                            android:textSize="22sp" />
-                    </LinearLayout>
+                            android:paddingBottom="5dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="10dp"
+                                android:contentDescription="@string/condesc_menu_button_goals"
+                                app:srcCompat="@drawable/ic_timer" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="left"
+                                android:paddingLeft="30dp"
+                                android:paddingTop="5dp"
+                                android:paddingBottom="5dp"
+                                android:text="@string/menu_button_timers"
+                                android:textSize="22sp" />
+                        </LinearLayout>
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="20dp"/>
+                            android:layout_height="10dp" />
 
                         <LinearLayout
                             android:id="@+id/bMenuNotes"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:paddingTop="20dp">
+                            android:orientation="horizontal"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="10dp"
+                                app:srcCompat="@drawable/ic_notes" />
 
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_horizontal"
+                                android:gravity="left"
+                                android:paddingLeft="30dp"
                                 android:paddingTop="5dp"
                                 android:paddingBottom="5dp"
-                                android:text="@string/menu_button_notes"
-                                android:textAlignment="center"
+                            android:text="@string/menu_button_notes"
+                                android:textSize="22sp" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp" />
+
+                        <LinearLayout
+                            android:id="@+id/bMenuSettings"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="10dp"
+                                app:srcCompat="@drawable/ic_settings_cog" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="left"
+                                android:paddingLeft="30dp"
+                                android:paddingTop="5dp"
+                                android:paddingBottom="5dp"
+                                android:text="@string/menu_button_settings"
                                 android:textSize="22sp" />
                         </LinearLayout>
                     </LinearLayout>

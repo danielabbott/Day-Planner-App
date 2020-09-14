@@ -284,7 +284,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Add picture" />
+                android:text="Add Picture"
+                android:backgroundTint="@color/buttonColour"
+                android:textAllCaps="false" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -305,7 +307,8 @@
                 android:id="@+id/bDelete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Delete Task" />
+                android:text="Delete Task"
+                android:backgroundTint="@color/buttonColour" />
         </LinearLayout>
     </ScrollView>
 
