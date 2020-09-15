@@ -99,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.4"
                     android:text="&lt;"
-                    android:visibility="invisible" />
+                    android:backgroundTint="@color/buttonColour" />
 
                 <Button
                     android:id="@+id/dateForwards"
@@ -107,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.4"
                     android:text="&gt;"
-                    android:visibility="invisible" />
+                    android:backgroundTint="@color/buttonColour" />
 
 
             </LinearLayout>

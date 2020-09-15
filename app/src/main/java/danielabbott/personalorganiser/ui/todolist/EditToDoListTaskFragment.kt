@@ -106,6 +106,10 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                 dateForwards.visibility = View.VISIBLE
                 dateBack.visibility = View.VISIBLE
             }
+            else {
+                dateForwards.visibility = View.INVISIBLE
+                dateBack.visibility = View.INVISIBLE
+            }
 
             if (e.dateTime != null) {
                 if (e.hasTime) {
@@ -115,6 +119,10 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                 val d = DateTimeUtil.getYearMonthDay(e.dateTime!!)
                 date.setDate(d.first, d.second, d.third)
             }
+        }
+        else {
+            dateForwards.visibility = View.INVISIBLE
+            dateBack.visibility = View.INVISIBLE
         }
 
         picturePreviewsView = root.findViewById<LinearLayout>(R.id.PicturePreviews)

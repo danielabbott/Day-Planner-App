@@ -15,6 +15,9 @@ import java.io.OutputStream
 // All functions can throw exceptions
 object DB {
 
+    // ** Database versions **
+    // 1: Original database schema
+    // 2: Added TBL_NOTES, TBL_TAGS, TBL_NOTE_TAG
     class DBHelper(context: Context) : SQLiteOpenHelper(
         context, "po.db", null,
         2 /*Increment whenever db structure changes*/
