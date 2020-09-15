@@ -17,7 +17,8 @@ import danielabbott.personalorganiser.data.Note
 import danielabbott.personalorganiser.data.Tag
 import danielabbott.personalorganiser.ui.DataEntryFragmentBasic
 
-class EditNoteFragment(val noteId: Long?) : DataEntryFragmentBasic() {
+// text_from_share is only used if noteId == null. It is the text provided by a share intent
+class EditNoteFragment(val noteId: Long?, val text_from_share: String? = null) : DataEntryFragmentBasic() {
 
 
     private lateinit var textArea: EditText
@@ -43,6 +44,11 @@ class EditNoteFragment(val noteId: Long?) : DataEntryFragmentBasic() {
 
         if (noteId == null) {
             tags = ArrayList()
+
+            if(text_from_share != null) {
+                textArea.setText(text_from_share)
+                unsavedData = true
+            }
         } else {
             var e: Note
             try {

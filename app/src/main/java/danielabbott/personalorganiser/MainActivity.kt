@@ -23,6 +23,7 @@ import danielabbott.personalorganiser.data.Settings
 import danielabbott.personalorganiser.ui.OnBackPressed
 import danielabbott.personalorganiser.ui.SettingsFragment
 import danielabbott.personalorganiser.ui.goals.GoalsFragment
+import danielabbott.personalorganiser.ui.notes.EditNoteFragment
 import danielabbott.personalorganiser.ui.notes.NotesFragment
 import danielabbott.personalorganiser.ui.timers.TimersFragment
 import danielabbott.personalorganiser.ui.timetable.TimetableEditEventFragment
@@ -184,46 +185,78 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
+
+        Notifications.createChannels(this)
+        Notifications.scheduleAllNotifications(this)
+        enableWeeklyNotificationReschedule()
+
+
         if (intent == null || intent.extras == null) {
             // Activity started normally
 
             loadLastPage()
 
         } else {
-            val type = intent.extras!!.getString("WHAT_LOAD")
-            val id = intent.extras!!.getLong("TASK_EVENT_ID")
+            if(intent.action == Intent.ACTION_SEND) {
+                if(intent.type == "text/plain") {
+                    // Launched from a different app to create a new note
 
-            if (type == null) {
-                // Activity started normally
-                loadLastPage()
-            } else {
-                // Activity started from the user tapping a notification
+                    // Go to notes page
+                    Settings.setLastPage(this, 4)
+                    switchToFragment(NotesFragment())
 
-                hideKeyboard()
+                    val text = intent.getStringExtra(Intent.EXTRA_TEXT)
 
-                if (type == "TODO") {
-                    Settings.setLastPage(this, 0)
-                    switchToFragment(ToDoListFragment())
-                    switchToFragment(EditToDoListTaskFragment(id), true)
+
+                    // Go to edit notes page
+                    if(text == null) {
+                        switchToFragment(EditNoteFragment(null), true)
+                    }
+                    else {
+                        switchToFragment(EditNoteFragment(null, text), true)
+                    }
+
+                }
+                else {
+                    loadLastPage()
+                }
+            }
+            else {
+
+                val type = intent.extras!!.getString("WHAT_LOAD")
+                val id = intent.extras!!.getLong("TASK_EVENT_ID")
+
+                if (type == null) {
+                    // Activity started normally
+                    loadLastPage()
                 } else {
-                    // Go to timetable page then to edit page so back/save buttons take the user back to the timetable
-                    Settings.setLastPage(this, 1)
-                    switchToFragment(TimetableFragment())
-                    switchToFragment(
-                        TimetableEditEventFragment(
-                            Settings.getActiveTimetable(this),
-                            id
-                        ),
-                        true
-                    )
+                    // Activity started from the user tapping a notification
+
+                    hideKeyboard()
+
+                    if (type == "TODO") {
+                        Settings.setLastPage(this, 0)
+                        switchToFragment(ToDoListFragment())
+                        switchToFragment(EditToDoListTaskFragment(id), true)
+                    } else {
+                        // Go to timetable page then to edit page so back/save buttons take the user back to the timetable
+                        Settings.setLastPage(this, 1)
+                        switchToFragment(TimetableFragment())
+                        switchToFragment(
+                            TimetableEditEventFragment(
+                                Settings.getActiveTimetable(this),
+                                id
+                            ),
+                            true
+                        )
+                    }
                 }
             }
         }
 
 
-        Notifications.createChannels(this)
-        Notifications.scheduleAllNotifications(this)
-        enableWeeklyNotificationReschedule()
+
 
     }
 
