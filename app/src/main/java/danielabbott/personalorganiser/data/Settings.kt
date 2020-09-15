@@ -243,5 +243,20 @@ object Settings {
         setString(context, "qit", e)
     }
 
+    fun getMostRecentFindString(context: Context): String {
+        return getString(context, "find", "")
+    }
+
+    fun setMostRecentFindString(context: Context, s: String) {
+        setString(context, "find", s)
+    }
+
+    fun getMostRecentReplaceString(context: Context): String {
+        return getString(context, "replace", "")
+    }
+
+    fun setMostRecentReplaceString(context: Context, s: String) {
+        setString(context, "replace", s)
+    }
 
 }

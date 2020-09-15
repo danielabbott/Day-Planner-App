@@ -1188,6 +1188,30 @@ object DB {
         return list
     }
 
+    fun getNotesPreviewsUntagged(): List<NotePreview> {
+        val list = ArrayList<NotePreview>()
+
+        val db = dbHelper.readableDatabase
+
+
+        val cursor = db.rawQuery(
+            "SELECT _id,SUBSTR(contents,0,100) as contents_preview FROM TBL_NOTES LEFT JOIN TBL_NOTE_TAG ON _id=note_id GROUP BY note_id HAVING COUNT(note_id)=0",
+            arrayOf()
+        )
+
+
+        while (cursor.moveToNext()) {
+            list.add(
+                NotePreview(
+                    cursor.getLong(cursor.getColumnIndexOrThrow("_id")),
+                    cursor.getString(cursor.getColumnIndexOrThrow("contents_preview"))
+                )
+            )
+        }
+        cursor.close()
+        return list
+    }
+
     fun getTags(): List<Tag> {
         val list = ArrayList<Tag>()
 

@@ -34,20 +34,26 @@ class NoteRecyclerViewAdapter(
 
         var s2 = ""
         var lines = 0
+        var cutShort = false
 
         for (c in s1) {
             if (c == '\n') {
                 lines++;
 
                 if (lines > 7) {
+                    cutShort = true
                     break
                 }
             }
             s2 += c
 
             if (lines > 7) {
+                cutShort = true
                 break
             }
+        }
+        if(cutShort) {
+            s2 += "..."
         }
 
         holder.contentView.text = s2

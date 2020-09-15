@@ -141,13 +141,18 @@ class EditNoteFragment(val noteId: Long?, val text_from_share: String? = null) :
     }
 
     lateinit var qieMenuItem: MenuItem
+    lateinit var replaceMenuItem: MenuItem
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
 
         val qit = Settings.getQIT(context!!)
 
-        qieMenuItem = menu.add(qit.substring(0,Math.min(qit.length, 4)))
+        qieMenuItem = menu.add(qit.substring(0, Math.min(qit.length, 4)))
         qieMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+
+
+        replaceMenuItem = menu.add("Replace")
 
         activity!!.onCreateOptionsMenu(menu)
     }
@@ -155,6 +160,14 @@ class EditNoteFragment(val noteId: Long?, val text_from_share: String? = null) :
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item == qieMenuItem) {
             textArea.text.insert(textArea.selectionEnd, Settings.getQIT(context!!))
+        } else if (item == replaceMenuItem) {
+            var find: String? = null
+            if(textArea.selectionStart != textArea.selectionEnd) {
+                find = textArea.text.toString().substring(textArea.selectionStart, textArea.selectionEnd)
+            }
+            DialogReplace (textArea.text.toString(), find) { new_text ->
+                textArea.setText(new_text)
+            }.show(fragmentManager!!, null)
         }
         return super.onOptionsItemSelected(item)
     }

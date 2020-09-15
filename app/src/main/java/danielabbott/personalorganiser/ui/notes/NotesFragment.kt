@@ -33,14 +33,15 @@ class NotesFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             val selected = Settings.getSelectedTagID(context!!)
             adapter = NoteRecyclerViewAdapter(
-                DB.getNotesPreviews(if (selected < 0) null else selected),
+                if (selected == -2L) DB.getNotesPreviewsUntagged() else (DB.getNotesPreviews(if (selected < 0) null else selected)),
                 fragmentManager!!, activity!!
             )
         }
 
         var tags = ArrayList<String>()
         var tagIDs = ArrayList<Long>()
-        tags.add("All")
+        tags.add("[All]") // -1
+        tags.add("[Untagged]") // -2
         DB.getTags().forEach {
             tags.add(it.tag)
             tagIDs.add(it.id)
@@ -57,7 +58,7 @@ class NotesFragment : Fragment() {
         val id = Settings.getSelectedTagID(context!!)
 
         if (id > 0) {
-            var i: Int = 1
+            var i: Int = 2
             for (id_ in tagIDs) {
                 if (id_ == id) {
                     tagSelect.setSelection(i)
@@ -65,6 +66,8 @@ class NotesFragment : Fragment() {
                 }
                 i += 1
             }
+        } else {
+            tagSelect.setSelection(-id.toInt() - 1)
         }
 
 
@@ -72,8 +75,8 @@ class NotesFragment : Fragment() {
         tagSelect.onItemSelectedListener = SpinnerChangeDetector {
             Settings.setSelectedTagID(
                 context!!,
-                if (tagSelect.selectedItemPosition != 0) tagIDs[tagSelect.selectedItemPosition - 1]
-                else -1
+                if (tagSelect.selectedItemPosition > 1) tagIDs[tagSelect.selectedItemPosition - 2]
+                else -(tagSelect.selectedItemPosition.toLong() + 1)
             )
 
             val fragmentTransaction = fragmentManager!!.beginTransaction()
