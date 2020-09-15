@@ -67,6 +67,21 @@ object Settings {
         }
     }
 
+    private fun getString(context: Context, name: String, default: String): String {
+        val sharedPref = context.applicationContext.getSharedPreferences(".", Context.MODE_PRIVATE)
+            ?: return default
+        return sharedPref.getString(name, default) ?: default
+    }
+
+    private fun setString(context: Context, name: String, value: String) {
+        val sharedPref =
+            context.applicationContext.getSharedPreferences(".", Context.MODE_PRIVATE) ?: return
+        with(sharedPref.edit()) {
+            putString(name, value)
+            commit()
+        }
+    }
+
     fun setActiveTimetable(id: Long, context: Context) {
         setLong(context, "active_timetable", id)
     }
@@ -215,6 +230,17 @@ object Settings {
 
     fun setSelectedTagID(context: Context, id: Long) {
         setLong(context, "selectedTagID", id)
+    }
+
+
+    // Quick Insert Text
+    fun getQIT(context: Context): String {
+        // Defaults to medium white square emoji
+        return getString(context, "qit", 0x25FB.toChar().toString() + 0xFE0F.toChar().toString())
+    }
+
+    fun setQIT(context: Context, e: String) {
+        setString(context, "qit", e)
     }
 
 

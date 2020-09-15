@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import danielabbott.personalorganiser.BuildConfig
 import danielabbott.personalorganiser.MainActivity
@@ -168,6 +169,12 @@ class SettingsFragment : Fragment() {
             val c = (root.findViewById<LinearLayout>(R.id.settingsContents) as ViewGroup)
             c.removeView(root.findViewById<TextView>(R.id.exportDB))
             c.removeView(root.findViewById<TextView>(R.id.importDB))
+        }
+
+        val qit = root.findViewById<EditText>(R.id.qit)
+        qit.setText(Settings.getQIT(context!!))
+        qit.addTextChangedListener {
+            Settings.setQIT(context!!, qit.text.toString())
         }
 
         (activity as MainActivity).setToolbarTitle("Settings")

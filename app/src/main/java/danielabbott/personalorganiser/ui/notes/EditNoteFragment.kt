@@ -1,9 +1,7 @@
 package danielabbott.personalorganiser.ui.notes
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -14,11 +12,13 @@ import danielabbott.personalorganiser.MainActivity
 import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.Note
+import danielabbott.personalorganiser.data.Settings
 import danielabbott.personalorganiser.data.Tag
 import danielabbott.personalorganiser.ui.DataEntryFragmentBasic
 
 // text_from_share is only used if noteId == null. It is the text provided by a share intent
-class EditNoteFragment(val noteId: Long?, val text_from_share: String? = null) : DataEntryFragmentBasic() {
+class EditNoteFragment(val noteId: Long?, val text_from_share: String? = null) :
+    DataEntryFragmentBasic() {
 
 
     private lateinit var textArea: EditText
@@ -45,7 +45,7 @@ class EditNoteFragment(val noteId: Long?, val text_from_share: String? = null) :
         if (noteId == null) {
             tags = ArrayList()
 
-            if(text_from_share != null) {
+            if (text_from_share != null) {
                 textArea.setText(text_from_share)
                 unsavedData = true
             }
@@ -116,6 +116,7 @@ class EditNoteFragment(val noteId: Long?, val text_from_share: String? = null) :
             (activity as MainActivity).onBackPressed()
         }
 
+        setHasOptionsMenu(true)
         return root
     }
 
@@ -137,5 +138,24 @@ class EditNoteFragment(val noteId: Long?, val text_from_share: String? = null) :
             true
         }
         tagsll.addView(tv)
+    }
+
+    lateinit var qieMenuItem: MenuItem
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+
+        val qit = Settings.getQIT(context!!)
+
+        qieMenuItem = menu.add(qit.substring(0,Math.min(qit.length, 4)))
+        qieMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+
+        activity!!.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item == qieMenuItem) {
+            textArea.text.insert(textArea.selectionEnd, Settings.getQIT(context!!))
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
