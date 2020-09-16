@@ -1196,7 +1196,7 @@ object DB {
 
 
         val cursor = db.rawQuery(
-            "SELECT _id,SUBSTR(contents,0,100) as contents_preview, length(contents) as contents_length FROM TBL_NOTES LEFT JOIN TBL_NOTE_TAG ON _id=note_id GROUP BY note_id HAVING COUNT(note_id)=0",
+            "SELECT _id,SUBSTR(contents,0,100) as contents_preview, length(contents) as contents_length FROM TBL_NOTES WHERE _id NOT IN (SELECT note_id FROM TBL_NOTE_TAG)",
             arrayOf()
         )
 
