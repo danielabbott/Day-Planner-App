@@ -1163,12 +1163,12 @@ object DB {
 
         val cursor = if (tag == null) {
             db.rawQuery(
-                "SELECT _id,SUBSTR(contents,0,100) as contents_preview FROM TBL_NOTES",
+                "SELECT _id,SUBSTR(contents,0,100) as contents_preview , length(contents) as contents_length FROM TBL_NOTES",
                 arrayOf()
             )
         } else {
             db.rawQuery(
-                "SELECT _id,SUBSTR(contents,0,100) as contents_preview FROM TBL_NOTES WHERE _id IN (SELECT note_id FROM TBL_NOTE_TAG WHERE tag_id = ?)",
+                "SELECT _id,SUBSTR(contents,0,100) as contents_preview, length(contents) as contents_length FROM TBL_NOTES WHERE _id IN (SELECT note_id FROM TBL_NOTE_TAG WHERE tag_id = ?)",
                 arrayOf(tag.toString())
             )
         }
@@ -1178,7 +1178,8 @@ object DB {
             list.add(
                 NotePreview(
                     cursor.getLong(cursor.getColumnIndexOrThrow("_id")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("contents_preview"))
+                    cursor.getString(cursor.getColumnIndexOrThrow("contents_preview")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("contents_length"))
                 )
             )
         }
@@ -1195,7 +1196,7 @@ object DB {
 
 
         val cursor = db.rawQuery(
-            "SELECT _id,SUBSTR(contents,0,100) as contents_preview FROM TBL_NOTES LEFT JOIN TBL_NOTE_TAG ON _id=note_id GROUP BY note_id HAVING COUNT(note_id)=0",
+            "SELECT _id,SUBSTR(contents,0,100) as contents_preview, length(contents) as contents_length FROM TBL_NOTES LEFT JOIN TBL_NOTE_TAG ON _id=note_id GROUP BY note_id HAVING COUNT(note_id)=0",
             arrayOf()
         )
 
@@ -1204,7 +1205,8 @@ object DB {
             list.add(
                 NotePreview(
                     cursor.getLong(cursor.getColumnIndexOrThrow("_id")),
-                    cursor.getString(cursor.getColumnIndexOrThrow("contents_preview"))
+                    cursor.getString(cursor.getColumnIndexOrThrow("contents_preview")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("contents_length"))
                 )
             )
         }
