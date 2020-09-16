@@ -1163,12 +1163,12 @@ object DB {
 
         val cursor = if (tag == null) {
             db.rawQuery(
-                "SELECT _id,SUBSTR(contents,0,100) as contents_preview , length(contents) as contents_length FROM TBL_NOTES",
+                "SELECT _id,SUBSTR(contents,0,100) as contents_preview , length(contents) as contents_length FROM TBL_NOTES ORDER BY _id DESC",
                 arrayOf()
             )
         } else {
             db.rawQuery(
-                "SELECT _id,SUBSTR(contents,0,100) as contents_preview, length(contents) as contents_length FROM TBL_NOTES WHERE _id IN (SELECT note_id FROM TBL_NOTE_TAG WHERE tag_id = ?)",
+                "SELECT _id,SUBSTR(contents,0,100) as contents_preview, length(contents) as contents_length FROM TBL_NOTES WHERE _id IN (SELECT note_id FROM TBL_NOTE_TAG WHERE tag_id = ?) ORDER BY _id DESC",
                 arrayOf(tag.toString())
             )
         }
@@ -1196,7 +1196,7 @@ object DB {
 
 
         val cursor = db.rawQuery(
-            "SELECT _id,SUBSTR(contents,0,100) as contents_preview, length(contents) as contents_length FROM TBL_NOTES WHERE _id NOT IN (SELECT note_id FROM TBL_NOTE_TAG)",
+            "SELECT _id,SUBSTR(contents,0,100) as contents_preview, length(contents) as contents_length FROM TBL_NOTES WHERE _id NOT IN (SELECT note_id FROM TBL_NOTE_TAG) ORDER BY _id DESC",
             arrayOf()
         )
 
