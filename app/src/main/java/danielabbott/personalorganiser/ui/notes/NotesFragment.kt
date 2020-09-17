@@ -14,6 +14,7 @@ import danielabbott.personalorganiser.MainActivity
 import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.Settings
+import danielabbott.personalorganiser.data.Tag
 import danielabbott.personalorganiser.ui.SpinnerChangeDetector
 
 class NotesFragment : Fragment() {
@@ -38,24 +39,30 @@ class NotesFragment : Fragment() {
             )
         }
 
-        var tags = ArrayList<String>()
+
+        val id = Settings.getSelectedTagID(context!!)
+        var selected_tag: Tag? = null
+
+        var tagsStrings = ArrayList<String>()
         var tagIDs = ArrayList<Long>()
-        tags.add("[All]") // -1
-        tags.add("[Untagged]") // -2
+        tagsStrings.add("[All]") // -1
+        tagsStrings.add("[Untagged]") // -2
         DB.getTags().forEach {
-            tags.add(it.tag)
+            tagsStrings.add(it.tag)
+            if (it.id == id) {
+                selected_tag = it
+            }
             tagIDs.add(it.id)
         }
+
 
         val tagSelect = view.findViewById<Spinner>(R.id.tagSelect)
 
         tagSelect.adapter = ArrayAdapter<String>(
             context!!,
             android.R.layout.simple_spinner_dropdown_item,
-            tags
+            tagsStrings
         )
-
-        val id = Settings.getSelectedTagID(context!!)
 
         if (id > 0) {
             var i: Int = 2
@@ -87,7 +94,11 @@ class NotesFragment : Fragment() {
 
         // On click listener for the add (+) button
         view.findViewById<FloatingActionButton>(R.id.fab_new).setOnClickListener {
-            val fragment = EditNoteFragment(null)
+            val tagsAutoAdded = ArrayList<Tag>()
+            if (selected_tag != null) {
+                tagsAutoAdded.add(selected_tag!!)
+            }
+            val fragment = EditNoteFragment(null, null, tagsAutoAdded)
             val fragmentTransaction = fragmentManager!!.beginTransaction()
             fragmentTransaction.replace(R.id.fragmentView, fragment).addToBackStack(null)
             fragmentTransaction.commit()

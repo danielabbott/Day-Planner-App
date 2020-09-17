@@ -19,7 +19,7 @@ import danielabbott.personalorganiser.data.Tag
 import danielabbott.personalorganiser.ui.DataEntryFragmentBasic
 
 // text_from_share is only used if noteId == null. It is the text provided by a share intent
-class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = null) :
+class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = null, var tags: ArrayList<Tag> = ArrayList()) :
     DataEntryFragmentBasic() {
 
 
@@ -27,7 +27,6 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
     private lateinit var tagsll: LinearLayout
 
 
-    private lateinit var tags: ArrayList<Tag>
     private var newTags = ArrayList<Tag>() // tags to be added to the note (tag IDs are -1)
     private var deletedTags = ArrayList<Tag>()
 
@@ -45,11 +44,12 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
 
 
         if (noteId == null) {
-            tags = ArrayList()
-
             if (text_from_share != null) {
                 textArea.setText(text_from_share)
                 unsavedData = true
+            }
+            tags.forEach {
+                addTagTV(it)
             }
         } else {
             var e: Note
