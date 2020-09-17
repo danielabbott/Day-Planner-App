@@ -1,11 +1,13 @@
 package danielabbott.personalorganiser.ui.notes
 
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import danielabbott.personalorganiser.MainActivity
@@ -17,7 +19,7 @@ import danielabbott.personalorganiser.data.Tag
 import danielabbott.personalorganiser.ui.DataEntryFragmentBasic
 
 // text_from_share is only used if noteId == null. It is the text provided by a share intent
-class EditNoteFragment(val noteId: Long?, val text_from_share: String? = null) :
+class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = null) :
     DataEntryFragmentBasic() {
 
 
@@ -98,8 +100,8 @@ class EditNoteFragment(val noteId: Long?, val text_from_share: String? = null) :
             unsavedData = true
         }
 
-        val fab: FloatingActionButton = root.findViewById(R.id.fab_save)
-        fab.setOnClickListener { _ ->
+        val save: Button = root.findViewById(R.id.save)
+        save.setOnClickListener { _ ->
             val notes = textArea.text.toString()
 
             var e = Note(noteId ?: -1, notes, tags)
@@ -115,6 +117,8 @@ class EditNoteFragment(val noteId: Long?, val text_from_share: String? = null) :
             unsavedData = false
             (activity as MainActivity).onBackPressed()
         }
+
+
 
         setHasOptionsMenu(true)
         return root
