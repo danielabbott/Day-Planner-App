@@ -3,10 +3,7 @@ package danielabbott.personalorganiser.ui.notes
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -19,7 +16,7 @@ import danielabbott.personalorganiser.data.Tag
 import danielabbott.personalorganiser.ui.DataEntryFragmentBasic
 
 // text_from_share is only used if noteId == null. It is the text provided by a share intent
-class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = null, var tags: ArrayList<Tag> = ArrayList()) :
+class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = null, var tagsToAdd: ArrayList<Tag>? = null) :
     DataEntryFragmentBasic() {
 
 
@@ -27,6 +24,7 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
     private lateinit var tagsll: LinearLayout
 
 
+    private var tags = ArrayList<Tag>()
     private var newTags = ArrayList<Tag>() // tags to be added to the note (tag IDs are -1)
     private var deletedTags = ArrayList<Tag>()
 
@@ -48,7 +46,9 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
                 textArea.setText(text_from_share)
                 unsavedData = true
             }
-            tags.forEach {
+
+            tagsToAdd?.forEach {
+                newTags.add(it)
                 addTagTV(it)
             }
         } else {
@@ -100,7 +100,7 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
             unsavedData = true
         }
 
-        val save: Button = root.findViewById(R.id.save)
+        val save: ImageView = root.findViewById(R.id.save)
         save.setOnClickListener { _ ->
             val notes = textArea.text.toString()
 

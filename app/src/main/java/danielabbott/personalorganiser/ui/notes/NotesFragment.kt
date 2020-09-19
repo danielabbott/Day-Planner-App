@@ -94,8 +94,9 @@ class NotesFragment : Fragment() {
 
         // On click listener for the add (+) button
         view.findViewById<FloatingActionButton>(R.id.fab_new).setOnClickListener {
-            val tagsAutoAdded = ArrayList<Tag>()
+            var tagsAutoAdded: ArrayList<Tag>? = null
             if (selected_tag != null) {
+                tagsAutoAdded = ArrayList()
                 tagsAutoAdded.add(selected_tag!!)
             }
             val fragment = EditNoteFragment(null, null, tagsAutoAdded)

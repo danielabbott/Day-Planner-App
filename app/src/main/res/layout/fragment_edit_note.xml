@@ -61,11 +61,12 @@
                 </LinearLayout>
             </HorizontalScrollView>
 
-            <Button
+            <ImageView
                 android:id="@+id/save"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="@drawable/ic_save"/>
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_save"/>
         </LinearLayout>
 
     </LinearLayout>
