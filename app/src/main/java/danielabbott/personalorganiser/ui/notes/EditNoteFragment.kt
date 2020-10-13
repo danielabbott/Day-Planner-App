@@ -146,6 +146,7 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
 
     lateinit var qieMenuItem: MenuItem
     lateinit var replaceMenuItem: MenuItem
+    lateinit var deleteNoteMenuItem: MenuItem
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
@@ -157,6 +158,10 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
 
 
         replaceMenuItem = menu.add("Replace")
+
+        if(noteId != null) {
+            deleteNoteMenuItem = menu.add("Delete")
+        }
 
         activity!!.onCreateOptionsMenu(menu)
     }
@@ -172,6 +177,22 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
             DialogReplace (textArea.text.toString(), find) { new_text ->
                 textArea.setText(new_text)
             }.show(fragmentManager!!, null)
+        }
+        else if (item == deleteNoteMenuItem) {
+            android.app.AlertDialog.Builder(activity)
+                .setTitle("Delete note")
+                .setMessage("Are you sure you want to delete this note? This cannot be undone.")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton("Delete") { _, _ ->
+                    DB.deleteNote(noteId!!)
+
+                    // Reload notes page
+                    val fragmentTransaction = fragmentManager!!.beginTransaction()
+                    fragmentTransaction.replace(R.id.fragmentView, NotesFragment())
+                    fragmentTransaction.commit()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
         }
         return super.onOptionsItemSelected(item)
     }
