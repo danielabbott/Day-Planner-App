@@ -308,7 +308,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/buttonColour"
-                android:text="Delete Task" />
+                android:text="Delete Task"
+                android:textAllCaps="false" />
         </LinearLayout>
     </ScrollView>
 
