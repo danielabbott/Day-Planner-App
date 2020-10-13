@@ -146,7 +146,7 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
 
     lateinit var qieMenuItem: MenuItem
     lateinit var replaceMenuItem: MenuItem
-    lateinit var deleteNoteMenuItem: MenuItem
+    var deleteNoteMenuItem: MenuItem? = null
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
@@ -178,7 +178,7 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
                 textArea.setText(new_text)
             }.show(fragmentManager!!, null)
         }
-        else if (item == deleteNoteMenuItem) {
+        else if (deleteNoteMenuItem != null && item == deleteNoteMenuItem) {
             android.app.AlertDialog.Builder(activity)
                 .setTitle("Delete note")
                 .setMessage("Are you sure you want to delete this note? This cannot be undone.")
