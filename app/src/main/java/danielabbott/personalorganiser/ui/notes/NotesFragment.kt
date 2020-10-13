@@ -33,8 +33,13 @@ class NotesFragment : Fragment() {
         with(recyclerView) {
             layoutManager = LinearLayoutManager(context)
             val selected = Settings.getSelectedTagID(context!!)
+            var previews = if (selected == -2L) DB.getNotesPreviewsUntagged() else (DB.getNotesPreviews(if (selected < 0) null else selected))
+            if(previews.isEmpty() && selected != -1L) {
+                Settings.setSelectedTagID(context!!, -1)
+                previews = DB.getNotesPreviews(null)
+            }
             adapter = NoteRecyclerViewAdapter(
-                if (selected == -2L) DB.getNotesPreviewsUntagged() else (DB.getNotesPreviews(if (selected < 0) null else selected)),
+                previews,
                 fragmentManager!!, activity!!
             )
         }
