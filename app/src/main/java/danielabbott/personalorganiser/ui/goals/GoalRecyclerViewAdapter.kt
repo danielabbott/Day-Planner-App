@@ -34,7 +34,6 @@ class GoalRecyclerViewAdapter(
         if (position == mValues.size) {
             // Extra space at bottom (empty View)
             holder.circle.visibility = View.INVISIBLE
-            holder.divider.visibility = View.INVISIBLE
             holder.clickableArea.visibility = View.INVISIBLE
             holder.name.text = ""
             holder.clickableArea.setOnClickListener(null)
@@ -47,10 +46,6 @@ class GoalRecyclerViewAdapter(
         holder.name.text = item.name
         holder.circle.colour = item.colour
         holder.mView.tag = item.id
-
-        if (position == mValues.size - 1) {
-            holder.divider.visibility = View.INVISIBLE
-        }
 
         holder.clickableArea.setOnClickListener {
             // When clicked, open edit page for the goal
@@ -93,6 +88,5 @@ class GoalRecyclerViewAdapter(
         val clickableArea: LinearLayout = mView.goalClickable
         val name: TextView = mView.name
         val circle: CircleView = mView.circle
-        val divider: View = mView.divider
     }
 }

@@ -137,10 +137,6 @@ class TimersFragment : Fragment() {
         stopped: Boolean,
         paused: Boolean
     ) {
-        if (linearLayout.childCount > 0) {
-            linearLayout[linearLayout.childCount - 1].findViewById<View>(R.id.divider).visibility =
-                View.VISIBLE
-        }
 
         val layout =
             LayoutInflater.from(context)
@@ -188,11 +184,6 @@ class TimersFragment : Fragment() {
         bDelete.setOnClickListener {
             timers.remove(timerObj)
             linearLayout.removeView(layout)
-
-            if (linearLayout.childCount > 0) {
-                linearLayout.get(linearLayout.childCount - 1)
-                    .findViewById<View>(R.id.divider).visibility = View.INVISIBLE
-            }
 
 
             if (timerObj.id != null) {
