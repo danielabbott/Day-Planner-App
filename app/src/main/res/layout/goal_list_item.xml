@@ -18,6 +18,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corners"
+            android:paddingRight="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -28,7 +30,7 @@
                 android:padding="@dimen/text_margin"
                 android:text=""
                 android:textAppearance="?attr/textAppearanceListItem"
-                android:textSize="36sp" />
+                android:textSize="26sp" />
 
 
             <danielabbott.personalorganiser.ui.CircleView

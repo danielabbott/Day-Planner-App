@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".ui.timetable.TimetableEditEventFragment">
+    tools:context=".ui.timetable.TimetableEditEventFragment"
+    android:background="#ffffffff">
 
     <ScrollView
         android:layout_width="match_parent"

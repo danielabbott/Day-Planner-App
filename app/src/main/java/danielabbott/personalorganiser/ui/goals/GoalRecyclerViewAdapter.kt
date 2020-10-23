@@ -35,6 +35,7 @@ class GoalRecyclerViewAdapter(
             // Extra space at bottom (empty View)
             holder.circle.visibility = View.INVISIBLE
             holder.divider.visibility = View.INVISIBLE
+            holder.clickableArea.visibility = View.INVISIBLE
             holder.name.text = ""
             holder.clickableArea.setOnClickListener(null)
             holder.clickableArea.setOnLongClickListener(null)

@@ -73,7 +73,7 @@ class TimetableFragment : Fragment(), OnBackPressed {
                 if ((it.days and (1 shl day)) != 0) {
                     eventsUI.add(
                         TimetableEventUI(
-                            it.goal_colour ?: 0xffc0c0c0.toInt(),
+                            it.goal_colour ?: 0xffd0d0d0.toInt(),
                             it,
                             day,
                             it.notes != null && it.notes!!.isNotEmpty()
