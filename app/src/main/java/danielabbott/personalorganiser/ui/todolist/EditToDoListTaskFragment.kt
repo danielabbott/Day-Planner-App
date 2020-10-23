@@ -80,12 +80,13 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             super.unsavedData = true
         }
 
+        var originalTaskData: ToDoListTask? = null
+
         if (taskId != null) {
             // Load the task from the database
 
-            var e: ToDoListTask
             try {
-                e = DB.getToDoListTask(taskId)
+                originalTaskData = DB.getToDoListTask(taskId)
             } catch (e: Exception) {
                 val fragmentTransaction = fragmentManager!!.beginTransaction()
                 fragmentTransaction.replace(R.id.fragmentView, ToDoListFragment())
@@ -93,16 +94,16 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                 return root
             }
 
-            notes.setText(if (e.notes == null) "" else e.notes!!)
-            name.setText(e.name)
-            repeat.setSelection(e.repeat.n)
-            r30.isChecked = e.remind30Mins
-            r1.isChecked = e.remind1Hr
-            r2.isChecked = e.remind2Hrs
-            rMorn.isChecked = e.remindMorning
-            super.setGoalSpinner(goal, e.goal_id)
+            notes.setText(if (originalTaskData.notes == null) "" else originalTaskData.notes!!)
+            name.setText(originalTaskData.name)
+            repeat.setSelection(originalTaskData.repeat.n)
+            r30.isChecked = originalTaskData.remind30Mins
+            r1.isChecked = originalTaskData.remind1Hr
+            r2.isChecked = originalTaskData.remind2Hrs
+            rMorn.isChecked = originalTaskData.remindMorning
+            super.setGoalSpinner(goal, originalTaskData.goal_id)
 
-            if (e.repeat != Repeat.NEVER && e.dateTime != null) {
+            if (originalTaskData.repeat != Repeat.NEVER && originalTaskData.dateTime != null) {
                 dateForwards.visibility = View.VISIBLE
                 dateBack.visibility = View.VISIBLE
             }
@@ -111,12 +112,12 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                 dateBack.visibility = View.INVISIBLE
             }
 
-            if (e.dateTime != null) {
-                if (e.hasTime) {
-                    val t = DateTimeUtil.getHoursAndMinutes(e.dateTime!!)
+            if (originalTaskData.dateTime != null) {
+                if (originalTaskData.hasTime) {
+                    val t = DateTimeUtil.getHoursAndMinutes(originalTaskData.dateTime!!)
                     time.setTime(t.first, t.second)
                 }
-                val d = DateTimeUtil.getYearMonthDay(e.dateTime!!)
+                val d = DateTimeUtil.getYearMonthDay(originalTaskData.dateTime!!)
                 date.setDate(d.first, d.second, d.third)
             }
         }
@@ -157,7 +158,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                 )
                 else null
 
-                var e = ToDoListTask(
+                var newTask = ToDoListTask(
                     taskId ?: -1,
                     dateTime,
                     time.timeSelected,
@@ -171,7 +172,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                     if (goal.selectedItemPosition == 0) null else goals[goal.selectedItemPosition - 1].id
                 )
 
-                val eventId = DB.updateOrCreateToDoListTask(e)
+                val eventId = DB.updateOrCreateToDoListTask(newTask)
 
                 // Add/remove pictures
 
@@ -191,7 +192,18 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
 
                 // Reschedule all notifications
 
-                Notifications.scheduleAllNotifications(activity!!.applicationContext)
+                var needToRescheduleNotifications = true
+
+                if(!newTask.remind30Mins && !newTask.remind1Hr && !newTask.remind2Hrs && !newTask.remindMorning) {
+                    if (taskId == null || (!originalTaskData!!.remind30Mins && !originalTaskData.remind1Hr && !originalTaskData.remind2Hrs && !originalTaskData.remindMorning)){
+                        needToRescheduleNotifications = false
+                    }
+                }
+
+                if(needToRescheduleNotifications) {
+                    Notifications.scheduleForTask(context!!, newTask, taskId == null)
+                    //Notifications.scheduleAllNotifications(activity!!.applicationContext)
+                }
 
                 (activity!! as MainActivity).hideKeyboard()
 
@@ -211,7 +223,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton("Delete") { _, _ ->
                         DB.deleteToDoListTask(taskId)
-                        Notifications.scheduleAllNotifications(activity!!.applicationContext)
+                        Notifications.unscheduleNotificationsForTask(context!!, taskId)
                         super.unsavedData = false
                         (activity!! as MainActivity).hideKeyboard()
                         (activity as MainActivity).onBackPressed()

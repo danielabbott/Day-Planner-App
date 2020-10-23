@@ -15,9 +15,12 @@ class NotificationBroadcastReceiver : BroadcastReceiver() {
             return
         }
 
+        val reqCode = intent!!.extras!!.getInt("reqCode")
+
+
         DB.init(context)
 
-        DB.getNotificationsToShow().forEach { n ->
+        DB.getNotificationsToShow(reqCode).forEach { n ->
 
             // Intent runs when notification is tapped
             var pendingIntent: PendingIntent? = null

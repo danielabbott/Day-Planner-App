@@ -104,14 +104,6 @@ object Settings {
         return id
     }
 
-    fun highestNotificationID(context: Context): Int {
-        return getInt(context, "notifId", -1)
-    }
-
-    fun resetHighestNotificationID(context: Context) {
-        setInt(context, "notifId", -1)
-    }
-
     fun getAlarmID(context: Context): Int {
         val id = getInt(context, "alarmId", -1) - 1
         setInt(context, "alarmId", id)
@@ -257,6 +249,12 @@ object Settings {
 
     fun setMostRecentReplaceString(context: Context, s: String) {
         setString(context, "replace", s)
+    }
+
+    fun appStarted(context: Context) : Long {
+        val lastTime = getLong(context, "appLastStarted", 0)
+        setLong(context, "appLastStarted", System.currentTimeMillis())
+        return lastTime
     }
 
 }

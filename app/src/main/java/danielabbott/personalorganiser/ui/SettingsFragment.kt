@@ -141,7 +141,7 @@ class SettingsFragment : Fragment() {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton("Disable Reminders") { _, _ ->
                     DB.disableAllReminders()
-                    Notifications.scheduleAllNotifications(context!!)
+                    Notifications.clearPendingNotifications(context!!)
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
@@ -151,7 +151,8 @@ class SettingsFragment : Fragment() {
             root.findViewById<Button>(R.id.exportDB).setOnClickListener {
                 val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                     addCategory(Intent.CATEGORY_OPENABLE)
-                    type = "application/x-sqlite3"
+                    type = "*/*"
+                    putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("application/x-sqlite3", "application/vnd.sqlite3", "application/octet-stream"))
                     putExtra(Intent.EXTRA_TITLE, "data.db")
                 }
                 // See MainActivity.onActivityResult
@@ -161,7 +162,8 @@ class SettingsFragment : Fragment() {
             root.findViewById<Button>(R.id.importDB).setOnClickListener {
                 val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
                     addCategory(Intent.CATEGORY_OPENABLE)
-                    type = "application/x-sqlite3"
+                    type = "*/*"
+                    putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("application/x-sqlite3", "application/vnd.sqlite3", "application/octet-stream"))
                 }
                 activity!!.startActivityForResult(intent, MainActivity.OPEN_FILE_REQUEST_CODE)
             }

@@ -18,9 +18,10 @@ object DB {
     // ** Database versions **
     // 1: Original database schema
     // 2: Added TBL_NOTES, TBL_TAGS, TBL_NOTE_TAG
+    // 3: Added reqCode to TBL_NOTIFICATIONS
     class DBHelper(context: Context) : SQLiteOpenHelper(
         context, "po.db", null,
-        2 /*Increment whenever db structure changes*/
+        3 /*Increment whenever db structure changes*/
     ) {
         override fun onCreate(db: SQLiteDatabase) {
             db.execSQL(
@@ -67,6 +68,8 @@ object DB {
                         "    REFERENCES TBL_GOAL (_id)" +
                         "    ON DELETE CASCADE)"
             )
+
+
             db.execSQL(
                 "CREATE TABLE IF NOT EXISTS TBL_GOAL (_id INTEGER PRIMARY KEY, name TEXT NOT NULL," +
                         "colour INT NOT NULL DEFAULT 16744576," +
@@ -122,8 +125,9 @@ object DB {
             db.execSQL(
                 "CREATE TABLE IF NOT EXISTS TBL_NOTIFICATIONS (_id INTEGER PRIMARY KEY, " +
                         "content TEXT NOT NULL, channel INT NOT NULL, task_or_event_id LONG NOT NULL," +
-                        "time LONG NOT NULL)"
+                        "time LONG NOT NULL, reqCode INT NOT NULL)"
             )
+            db.execSQL("CREATE TABLE IF NOT EXISTS TBL_ALARM_REQ_CODES (_id INTEGER PRIMARY KEY)")
 
             db.execSQL("CREATE TABLE IF NOT EXISTS TBL_NOTES (_id INTEGER PRIMARY KEY, contents TEXT NOT NULL)")
 
@@ -145,11 +149,16 @@ object DB {
         }
 
         override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-            onCreate(db)
+            if(oldVersion < 3) {
+                db.execSQL("ALTER TABLE TBL_NOTIFICATIONS ADD COLUMN reqCode INT NOT NULL DEFAULT 0")
+            }
         }
 
         override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-            onUpgrade(db, oldVersion, newVersion)
+            if(newVersion < 3) {
+                db.execSQL("DROP TABLE IF EXISTS TBL_NOTIFICATIONS")
+                onCreate(db)
+            }
         }
 
     }
@@ -1091,16 +1100,17 @@ object DB {
             put("channel", n.channel.id_int)
             put("task_or_event_id", n.taskOrEventId)
             put("time", n.time)
+            put("reqCode", n.reqCode)
         }
 
         db?.insert("TBL_NOTIFICATIONS", null, values)!!
     }
 
-    fun getNotificationsToShow(): List<NotificationData> {
+    fun getNotificationsToShow(reqCodeToDelete: Int? = null): List<NotificationData> {
         val db = dbHelper.writableDatabase
 
         val projection =
-            arrayOf("content", "channel", "task_or_event_id", "time")
+            arrayOf("content", "channel", "task_or_event_id", "time", "reqCode")
 
         val maxTime = (System.currentTimeMillis() + 30000).toString()
 
@@ -1121,21 +1131,91 @@ object DB {
             val channel = cursor.getInt(cursor.getColumnIndexOrThrow("channel"))
             val task_or_event_id = cursor.getLong(cursor.getColumnIndexOrThrow("task_or_event_id"))
             val time = cursor.getLong(cursor.getColumnIndexOrThrow("time"))
+            val reqCode = cursor.getInt(cursor.getColumnIndexOrThrow("reqCode"))
 
             notifications.add(
                 NotificationData(
                     content,
                     Notifications.Channel.fromInt(channel),
                     task_or_event_id,
-                    time
+                    time,
+                    reqCode
                 )
             )
         }
         cursor.close()
 
-        db.delete("TBL_NOTIFICATIONS", "time <= ?", arrayOf(maxTime))
+        if(reqCodeToDelete != null) {
+            db.delete("TBL_NOTIFICATIONS", "time <= ? OR reqCode=?", arrayOf(maxTime, reqCodeToDelete.toString()))
+        }
+        else {
+            db.delete("TBL_NOTIFICATIONS", "time <= ?", arrayOf(maxTime))
+        }
 
         return notifications
+    }
+
+    fun getActiveAlarmReqCodesAndRemove(channel: Int, id: Long) : List<Int> {
+        val db = dbHelper.writableDatabase
+
+        val projection =
+            arrayOf("reqCode")
+
+        val cursor = db.query(
+            "TBL_NOTIFICATIONS",
+            projection,
+            "channel=? AND task_or_event_id=?",
+            arrayOf(channel.toString(), id.toString()),
+            null,
+            null,
+            null
+        )
+
+        val codes = ArrayList<Int>()
+
+        while (cursor.moveToNext()) {
+            codes.add(cursor.getInt(cursor.getColumnIndexOrThrow("reqCode")))
+        }
+        cursor.close()
+
+        db.delete("TBL_NOTIFICATIONS", "channel=? AND task_or_event_id=?", arrayOf(channel.toString(), id.toString()))
+
+
+        return codes
+    }
+
+    fun getActiveAlarmReqCodesForTaskAndRemove(id: Long) : List<Int> {
+        return getActiveAlarmReqCodesAndRemove(1, id)
+    }
+
+    fun getActiveAlarmReqCodesForTTEventAndRemove(id: Long) : List<Int> {
+        return getActiveAlarmReqCodesAndRemove(0, id)
+    }
+
+    fun getActiveAlarmReqCodes(): List<Int> {
+        val db = dbHelper.readableDatabase
+
+        val projection =
+            arrayOf("reqCode")
+
+        val cursor = db.query(
+            "TBL_NOTIFICATIONS",
+            projection,
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+
+        val codes = ArrayList<Int>()
+
+        while (cursor.moveToNext()) {
+            codes.add(cursor.getInt(cursor.getColumnIndexOrThrow("reqCode")))
+        }
+        cursor.close()
+
+        return codes
     }
 
     fun clearNotifications() {

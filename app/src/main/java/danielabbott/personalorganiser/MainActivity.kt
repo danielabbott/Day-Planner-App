@@ -4,9 +4,11 @@ import android.animation.ObjectAnimator
 import android.app.Activity
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -18,8 +20,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import danielabbott.personalorganiser.data.DB
-import danielabbott.personalorganiser.data.Settings
+import danielabbott.personalorganiser.data.*
 import danielabbott.personalorganiser.ui.OnBackPressed
 import danielabbott.personalorganiser.ui.SettingsFragment
 import danielabbott.personalorganiser.ui.goals.GoalsFragment
@@ -121,6 +122,50 @@ class MainActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayShowTitleEnabled(false)
         DB.init(applicationContext)
 
+
+        /*val testttid = DB.createNewTimetable("chungus")
+        for(i in 1..50) {
+            var e = TimetableEvent(
+                -1,
+                testttid,
+                (Math.random() * 23*60).toInt(),
+                60,
+                    (Math.random() * 127).toInt(),
+                "a"+Math.random().toFloat(),
+                null,
+                Math.random() < 0.5,
+                Math.random() < 0.5,
+                Math.random() < 0.5,
+                Math.random() < 0.5,
+                null,
+                null
+            )
+            DB.updateOrCreateTimetableEvent(e)
+        }
+        Notifications.scheduleAllNotifications(this)*/
+
+        /*for(i in 1..50) {
+            var e = ToDoListTask(
+                -1,
+                System.currentTimeMillis()+(Math.random() * 10000000).toLong(),
+                true,
+                "uwu" + Math.random().toFloat(),
+                null,
+                Math.random() < 0.5,
+                Math.random() < 0.5,
+                Math.random() < 0.5,
+                Math.random() < 0.5,
+                Repeat.fromInt((Math.random() * 4.9).toInt()),
+                null,
+                null
+            )
+            DB.updateOrCreateToDoListTask(e)
+        }
+        Notifications.scheduleAllNotifications(DB.context)*/
+
+
+
+
         menu = findViewById<ScrollView>(R.id.menu)
         menuContainer = findViewById<LinearLayout>(R.id.menuContainer)
         menuBlack = findViewById<View>(R.id.menuBlack)
@@ -188,8 +233,12 @@ class MainActivity : AppCompatActivity() {
 
 
         Notifications.createChannels(this)
-        Notifications.scheduleAllNotifications(this)
-        enableWeeklyNotificationReschedule()
+
+        val lastAppStartTime = Settings.appStarted(this)
+        if(System.currentTimeMillis() - lastAppStartTime > 6*24*60*60*1000) {
+            Notifications.scheduleAllNotifications(this)
+            enableWeeklyNotificationReschedule()
+        }
 
 
         if (intent == null || intent.extras == null) {
@@ -393,10 +442,11 @@ class MainActivity : AppCompatActivity() {
         if (resultCode == Activity.RESULT_OK && resultData != null && resultData.data != null) {
             if (requestCode == CREATE_FILE_REQUEST_CODE) {
                 val uri = resultData.data!!
+
                 try {
                     contentResolver.openFileDescriptor(uri, "w").use {
                         if (it?.fileDescriptor != null) {
-                            FileOutputStream(it?.fileDescriptor).use { fos ->
+                            FileOutputStream(it.fileDescriptor).use { fos ->
                                 fos.write(
                                     DB.getDBFileBytes()
                                 )
@@ -408,6 +458,7 @@ class MainActivity : AppCompatActivity() {
                 }
             } else if (requestCode == OPEN_FILE_REQUEST_CODE) {
                 val uri = resultData.data!!
+
                 DB.getOutputStream().use { out ->
                     contentResolver.openInputStream(uri)?.use { inputStream ->
                         while (inputStream.available() > 0) {

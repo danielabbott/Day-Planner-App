@@ -8,10 +8,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import danielabbott.personalorganiser.data.DB
-import danielabbott.personalorganiser.data.NotificationData
-import danielabbott.personalorganiser.data.Repeat
-import danielabbott.personalorganiser.data.Settings
+import danielabbott.personalorganiser.data.*
 
 object Notifications {
 
@@ -83,39 +80,40 @@ object Notifications {
             return
         }
 
-        DB.addNotification(NotificationData(content, channel, id, timeMs))
+        val reqCode = Settings.getNotificationID(context.applicationContext)
+        DB.addNotification(NotificationData(content, channel, id, timeMs, reqCode))
 
         val intent = Intent(context.applicationContext, NotificationBroadcastReceiver::class.java)
         val intent2 = PendingIntent.getBroadcast(
             context.applicationContext,
-            Settings.getNotificationID(context.applicationContext),
+            reqCode,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
         EventSchedule.scheduleEvent(context.applicationContext, timeMs, intent2, false)
     }
 
-    // Tell android to cancel every scheduled alarm
-    // ^ except for the weeklyish reschedule alarm (request code -1)
-    private fun clearPendingNotifications(context: Context) {
-        DB.clearNotifications()
+    private fun clearPendingNotification(context: Context, reqCode: Int) {
+        val intent =
+            Intent(context.applicationContext, NotificationBroadcastReceiver::class.java)
+        intent.putExtra("reqCode", reqCode)
+        val intent2 =
+            PendingIntent.getBroadcast(
+                context.applicationContext,
+                reqCode,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        EventSchedule.clearEvent(context.applicationContext, intent2)
+    }
 
-        var i = 0
-        var maxReqCode = Settings.highestNotificationID(context.applicationContext)
-        while (i <= maxReqCode) {
-            val intent =
-                Intent(context.applicationContext, NotificationBroadcastReceiver::class.java)
-            val intent2 =
-                PendingIntent.getBroadcast(
-                    context.applicationContext,
-                    i,
-                    intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT
-                )
-            EventSchedule.clearEvent(context.applicationContext, intent2)
-            i += 1
+    // Tell android to cancel every scheduled alarm
+    // ^ except for the weeklyish reschedule alarm (request code -1) and timer alarms
+    fun clearPendingNotifications(context: Context) {
+        DB.getActiveAlarmReqCodes().forEach {c->
+            clearPendingNotification(context.applicationContext, c)
         }
-        Settings.resetHighestNotificationID(context)
+        DB.clearNotifications()
     }
 
     private fun scheduleAllNotificationsForTimetableEvents(context: Context) {
@@ -124,39 +122,43 @@ object Notifications {
             return
         }
         DB.getTimetableEvents(activeTimetable).forEach {
-            // Minutes before, -1 = morning of
-            val times = listOf<Int>(30, 60, 120, -1)
-            times.forEach { timeBefore ->
-                if ((timeBefore == 30 && it.remind30Mins) ||
-                    (timeBefore == 60 && it.remind1Hr) ||
-                    (timeBefore == 120 && it.remind2Hrs) ||
-                    (timeBefore == -1 && it.remindMorning)
-                ) {
+            scheduleAllNotificationsForTimetableEvent(context, it)
+        }
+    }
 
-                    var time: Int
+    private fun scheduleAllNotificationsForTimetableEvent(context: Context, it: TimetableEvent) {
+        // Minutes before, -1 = morning of
+        val times = listOf<Int>(30, 60, 120, -1)
+        times.forEach { timeBefore ->
+            if ((timeBefore == 30 && it.remind30Mins) ||
+                (timeBefore == 60 && it.remind1Hr) ||
+                (timeBefore == 120 && it.remind2Hrs) ||
+                (timeBefore == -1 && it.remindMorning)
+            ) {
 
-                    if (timeBefore == -1) {
-                        time = Settings.getMorningReminderTime(context.applicationContext)
-                    } else {
-                        time = it.startTime - timeBefore
-                    }
+                var time: Int
+
+                if (timeBefore == -1) {
+                    time = Settings.getMorningReminderTime(context.applicationContext)
+                } else {
+                    time = it.startTime - timeBefore
+                }
 
 
-                    for (day in 0..6) {
-                        if ((it.days and (1 shl day)) != 0) {
-                            var j = 0
-                            while (j < 2) { // This/next week
-                                scheduleNotification(
-                                    context.applicationContext,
-                                    EventSchedule.getTime(day, time) + j * 7 * 24 * 60 * 60 * 1000,
-                                    it.name,
-                                    Channel.TIMETABLE,
-                                    it.id
-                                )
-                                j += 1
-                            }
-
+                for (day in 0..6) {
+                    if ((it.days and (1 shl day)) != 0) {
+                        var j = 0
+                        while (j < 2) { // This/next week
+                            scheduleNotification(
+                                context.applicationContext,
+                                EventSchedule.getTime(day, time) + j * 7 * 24 * 60 * 60 * 1000,
+                                it.name,
+                                Channel.TIMETABLE,
+                                it.id
+                            )
+                            j += 1
                         }
+
                     }
                 }
             }
@@ -164,115 +166,119 @@ object Notifications {
     }
 
     private fun scheduleAllNotificationsForToDoListTasks(context: Context) {
-        val dayMillis = 24 * 60 * 60 * 1000
         DB.getToDoListTasksNotificationData().forEach {
-            val taskDateTime = if (it.repeat == Repeat.DAILY) it.dateTime
-                ?: System.currentTimeMillis() - dayMillis else it.dateTime
-            if (taskDateTime != null) {
-                val times = listOf<Int>(30, 60, 120, -1)
-                times.forEach { timeBefore ->
-                    if ((timeBefore == 30 && it.hasTime && it.remind30Mins) ||
-                        (timeBefore == 60 && it.hasTime && it.remind1Hr) ||
-                        (timeBefore == 120 && it.hasTime && it.remind2Hrs) ||
-                        (timeBefore == -1 && it.remindMorning)
-                    ) {
+            scheduleAllNotificationsForToDoListTask(context, it)
+        }
+    }
 
-                        var dateTime: Long
+    private fun scheduleAllNotificationsForToDoListTask(context: Context, it: ToDoListTaskNotificationData) {
+        val dayMillis = 24 * 60 * 60 * 1000
+        val taskDateTime = if (it.repeat == Repeat.DAILY) it.dateTime
+            ?: System.currentTimeMillis() - dayMillis else it.dateTime
+        if (taskDateTime != null) {
+            val times = listOf<Int>(30, 60, 120, -1)
+            times.forEach { timeBefore ->
+                if ((timeBefore == 30 && it.hasTime && it.remind30Mins) ||
+                    (timeBefore == 60 && it.hasTime && it.remind1Hr) ||
+                    (timeBefore == 120 && it.hasTime && it.remind2Hrs) ||
+                    (timeBefore == -1 && it.remindMorning)
+                ) {
 
-                        if (timeBefore == -1) {
-                            dateTime = DateTimeUtil.getStartOfDay(taskDateTime)
-                            dateTime += Settings.getMorningReminderTime(context.applicationContext) * 60 * 1000
-                        } else {
-                            dateTime =
-                                DateTimeUtil.stripSeconds(taskDateTime) - timeBefore * 60 * 1000
+                    var dateTime: Long
+
+                    if (timeBefore == -1) {
+                        dateTime = DateTimeUtil.getStartOfDay(taskDateTime)
+                        dateTime += Settings.getMorningReminderTime(context.applicationContext) * 60 * 1000
+                    } else {
+                        dateTime =
+                            DateTimeUtil.stripSeconds(taskDateTime) - timeBefore * 60 * 1000
+                    }
+
+                    // Notifications for repeat events
+
+                    fun schedule(dateTime: Long) {
+                        scheduleNotification(
+                            context.applicationContext,
+                            dateTime,
+                            it.name,
+                            Channel.TODOLIST,
+                            it.id
+                        )
+                    }
+
+                    val time = DateTimeUtil.timeOfDayMillis(dateTime)
+
+                    if (it.repeat == Repeat.DAILY || it.repeat == Repeat.WEEKLY) {
+                        // Schedule notifications for next 7 days (daily) or for in 1 weeks time (weekly)
+
+                        val mul = if (it.repeat == Repeat.WEEKLY) 7 else 1
+                        val iterations = if (it.repeat == Repeat.WEEKLY) 1 else 7
+
+                        for (i in 0 until iterations) {
+                            val dt = DateTimeUtil.getTimeOfDay(
+                                System.currentTimeMillis() + i * dayMillis * mul,
+                                0
+                            ) + time
+                            if (dt >= dateTime - 60000) {
+                                schedule(dt)
+                            }
                         }
-
-                        // Notifications for repeat events
-
-                        fun schedule(dateTime: Long) {
-                            scheduleNotification(
-                                context.applicationContext,
-                                dateTime,
-                                it.name,
-                                Channel.TODOLIST,
-                                it.id
-                            )
+                    } else if (it.repeat == Repeat.EVERY_OTHER_DAY) {
+                        val dayMod2 = DateTimeUtil.getDaySinceEpoch(dateTime) % 2
+                        val todayMod2 =
+                            DateTimeUtil.getDaySinceEpoch(System.currentTimeMillis()) % 2
+                        var i = 0
+                        if (dayMod2 != todayMod2) {
+                            // No reminder today
+                            i = 1
                         }
-
-                        val time = DateTimeUtil.timeOfDayMillis(dateTime)
-
-                        if (it.repeat == Repeat.DAILY || it.repeat == Repeat.WEEKLY) {
-                            // Schedule notifications for next 7 days (daily) or for in 1 weeks time (weekly)
-
-                            val mul = if (it.repeat == Repeat.WEEKLY) 7 else 1
-                            val iterations = if (it.repeat == Repeat.WEEKLY) 1 else 7
-
-                            for (i in 0 until iterations) {
-                                val dt = DateTimeUtil.getTimeOfDay(
-                                    System.currentTimeMillis() + i * dayMillis * mul,
-                                    0
-                                ) + time
-                                if (dt >= dateTime - 60000) {
-                                    schedule(dt)
-                                }
+                        while (i < 7) {
+                            val dt = DateTimeUtil.getTimeOfDay(
+                                System.currentTimeMillis() + i * dayMillis,
+                                0
+                            ) + time
+                            if (dt >= dateTime - 60000) {
+                                schedule(dt)
                             }
-                        } else if (it.repeat == Repeat.EVERY_OTHER_DAY) {
-                            val dayMod2 = DateTimeUtil.getDaySinceEpoch(dateTime) % 2
-                            val todayMod2 =
-                                DateTimeUtil.getDaySinceEpoch(System.currentTimeMillis()) % 2
-                            var i = 0
-                            if (dayMod2 != todayMod2) {
-                                // No reminder today
-                                i = 1
-                            }
-                            while (i < 7) {
-                                val dt = DateTimeUtil.getTimeOfDay(
-                                    System.currentTimeMillis() + i * dayMillis,
-                                    0
-                                ) + time
-                                if (dt >= dateTime - 60000) {
-                                    schedule(dt)
-                                }
-                                i += 2
-                            }
-                        } else if (it.repeat == Repeat.MONTHLY) {
-                            val timeMinutes =
-                                ((DateTimeUtil.timeOfDayMillis(dateTime) / 1000) / 60).toInt()
-                            val dayOfMonth = DateTimeUtil.getDayOfMonth(dateTime)
-                            val now = DateTimeUtil.getYearMonthDay(System.currentTimeMillis())
-
-                            // This month
-                            schedule(
-                                DateTimeUtil.getDateTimeMillis(
-                                    now.first,
-                                    now.second,
-                                    dayOfMonth,
-                                    timeMinutes / 60,
-                                    timeMinutes % 60
-                                )
-                            )
-
-                            // Next month
-                            var month = now.second
-                            var year = now.first
-                            month += 1
-                            if (month > 12) {
-                                month = 0
-                                year += 1
-                            }
-                            schedule(
-                                DateTimeUtil.getDateTimeMillis(
-                                    year,
-                                    month,
-                                    dayOfMonth,
-                                    timeMinutes / 60,
-                                    timeMinutes % 60
-                                )
-                            )
-
-                        } else {
-                            schedule(dateTime)
+                            i += 2
                         }
+                    } else if (it.repeat == Repeat.MONTHLY) {
+                        val timeMinutes =
+                            ((DateTimeUtil.timeOfDayMillis(dateTime) / 1000) / 60).toInt()
+                        val dayOfMonth = DateTimeUtil.getDayOfMonth(dateTime)
+                        val now = DateTimeUtil.getYearMonthDay(System.currentTimeMillis())
+
+                        // This month
+                        schedule(
+                            DateTimeUtil.getDateTimeMillis(
+                                now.first,
+                                now.second,
+                                dayOfMonth,
+                                timeMinutes / 60,
+                                timeMinutes % 60
+                            )
+                        )
+
+                        // Next month
+                        var month = now.second
+                        var year = now.first
+                        month += 1
+                        if (month > 12) {
+                            month = 0
+                            year += 1
+                        }
+                        schedule(
+                            DateTimeUtil.getDateTimeMillis(
+                                year,
+                                month,
+                                dayOfMonth,
+                                timeMinutes / 60,
+                                timeMinutes % 60
+                            )
+                        )
+
+                    } else {
+                        schedule(dateTime)
                     }
                 }
             }
@@ -283,6 +289,44 @@ object Notifications {
         clearPendingNotifications(context.applicationContext)
         scheduleAllNotificationsForTimetableEvents(context.applicationContext)
         scheduleAllNotificationsForToDoListTasks(context.applicationContext)
+    }
+
+    fun unscheduleNotificationsForTask(context: Context, taskId: Long) {
+        DB.getActiveAlarmReqCodesForTaskAndRemove(taskId).forEach {c->
+            clearPendingNotification(context, c)
+        }
+    }
+
+    fun unscheduleNotificationsForTTEvent(context: Context, eventId: Long) {
+        DB.getActiveAlarmReqCodesForTTEventAndRemove(eventId).forEach {c->
+            clearPendingNotification(context, c)
+        }
+    }
+
+    fun scheduleForTask(context: Context, task: ToDoListTask, newTask: Boolean) {
+        if(!newTask) {
+            unscheduleNotificationsForTask(context, task.id)
+        }
+
+        scheduleAllNotificationsForToDoListTask(context, ToDoListTaskNotificationData(
+            task.id,
+            task.dateTime,
+            task.hasTime,
+            task.name,
+            task.remind30Mins,
+            task.remind1Hr,
+            task.remind2Hrs,
+            task.remindMorning,
+            task.repeat
+        ))
+    }
+
+    fun scheduleForTTEvent(context: Context, event: TimetableEvent, newEvent: Boolean) {
+        if(!newEvent) {
+            unscheduleNotificationsForTTEvent(context, event.id)
+        }
+
+        scheduleAllNotificationsForTimetableEvent(context, event)
     }
 
 }

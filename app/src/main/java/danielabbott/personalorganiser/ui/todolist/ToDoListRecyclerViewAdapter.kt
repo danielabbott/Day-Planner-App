@@ -185,7 +185,7 @@ class ToDoListRecyclerViewAdapter(
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton("Delete") { _, _ ->
                         DB.deleteToDoListTask(item.id)
-                        Notifications.scheduleAllNotifications(activity.applicationContext)
+                        Notifications.unscheduleNotificationsForTask(activity.applicationContext, item.id)
 
                         // Reload page
                         val fragment = ToDoListFragment()

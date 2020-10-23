@@ -69,6 +69,55 @@ class TimetableEditEventFragment(
         super.init(root)
         super.initGoals(goal)
 
+
+
+
+        var startTime: Int
+        var endTime: Int
+
+        var originalEventData: TimetableEvent? = null
+        if (eventId != null) {
+            // Fill widgets with data in database
+
+            try {
+                originalEventData = DB.getTimetableEvent(eventId)
+            } catch (e: Exception) {
+                val fragmentTransaction = fragmentManager!!.beginTransaction()
+                fragmentTransaction.replace(R.id.fragmentView, TimetableFragment())
+                fragmentTransaction.commit()
+                return root
+            }
+
+            setDayCheckBoxes(originalEventData.days)
+
+            notes.setText(if (originalEventData.notes == null) "" else originalEventData.notes!!)
+            name.setText(originalEventData.name)
+            r30.isChecked = originalEventData.remind30Mins
+            r1.isChecked = originalEventData.remind1Hr
+            r2.isChecked = originalEventData.remind2Hrs
+            rMorn.isChecked = originalEventData.remindMorning
+
+            super.setGoalSpinner(goal, originalEventData.goal_id)
+
+            startTime = originalEventData.startTime
+            endTime = originalEventData.startTime + originalEventData.duration
+
+
+            // Get images in background
+            object : Thread() {
+                override fun run() {
+                    DB.getTimetableEventPhotos(eventId).forEach {
+                        addImage(Uri.parse(it))
+                    }
+                }
+            }.start()
+        } else {
+            // Use values passed as arguments to constructor
+            startTime = startTime_
+            endTime = endTime_
+            setDayCheckBoxes(days_)
+        }
+
         // Save button
         val fab: FloatingActionButton = root.findViewById(R.id.fab_save)
         fab.setOnClickListener { _ ->
@@ -98,8 +147,8 @@ class TimetableEditEventFragment(
                     }
                 }
 
-                var startTime = startTimes[0].toInt() * 60 + startTimes[1].toInt()
-                var endTime = endTimes[0].toInt() * 60 + endTimes[1].toInt()
+                startTime = startTimes[0].toInt() * 60 + startTimes[1].toInt()
+                endTime = endTimes[0].toInt() * 60 + endTimes[1].toInt()
 
                 val nameString = name.text.toString()
 
@@ -148,7 +197,7 @@ class TimetableEditEventFragment(
                         }
                     }
 
-                    var e = TimetableEvent(
+                    var newEvent = TimetableEvent(
                         eventId ?: -1,
                         timetableId,
                         startTime,
@@ -163,27 +212,37 @@ class TimetableEditEventFragment(
                         if (goal.selectedItemPosition == 0) null else goals[goal.selectedItemPosition - 1].id
                     )
 
-                    val eventId = DB.updateOrCreateTimetableEvent(e)
+                    val eventId2 = DB.updateOrCreateTimetableEvent(newEvent)
 
                     // Add/remove pictures
 
                     newPhotos.forEach {
                         try {
-                            DB.addTimetableEventPhoto(eventId, it)
+                            DB.addTimetableEventPhoto(eventId2, it)
                         } catch (_: Exception) {
                         }
                     }
 
                     imagesToRemove.forEach {
                         try {
-                            DB.removeTimetableEventPhoto(eventId, it)
+                            DB.removeTimetableEventPhoto(eventId2, it)
                         } catch (_: Exception) {
                         }
                     }
 
                     // Reschedule all notifications
 
-                    Notifications.scheduleAllNotifications(activity!!.applicationContext)
+                    var needToRescheduleNotifications = true
+
+                    if(!newEvent.remind30Mins && !newEvent.remind1Hr && !newEvent.remind2Hrs && !newEvent.remindMorning) {
+                        if (eventId == null || (!originalEventData!!.remind30Mins && !originalEventData.remind1Hr && !originalEventData.remind2Hrs && !originalEventData.remindMorning)){
+                            needToRescheduleNotifications = false
+                        }
+                    }
+
+                    if(needToRescheduleNotifications) {
+                        Notifications.scheduleForTTEvent(context!!, newEvent, eventId == null)
+                    }
 
                     (activity!! as MainActivity).hideKeyboard()
 
@@ -203,8 +262,8 @@ class TimetableEditEventFragment(
                     .setMessage("Are you sure you want to delete this event? This cannot be undone.")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton("Delete") { _, _ ->
+                        Notifications.unscheduleNotificationsForTTEvent(context!!, eventId)
                         DB.deleteTimetableEvent(eventId)
-                        Notifications.scheduleAllNotifications(activity!!.applicationContext)
                         super.unsavedData = false
                         (activity!! as MainActivity).hideKeyboard()
                         (activity as MainActivity).onBackPressed()
@@ -212,53 +271,6 @@ class TimetableEditEventFragment(
                     .setNegativeButton("Cancel", null)
                     .show()
             }
-        }
-
-
-        var startTime: Int
-        var endTime: Int
-
-        if (eventId != null) {
-            // Fill widgets with data in database
-
-            var e: TimetableEvent
-            try {
-                e = DB.getTimetableEvent(eventId)
-            } catch (e: Exception) {
-                val fragmentTransaction = fragmentManager!!.beginTransaction()
-                fragmentTransaction.replace(R.id.fragmentView, TimetableFragment())
-                fragmentTransaction.commit()
-                return root
-            }
-
-            setDayCheckBoxes(e.days)
-
-            notes.setText(if (e.notes == null) "" else e.notes!!)
-            name.setText(e.name)
-            r30.isChecked = e.remind30Mins
-            r1.isChecked = e.remind1Hr
-            r2.isChecked = e.remind2Hrs
-            rMorn.isChecked = e.remindMorning
-
-            super.setGoalSpinner(goal, e.goal_id)
-
-            startTime = e.startTime
-            endTime = e.startTime + e.duration
-
-
-            // Get images in background
-            object : Thread() {
-                override fun run() {
-                    DB.getTimetableEventPhotos(eventId).forEach {
-                        addImage(Uri.parse(it))
-                    }
-                }
-            }.start()
-        } else {
-            // Use values passed as arguments to constructor
-            startTime = startTime_
-            endTime = endTime_
-            setDayCheckBoxes(days_)
         }
 
         // Time
