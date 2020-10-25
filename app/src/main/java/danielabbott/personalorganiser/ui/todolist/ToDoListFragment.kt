@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import danielabbott.personalorganiser.MainActivity
@@ -37,6 +38,8 @@ class ToDoListFragment : Fragment() {
 
         (activity as MainActivity).setToolbarTitle("To Do List")
 
+        loadList()
+
         return root
     }
 
@@ -45,21 +48,16 @@ class ToDoListFragment : Fragment() {
             // Set up recyclerview (list of task name & dates)
 
             with(recyclerView) {
-                layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
-                adapter = danielabbott.personalorganiser.ui.todolist.ToDoListRecyclerViewAdapter(
+                layoutManager = LinearLayoutManager(context)
+                adapter = ToDoListRecyclerViewAdapter(
                     fragmentManager!!,
                     (activity as MainActivity),
-                    danielabbott.personalorganiser.data.DB.getToDoListTasks()
+                    DB.getToDoListTasks()
                 )
             }
         } else {
             // Make the 'no tasks to display' text visible
             noTasksText.visibility = View.VISIBLE
         }
-    }
-
-    override fun onResume() {
-        loadList()
-        super.onResume()
     }
 }

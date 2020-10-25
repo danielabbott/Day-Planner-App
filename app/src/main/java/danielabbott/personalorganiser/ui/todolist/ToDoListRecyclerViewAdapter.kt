@@ -188,11 +188,12 @@ class ToDoListRecyclerViewAdapter(
                         Notifications.unscheduleNotificationsForTask(activity.applicationContext, item.id)
 
                         // Reload page
-                        val fragment = ToDoListFragment()
-                        val fragmentTransaction = parentFragmentManager.beginTransaction()
-                        fragmentTransaction.replace(R.id.fragmentView, fragment)
-                            .addToBackStack(null)
-                        fragmentTransaction.commit()
+                        val f = parentFragmentManager.fragments[0]
+                        parentFragmentManager
+                            .beginTransaction()
+                            .detach(f)
+                            .attach(f)
+                            .commit();
                     }
                     .setNegativeButton("Cancel", null)
                     .show()
