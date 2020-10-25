@@ -277,13 +277,14 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
 
                     // If gone past december, go to january of next year
                     if (m > 12) {
-                        m = 0
+                        m = 1
                         yr++
                     }
 
-                    ymd = Triple<Int, Int, Int>(yr, m, date.day)
+                    val ms = DateTimeUtil.getDateTimeMillis(yr, m, date.day, 6, 0)
+                    ymd = DateTimeUtil.getYearMonthDay(ms)
                 } else {
-                    var m = DateTimeUtil.getDateTimeMillis(date.year, date.month, date.day, 0, 1)
+                    var m = DateTimeUtil.getDateTimeMillis(date.year, date.month, date.day, 6, 0)
                     m += 24 * 60 * 60 * 1000 * rep.days()
                     ymd = DateTimeUtil.getYearMonthDay(m)
                 }
@@ -307,9 +308,10 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                         yr--
                     }
 
-                    ymd = Triple<Int, Int, Int>(yr, m, date.day)
+                    val ms = DateTimeUtil.getDateTimeMillis(yr, m, date.day, 6, 0)
+                    ymd = DateTimeUtil.getYearMonthDay(ms)
                 } else {
-                    var m = DateTimeUtil.getDateTimeMillis(date.year, date.month, date.day, 0, 1)
+                    var m = DateTimeUtil.getDateTimeMillis(date.year, date.month, date.day, 6, 0)
                     m -= 24 * 60 * 60 * 1000 * rep.days()
                     ymd = DateTimeUtil.getYearMonthDay(m)
                 }

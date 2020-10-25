@@ -11,7 +11,7 @@ class DateSelectView : AppCompatTextView {
 
     var dateSelected = false
     var year = 0
-    var month = 0
+    var month = 0 // 1 - 12
     var day = 0
 
     constructor(context: Context) : super(context) {

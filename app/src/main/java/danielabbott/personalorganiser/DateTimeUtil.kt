@@ -77,7 +77,7 @@ object DateTimeUtil {
     }
 
     fun getDateString(context: Context, year: Int, month: Int, day: Int): String {
-        return getDateString(context, getDateTimeMillis(year, month, day, 0, 1))
+        return getDateString(context, getDateTimeMillis(year, month, day, 6, 0))
     }
 
     fun getTimeString(dateTime: Long): String {
