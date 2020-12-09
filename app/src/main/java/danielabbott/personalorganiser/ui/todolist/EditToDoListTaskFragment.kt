@@ -35,6 +35,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
     private lateinit var time: TimeSelectView
     private lateinit var date: DateSelectView
     private lateinit var repeat: Spinner
+    private lateinit var rOnTime: SwitchCompat
     private lateinit var r30: SwitchCompat
     private lateinit var r1: SwitchCompat
     private lateinit var r2: SwitchCompat
@@ -53,6 +54,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
         notes = root.findViewById<EditText>(R.id.notes)
         name = root.findViewById<EditText>(R.id.name)
         repeat = root.findViewById<Spinner>(R.id.repeat)
+        rOnTime = root.findViewById<SwitchCompat>(R.id.rOnTime)
         r30 = root.findViewById<SwitchCompat>(R.id.r30)
         r1 = root.findViewById<SwitchCompat>(R.id.r1)
         r2 = root.findViewById<SwitchCompat>(R.id.r2)
@@ -97,6 +99,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             notes.setText(if (originalTaskData.notes == null) "" else originalTaskData.notes!!)
             name.setText(originalTaskData.name)
             repeat.setSelection(originalTaskData.repeat.n)
+            rOnTime.isChecked = originalTaskData.remindOnTime
             r30.isChecked = originalTaskData.remind30Mins
             r1.isChecked = originalTaskData.remind1Hr
             r2.isChecked = originalTaskData.remind2Hrs
@@ -164,6 +167,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                     time.timeSelected,
                     nameString,
                     if (notes.isEmpty()) null else notes.toString(),
+                    rOnTime.isChecked,
                     r30.isChecked,
                     r1.isChecked,
                     r2.isChecked,
@@ -195,8 +199,8 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
 
                 var needToRescheduleNotifications = true
 
-                if(!newTask.remind30Mins && !newTask.remind1Hr && !newTask.remind2Hrs && !newTask.remindMorning) {
-                    if (taskId == null || (!originalTaskData!!.remind30Mins && !originalTaskData.remind1Hr && !originalTaskData.remind2Hrs && !originalTaskData.remindMorning)){
+                if(!newTask.remindOnTime && !newTask.remind30Mins && !newTask.remind1Hr && !newTask.remind2Hrs && !newTask.remindMorning) {
+                    if (taskId == null || (!originalTaskData!!.remindOnTime && !originalTaskData!!.remind30Mins && !originalTaskData.remind1Hr && !originalTaskData.remind2Hrs && !originalTaskData.remindMorning)){
                         needToRescheduleNotifications = false
                     }
                 }
@@ -347,6 +351,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                 setNotificationCheckboxesEnabledState()
             }
         goal.onItemSelectedListener = SpinnerChangeDetector { super.unsavedData = true }
+        rOnTime.setOnClickListener(unsavedCL)
         r30.setOnClickListener(unsavedCL)
         r1.setOnClickListener(unsavedCL)
         r2.setOnClickListener(unsavedCL)
@@ -358,13 +363,16 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
     private fun setNotificationCheckboxesEnabledState() {
         val rep = Repeat.fromInt(repeat.selectedItemPosition)
         if (time.timeSelected) {
+            rOnTime.isEnabled = true
             r30.isEnabled = true
             r1.isEnabled = true
             r2.isEnabled = true
         } else {
+            rOnTime.isEnabled = false
             r30.isEnabled = false
             r1.isEnabled = false
             r2.isEnabled = false
+            rOnTime.isChecked = false
             r30.isChecked = false
             r1.isChecked = false
             r2.isChecked = false

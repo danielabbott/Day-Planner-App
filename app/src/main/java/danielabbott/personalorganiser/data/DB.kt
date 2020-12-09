@@ -19,9 +19,10 @@ object DB {
     // 1: Original database schema
     // 2: Added TBL_NOTES, TBL_TAGS, TBL_NOTE_TAG
     // 3: Added reqCode to TBL_NOTIFICATIONS
+    // 4: Remind on time
     class DBHelper(context: Context) : SQLiteOpenHelper(
         context, "po.db", null,
-        3 /*Increment whenever db structure changes*/
+        4 /*Increment whenever db structure changes*/
     ) {
         override fun onCreate(db: SQLiteDatabase) {
             db.execSQL(
@@ -34,6 +35,7 @@ object DB {
                         "timetable_id INTEGER NOT NULL," +
                         "startTime INTEGER NOT NULL, duration INTEGER NOT NULL, days INTEGER NOT NULL CHECK(days <> 0)," +
                         "name TEXT NOT NULL, notes TEXT DEFAULT NULL, " +
+                        "remindOnTime INT NOT NULL DEFAULT 0," +
                         "remind30Mins INT NOT NULL DEFAULT 0, remind1Hr INT NOT NULL DEFAULT 0," +
                         "remind2Hrs INT NOT NULL DEFAULT 0," +
                         "remindMorning INT NOT NULL DEFAULT 0," +
@@ -59,6 +61,7 @@ object DB {
                 //      4 = Repeat monthly
                 "CREATE TABLE IF NOT EXISTS TBL_TODO_LIST_TASK (_id INTEGER PRIMARY KEY," +
                         "dateTime INTEGER, has_time INT DEFAULT 1 NOT NULL, name TEXT NOT NULL, notes TEXT DEFAULT NULL, " +
+                        "remindOnTime INT NOT NULL DEFAULT 0," +
                         "remind30Mins INT NOT NULL DEFAULT 0, remind1Hr INT NOT NULL DEFAULT 0," +
                         "remind2Hrs INT NOT NULL DEFAULT 0," +
                         "remindMorning INT NOT NULL DEFAULT 0, repeat INT NOT NULL DEFAULT 0," +
@@ -152,12 +155,19 @@ object DB {
             if(oldVersion < 3) {
                 db.execSQL("ALTER TABLE TBL_NOTIFICATIONS ADD COLUMN reqCode INT NOT NULL DEFAULT 0")
             }
+            if(oldVersion < 4) {
+                db.execSQL("ALTER TABLE TBL_TIMETABLE_EVENT ADD COLUMN remindOnTime INT NOT NULL DEFAULT 0")
+                db.execSQL("ALTER TABLE TBL_TODO_LIST_TASK ADD COLUMN remindOnTime INT NOT NULL DEFAULT 0")
+            }
         }
 
         override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-            if(newVersion < 3) {
+            if(oldVersion >= 4 && newVersion < 4) {
+                db.execSQL("ALTER TABLE TBL_TIMETABLE_EVENT DROP COLUMN remindOnTime")
+                db.execSQL("ALTER TABLE TBL_TODO_LIST_TASK DROP COLUMN remindOnTime")
+            }
+            if(oldVersion >= 3 && newVersion < 3) {
                 db.execSQL("DROP TABLE IF EXISTS TBL_NOTIFICATIONS")
-                onCreate(db)
             }
         }
 
@@ -337,6 +347,7 @@ object DB {
                     cursor.getInt(cursor.getColumnIndexOrThrow("days")),
                     cursor.getString(cursor.getColumnIndexOrThrow("name")),
                     cursor.getStringOrNull(cursor.getColumnIndexOrThrow("notes")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("remindOnTime")) != 0,
                     cursor.getInt(cursor.getColumnIndexOrThrow("remind30Mins")) != 0,
                     cursor.getInt(cursor.getColumnIndexOrThrow("remind1Hr")) != 0,
                     cursor.getInt(cursor.getColumnIndexOrThrow("remind2Hrs")) != 0,
@@ -369,6 +380,7 @@ object DB {
                 put("days", cursor.getInt(cursor.getColumnIndexOrThrow("days")))
                 put("name", cursor.getString(cursor.getColumnIndexOrThrow("name")))
                 put("notes", cursor.getStringOrNull(cursor.getColumnIndexOrThrow("notes")))
+                put("remindOnTime", cursor.getInt(cursor.getColumnIndexOrThrow("remindOnTime")))
                 put("remind30Mins", cursor.getInt(cursor.getColumnIndexOrThrow("remind30Mins")))
                 put("remind1Hr", cursor.getInt(cursor.getColumnIndexOrThrow("remind1Hr")))
                 put("remind2Hrs", cursor.getInt(cursor.getColumnIndexOrThrow("remind2Hrs")))
@@ -399,6 +411,7 @@ object DB {
                 cursor.getInt(cursor.getColumnIndexOrThrow("days")),
                 cursor.getString(cursor.getColumnIndexOrThrow("name")),
                 cursor.getStringOrNull(cursor.getColumnIndexOrThrow("notes")),
+                cursor.getInt(cursor.getColumnIndexOrThrow("remindOnTime")) != 0,
                 cursor.getInt(cursor.getColumnIndexOrThrow("remind30Mins")) != 0,
                 cursor.getInt(cursor.getColumnIndexOrThrow("remind1Hr")) != 0,
                 cursor.getInt(cursor.getColumnIndexOrThrow("remind2Hrs")) != 0,
@@ -432,6 +445,7 @@ object DB {
             put("days", e.days)
             put("name", e.name)
             put("notes", e.notes?.ifBlank { null }?.trim())
+            put("remindOnTime", if (e.remindOnTime) 1 else 0)
             put("remind30Mins", if (e.remind30Mins) 1 else 0)
             put("remind1Hr", if (e.remind1Hr) 1 else 0)
             put("remind2Hrs", if (e.remind2Hrs) 1 else 0)
@@ -567,7 +581,7 @@ object DB {
         val db = dbHelper.readableDatabase
 
         val cursor = db.rawQuery(
-            "SELECT _id,dateTime,has_time,name,remind30Mins,remind1Hr,remind2Hrs,remindMorning,repeat" +
+            "SELECT _id,dateTime,has_time,name,remindOnTime,remind30Mins,remind1Hr,remind2Hrs,remindMorning,repeat" +
                     " FROM TBL_TODO_LIST_TASK",
             arrayOf()
         )
@@ -579,6 +593,7 @@ object DB {
                     cursor.getLongOrNull(cursor.getColumnIndexOrThrow("dateTime")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("has_time")) != 0,
                     cursor.getString(cursor.getColumnIndexOrThrow("name")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("remindOnTime")) != 0,
                     cursor.getInt(cursor.getColumnIndexOrThrow("remind30Mins")) != 0,
                     cursor.getInt(cursor.getColumnIndexOrThrow("remind1Hr")) != 0,
                     cursor.getInt(cursor.getColumnIndexOrThrow("remind2Hrs")) != 0,
@@ -609,6 +624,7 @@ object DB {
                 cursor.getInt(cursor.getColumnIndexOrThrow("has_time")) != 0,
                 cursor.getString(cursor.getColumnIndexOrThrow("name")),
                 cursor.getStringOrNull(cursor.getColumnIndexOrThrow("notes")),
+                cursor.getInt(cursor.getColumnIndexOrThrow("remindOnTime")) != 0,
                 cursor.getInt(cursor.getColumnIndexOrThrow("remind30Mins")) != 0,
                 cursor.getInt(cursor.getColumnIndexOrThrow("remind1Hr")) != 0,
                 cursor.getInt(cursor.getColumnIndexOrThrow("remind2Hrs")) != 0,
@@ -635,6 +651,7 @@ object DB {
             put("has_time", e.hasTime)
             put("name", e.name)
             put("notes", e.notes?.ifBlank { null }?.trim())
+            put("remindOnTime", if (e.remindOnTime) 1 else 0)
             put("remind30Mins", if (e.remind30Mins) 1 else 0)
             put("remind1Hr", if (e.remind1Hr) 1 else 0)
             put("remind2Hrs", if (e.remind2Hrs) 1 else 0)
@@ -1226,6 +1243,7 @@ object DB {
     fun disableAllReminders() {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
+            put("remindOnTime", 0)
             put("remind30Mins", 0)
             put("remind1Hr", 0)
             put("remind2Hrs", 0)

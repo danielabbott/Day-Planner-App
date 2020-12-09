@@ -202,7 +202,24 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView15"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Remind on time" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/rOnTime"
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@null" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -221,7 +238,6 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView16"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -240,7 +256,6 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView17"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -259,7 +274,6 @@
                     android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/textView15_"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"

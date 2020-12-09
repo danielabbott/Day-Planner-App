@@ -8,6 +8,7 @@ class TimetableEvent(
     var days: Int,
     var name: String,
     var notes: String?,
+    var remindOnTime: Boolean,
     var remind30Mins: Boolean,
     var remind1Hr: Boolean,
     var remind2Hrs: Boolean,

@@ -128,9 +128,10 @@ object Notifications {
 
     private fun scheduleAllNotificationsForTimetableEvent(context: Context, it: TimetableEvent) {
         // Minutes before, -1 = morning of
-        val times = listOf<Int>(30, 60, 120, -1)
+        val times = listOf<Int>(0, 30, 60, 120, -1)
         times.forEach { timeBefore ->
-            if ((timeBefore == 30 && it.remind30Mins) ||
+            if ((timeBefore == 0 && it.remindOnTime) ||
+                (timeBefore == 30 && it.remind30Mins) ||
                 (timeBefore == 60 && it.remind1Hr) ||
                 (timeBefore == 120 && it.remind2Hrs) ||
                 (timeBefore == -1 && it.remindMorning)
@@ -176,9 +177,10 @@ object Notifications {
         val taskDateTime = if (it.repeat == Repeat.DAILY) it.dateTime
             ?: System.currentTimeMillis() - dayMillis else it.dateTime
         if (taskDateTime != null) {
-            val times = listOf<Int>(30, 60, 120, -1)
+            val times = listOf<Int>(0, 30, 60, 120, -1)
             times.forEach { timeBefore ->
-                if ((timeBefore == 30 && it.hasTime && it.remind30Mins) ||
+                if ((timeBefore == 0 && it.hasTime && it.remindOnTime) ||
+                    (timeBefore == 30 && it.hasTime && it.remind30Mins) ||
                     (timeBefore == 60 && it.hasTime && it.remind1Hr) ||
                     (timeBefore == 120 && it.hasTime && it.remind2Hrs) ||
                     (timeBefore == -1 && it.remindMorning)
@@ -313,6 +315,7 @@ object Notifications {
             task.dateTime,
             task.hasTime,
             task.name,
+            task.remindOnTime,
             task.remind30Mins,
             task.remind1Hr,
             task.remind2Hrs,

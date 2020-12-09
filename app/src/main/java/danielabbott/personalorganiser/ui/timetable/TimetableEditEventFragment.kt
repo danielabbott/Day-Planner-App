@@ -57,6 +57,7 @@ class TimetableEditEventFragment(
 
 
         val r30 = root.findViewById<SwitchCompat>(R.id.r30)
+        val rOnTime = root.findViewById<SwitchCompat>(R.id.rOnTime)
         val r1 = root.findViewById<SwitchCompat>(R.id.r1)
         val r2 = root.findViewById<SwitchCompat>(R.id.r2)
         val rMorn = root.findViewById<SwitchCompat>(R.id.rMorn)
@@ -92,6 +93,7 @@ class TimetableEditEventFragment(
 
             notes.setText(if (originalEventData.notes == null) "" else originalEventData.notes!!)
             name.setText(originalEventData.name)
+            rOnTime.isChecked = originalEventData.remindOnTime
             r30.isChecked = originalEventData.remind30Mins
             r1.isChecked = originalEventData.remind1Hr
             r2.isChecked = originalEventData.remind2Hrs
@@ -205,6 +207,7 @@ class TimetableEditEventFragment(
                         daysBitmask,
                         nameString,
                         if (notes.text.isEmpty()) null else notes.text.toString(),
+                        rOnTime.isChecked,
                         r30.isChecked,
                         r1.isChecked,
                         r2.isChecked,
@@ -235,8 +238,8 @@ class TimetableEditEventFragment(
 
                     var needToRescheduleNotifications = true
 
-                    if(!newEvent.remind30Mins && !newEvent.remind1Hr && !newEvent.remind2Hrs && !newEvent.remindMorning) {
-                        if (eventId == null || (!originalEventData!!.remind30Mins && !originalEventData.remind1Hr && !originalEventData.remind2Hrs && !originalEventData.remindMorning)){
+                    if(!newEvent.remindOnTime && !newEvent.remind30Mins && !newEvent.remind1Hr && !newEvent.remind2Hrs && !newEvent.remindMorning) {
+                        if (eventId == null || (!originalEventData!!.remindOnTime && !originalEventData!!.remind30Mins && !originalEventData.remind1Hr && !originalEventData.remind2Hrs && !originalEventData.remindMorning)){
                             needToRescheduleNotifications = false
                         }
                     }
@@ -297,6 +300,7 @@ class TimetableEditEventFragment(
         goal.onItemSelectedListener =
             SpinnerChangeDetector(unsavedCL)
         notes.addTextChangedListener { unsavedData = true }
+        rOnTime.setOnClickListener(unsavedCL)
         r30.setOnClickListener(unsavedCL)
         r1.setOnClickListener(unsavedCL)
         r2.setOnClickListener(unsavedCL)
