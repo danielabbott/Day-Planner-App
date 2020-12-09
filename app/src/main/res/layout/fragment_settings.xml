@@ -307,6 +307,17 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp" />
+
+        <TextView
+            android:text="https://github.com/danielabbott/Day-Planner-App"
+            android:autoLink="web"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" />
+
 
     </LinearLayout>
 </ScrollView>
