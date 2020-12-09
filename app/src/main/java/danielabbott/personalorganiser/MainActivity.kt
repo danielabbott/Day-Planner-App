@@ -288,7 +288,7 @@ class MainActivity : AppCompatActivity() {
                         Settings.setLastPage(this, 0)
                         switchToFragment(ToDoListFragment())
                         switchToFragment(EditToDoListTaskFragment(id), true)
-                    } else {
+                    } else if (type == "TIMETABLE") {
                         // Go to timetable page then to edit page so back/save buttons take the user back to the timetable
                         Settings.setLastPage(this, 1)
                         switchToFragment(TimetableFragment())
@@ -299,6 +299,10 @@ class MainActivity : AppCompatActivity() {
                             ),
                             true
                         )
+                    }
+                    else {
+                        // Go to timers page
+                        switchToFragment(TimersFragment())
                     }
                 }
             }

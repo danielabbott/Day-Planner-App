@@ -1,11 +1,14 @@
 package danielabbott.personalorganiser.ui.timers
 
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.*
 import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import danielabbott.personalorganiser.NotificationTapped
 import danielabbott.personalorganiser.Notifications
 import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB.context
@@ -85,12 +88,25 @@ class AlarmActivity : AppCompatActivity() {
             }, 7000)
         }
 
+        val intent2 = Intent(context.applicationContext, NotificationTapped::class.java)
+        intent2.putExtra("channel", Notifications.Channel.TIMER.id_int)
+
+        // Request code = current time
+        // https://stackoverflow.com/a/21204851/11498001
+
+        val pendingIntent = PendingIntent.getBroadcast(
+            context.applicationContext,
+            System.currentTimeMillis().toInt(),
+            intent2,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
         Notifications.showNotification(
             context.applicationContext,
             "Timer",
             timerName,
             Notifications.Channel.TIMER,
-            null
+            pendingIntent
         )
     }
 }

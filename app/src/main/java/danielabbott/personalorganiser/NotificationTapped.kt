@@ -22,10 +22,15 @@ class NotificationTapped : BroadcastReceiver() {
                 flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK
                 if (channel == Notifications.Channel.TODOLIST) {
                     putExtra("WHAT_LOAD", "TODO")
-                } else {
+                } else if (channel == Notifications.Channel.TIMETABLE) {
                     putExtra("WHAT_LOAD", "TIMETABLE")
                 }
-                putExtra("TASK_EVENT_ID", id)
+                else {
+                    putExtra("WHAT_LOAD", "TIMER")
+                }
+                if(id > 0) {
+                    putExtra("TASK_EVENT_ID", id)
+                }
             }
 
             startActivity(context, newIntent, null)
