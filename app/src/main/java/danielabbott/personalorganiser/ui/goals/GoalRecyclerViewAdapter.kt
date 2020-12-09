@@ -15,7 +15,6 @@ import danielabbott.personalorganiser.data.DB.context
 import danielabbott.personalorganiser.data.GoalListData
 import danielabbott.personalorganiser.ui.CircleView
 import danielabbott.personalorganiser.ui.LimitedColourPickerView
-import kotlinx.android.synthetic.main.goal_list_item.view.*
 
 
 class GoalRecyclerViewAdapter(
@@ -85,8 +84,8 @@ class GoalRecyclerViewAdapter(
     override fun getItemCount(): Int = mValues.size + 1
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val clickableArea: LinearLayout = mView.goalClickable
-        val name: TextView = mView.name
-        val circle: CircleView = mView.circle
+        val clickableArea: LinearLayout = mView.findViewById(R.id.goalClickable)
+        val name: TextView = mView.findViewById(R.id.name)
+        val circle: CircleView = mView.findViewById(R.id.circle)
     }
 }

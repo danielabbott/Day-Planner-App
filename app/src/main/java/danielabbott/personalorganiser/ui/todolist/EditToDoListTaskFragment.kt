@@ -173,6 +173,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                 )
 
                 val eventId = DB.updateOrCreateToDoListTask(newTask)
+                newTask.id = eventId
 
                 // Add/remove pictures
 
@@ -202,7 +203,6 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
 
                 if(needToRescheduleNotifications) {
                     Notifications.scheduleForTask(context!!, newTask, taskId == null)
-                    //Notifications.scheduleAllNotifications(activity!!.applicationContext)
                 }
 
                 (activity!! as MainActivity).hideKeyboard()

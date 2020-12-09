@@ -10,8 +10,6 @@ import danielabbott.personalorganiser.DateTimeUtil
 import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB.context
 import danielabbott.personalorganiser.data.Milestone
-import kotlinx.android.synthetic.main.goal_list_item.view.name
-import kotlinx.android.synthetic.main.milestone_list_item.view.*
 
 
 class MilestoneRecyclerViewAdapter(
@@ -47,9 +45,9 @@ class MilestoneRecyclerViewAdapter(
     override fun getItemCount(): Int = mValues.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val layout: LinearLayout = mView.linlayout
-        val name: TextView = mView.name
-        val deadline: TextView = mView.deadline
+        val layout: LinearLayout = mView.findViewById(R.id.linlayout)
+        val name: TextView = mView.findViewById(R.id.name)
+        val deadline: TextView = mView.findViewById(R.id.deadline)
     }
 
     fun add(m: Milestone): Int {

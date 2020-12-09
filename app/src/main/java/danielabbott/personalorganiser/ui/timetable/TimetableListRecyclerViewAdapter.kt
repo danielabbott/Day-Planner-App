@@ -14,7 +14,6 @@ import danielabbott.personalorganiser.Notifications
 import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.Settings
-import kotlinx.android.synthetic.main.timetable_list_item.view.*
 
 
 class TimetableListRecyclerViewAdapter(
@@ -71,7 +70,7 @@ class TimetableListRecyclerViewAdapter(
     override fun getItemCount(): Int = mValues.size
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mContentView: TextView = mView.content
-        val divider: View = mView.divider
+        val mContentView: TextView = mView.findViewById(R.id.content)
+        val divider: View = mView.findViewById(R.id.divider)
     }
 }

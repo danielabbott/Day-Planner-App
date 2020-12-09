@@ -213,6 +213,7 @@ class TimetableEditEventFragment(
                     )
 
                     val eventId2 = DB.updateOrCreateTimetableEvent(newEvent)
+                    newEvent.id = eventId2
 
                     // Add/remove pictures
 

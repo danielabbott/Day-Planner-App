@@ -1,8 +1,8 @@
 package danielabbott.personalorganiser.data
 
 class TimetableEvent(
-    val id: Long,
-    val timetable_id: Long,
+    var id: Long,
+    var timetable_id: Long,
     var startTime: Int,
     var duration: Int, // In minutes
     var days: Int,

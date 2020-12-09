@@ -18,7 +18,6 @@ import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.DB.context
 import danielabbott.personalorganiser.data.ToDoListTaskListData
-import kotlinx.android.synthetic.main.to_do_list_item.view.*
 
 // List of tasks
 class ToDoListRecyclerViewAdapter(
@@ -225,11 +224,11 @@ class ToDoListRecyclerViewAdapter(
     }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val colourLayout: LinearLayout = mView.colourLayout
-        val layout: LinearLayout = mView.layout
-        val name: TextView = mView.name
-        val dateTime: TextView? = mView.date_time
-        val dots: TextView? = mView.dots
-        val divider: View? = mView.divider
+        val colourLayout: LinearLayout = mView.findViewById(R.id.colourLayout)
+        val layout: LinearLayout = mView.findViewById(R.id.layout)
+        val name: TextView = mView.findViewById(R.id.name)
+        val dateTime: TextView? = mView.findViewById(R.id.date_time)
+        val dots: TextView? = mView.findViewById(R.id.dots)
+        val divider: View? = mView.findViewById(R.id.divider)
     }
 }

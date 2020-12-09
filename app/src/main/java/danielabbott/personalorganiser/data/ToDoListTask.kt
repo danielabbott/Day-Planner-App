@@ -1,7 +1,7 @@
 package danielabbott.personalorganiser.data
 
 class ToDoListTask(
-    val id: Long,
+    var id: Long,
     var dateTime: Long?,
     var hasTime: Boolean,
     var name: String,

@@ -60,7 +60,7 @@ class NoteRecyclerViewAdapter(
 
         holder.noteClickable.setOnClickListener {
             val fragment = EditNoteFragment(item.id)
-            val fragmentTransaction = parentFragmentManager!!.beginTransaction()
+            val fragmentTransaction = parentFragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.fragmentView, fragment).addToBackStack(null)
             fragmentTransaction.commit()
         }
@@ -91,9 +91,12 @@ class NoteRecyclerViewAdapter(
                 DB.deleteNote(noteId)
 
                 // Reload notes page
-                val fragmentTransaction = parentFragmentManager.beginTransaction()
-                fragmentTransaction.replace(R.id.fragmentView, NotesFragment())
-                fragmentTransaction.commit()
+                val f = parentFragmentManager.fragments[0]
+                parentFragmentManager
+                    .beginTransaction()
+                    .detach(f)
+                    .attach(f)
+                    .commit();
             }
             .setNegativeButton("Cancel", null)
             .show()
