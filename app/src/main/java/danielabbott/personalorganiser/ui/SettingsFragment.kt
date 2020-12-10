@@ -152,7 +152,6 @@ class SettingsFragment : Fragment() {
                 val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                     addCategory(Intent.CATEGORY_OPENABLE)
                     type = "*/*"
-                    putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("application/x-sqlite3", "application/vnd.sqlite3", "application/octet-stream"))
                     putExtra(Intent.EXTRA_TITLE, "data.db")
                 }
                 // See MainActivity.onActivityResult
@@ -160,12 +159,19 @@ class SettingsFragment : Fragment() {
             }
 
             root.findViewById<Button>(R.id.importDB).setOnClickListener {
-                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                    addCategory(Intent.CATEGORY_OPENABLE)
-                    type = "*/*"
-                    putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("application/x-sqlite3", "application/vnd.sqlite3", "application/octet-stream"))
-                }
-                activity!!.startActivityForResult(intent, MainActivity.OPEN_FILE_REQUEST_CODE)
+                AlertDialog.Builder(activity)
+                    .setTitle("Import database")
+                    .setMessage("This will overwrite all data stored in the app. This action cannot be undone. Are you sure you want to do this?")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton("Import database") { _, _ ->
+                        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                            addCategory(Intent.CATEGORY_OPENABLE)
+                            type = "*/*"
+                        }
+                        activity!!.startActivityForResult(intent, MainActivity.OPEN_FILE_REQUEST_CODE)
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
             }
         } else {
             val c = (root.findViewById<LinearLayout>(R.id.settingsContents) as ViewGroup)
