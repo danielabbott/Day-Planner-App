@@ -25,6 +25,7 @@ class SettingsFragment : Fragment() {
     private lateinit var startTime: TextView
     private lateinit var endTime: TextView
     private lateinit var timetableFontSize: Spinner
+    private lateinit var timetableLineWidth: Spinner
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,21 +50,47 @@ class SettingsFragment : Fragment() {
         timetableFontSize.onItemSelectedListener = SpinnerChangeDetector {
             Settings.setTimetableFontSize(
                 context!!,
-                (timetableFontSize.selectedItem!! as String).toFloat()
+                (timetableFontSize.selectedItem!! as String).toInt()
             )
         }
 
         val ttFontSz = Settings.getTimetableFontSize(context!!)
-        if (ttFontSz <= 16.0f) {
+        if (ttFontSz <= 16) {
             timetableFontSize.setSelection(0)
-        } else if (ttFontSz <= 18.0f) {
+        } else if (ttFontSz <= 18) {
             timetableFontSize.setSelection(1)
-        } else if (ttFontSz <= 20.0f) {
+        } else if (ttFontSz <= 20) {
             timetableFontSize.setSelection(2)
-        } else if (ttFontSz <= 22.0f) {
+        } else if (ttFontSz <= 22) {
             timetableFontSize.setSelection(3)
         } else {
             timetableFontSize.setSelection(4)
+        }
+
+        timetableLineWidth = root.findViewById<Spinner>(R.id.timetableLineWidth)
+
+        timetableLineWidth.onItemSelectedListener = SpinnerChangeDetector {
+            Settings.setTimetableLineWidth(
+                context!!,
+                (timetableLineWidth.selectedItem!! as String).toFloat()
+            )
+        }
+
+        val ttLineWidth = Settings.getTimetableLineWidth(context!!)
+        if (ttLineWidth <= 0.5f) {
+            timetableLineWidth.setSelection(0)
+        } else if (ttLineWidth <= 0.75f) {
+            timetableLineWidth.setSelection(1)
+        } else if (ttLineWidth <= 1.0f) {
+            timetableLineWidth.setSelection(2)
+        } else if (ttLineWidth <= 1.25f) {
+            timetableLineWidth.setSelection(3)
+        } else if (ttLineWidth <= 1.5f) {
+            timetableLineWidth.setSelection(4)
+        } else if (ttLineWidth <= 1.75f) {
+            timetableLineWidth.setSelection(5)
+        } else {
+            timetableLineWidth.setSelection(6)
         }
 
         startTime = root.findViewById<TextView>(R.id.startTime)

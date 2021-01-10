@@ -17,6 +17,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import danielabbott.personalorganiser.ColourFunctions
 import danielabbott.personalorganiser.MainActivity
 import danielabbott.personalorganiser.Notifications
 import danielabbott.personalorganiser.R
@@ -347,7 +348,7 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
     private fun setGradient() {
         val gradient = GradientDrawable()
         val c = IntArray(2) { 0xffffff }
-        c[0] = colour or 0xff000000.toInt()
+        c[0] = ColourFunctions.lightenRGB(colour) or 0xff000000.toInt()
         gradient.colors = c
         gradient.gradientType = GradientDrawable.LINEAR_GRADIENT
         goalColourView.background = gradient

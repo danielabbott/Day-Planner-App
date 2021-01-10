@@ -1,6 +1,7 @@
 package danielabbott.personalorganiser.ui.timetable
 
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -15,22 +16,26 @@ import android.view.View
 import androidx.core.graphics.withTranslation
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.FragmentManager
+import danielabbott.personalorganiser.ColourFunctions
 import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.Settings
 import kotlin.math.*
 
 class TimetableView : View, GestureDetector.OnGestureListener {
 
+    @SuppressLint("AnimatorKeep")
     var startX = 0.0f
+
+    @SuppressLint("AnimatorKeep")
     var startY = 0.0f
     var events: ArrayList<TimetableEventUI> = ArrayList<TimetableEventUI>()
     var timetableId: Long = -1
 
     private var pFragmentManager: FragmentManager? = null
-    private var columnHeadersHeight = 0.0f
-    private var rowHeadersWidth = 0.0f
-    private var rowHeight: Float = 0.0f
-    private var columnWidth: Float = 0.0f
+    private var columnHeadersHeight = 0
+    private var rowHeadersWidth = 0
+    private var rowHeight = 0.0f
+    private var columnWidth = 0.0f
     private var mDetector: GestureDetectorCompat
     private var minStartX = 0.0f
     private var minStartY = 0.0f
@@ -74,55 +79,61 @@ class TimetableView : View, GestureDetector.OnGestureListener {
         }
     }
 
+    private val linePaint = Paint()
+    private val textPaint = TextPaint()
+    private val egTextBounds = Rect()
+    private val rectPaint: Paint = Paint()
+    private val wednesdayBounds = Rect()
+
     override fun onDraw(canvas: Canvas) {
         validateValues()
 
         val startHour = Settings.getTimetableStartHour(context)
         val endHour = Settings.getTimetableEndHour(context)
         val totalHours = endHour - startHour
+        val fontSize = Settings.getTimetableFontSize(context)
 
-        // Fill white
-        canvas.drawRGB(255, 255, 255)
 
-        var linePaint = Paint()
         linePaint.style = Paint.Style.STROKE
         linePaint.color = 0xff000000.toInt()
-        linePaint.strokeWidth = 4.0f
         linePaint.isAntiAlias = false
 
-        var textPaint = TextPaint()
+        var strokeWidth = max(
+            2.0f,
+            resources.displayMetrics.density * 1.8f * Settings.getTimetableLineWidth(context!!)
+        ).toInt()
+        if (strokeWidth % 2 != 0) {
+            strokeWidth += 1
+        }
+        linePaint.strokeWidth = strokeWidth.toFloat()
+
         textPaint.color = 0xff000000.toInt()
         textPaint.isAntiAlias = true
         textPaint.textAlign = Paint.Align.CENTER
 
         // Match font size to DPI so it is roughly the same physical size on all screens
-        textPaint.textSize =
-            Settings.getTimetableFontSize(context) * resources.displayMetrics.density
+        textPaint.textSize = fontSize * resources.displayMetrics.density
 
         // Figure out how big to make the table headers to fit the text
 
-        val egTextBounds = Rect()
         textPaint.getTextBounds("by", 0, 2, egTextBounds)
-        columnHeadersHeight =
-            ceil(egTextBounds.height().toFloat() + 4f * resources.displayMetrics.density)
+        columnHeadersHeight = ceil(egTextBounds.height().toFloat() + 6f * resources.displayMetrics.density).toInt()
 
         textPaint.getTextBounds("44:444", 0, 6, egTextBounds)
-        rowHeadersWidth = ceil(egTextBounds.width().toFloat())
+        rowHeadersWidth = egTextBounds.width()
+
+        rectPaint.style = Paint.Style.FILL
+        rectPaint.isAntiAlias = false
 
         // Width and height of columns and rows
 
         rowHeight = columnHeadersHeight * 6.0f * zoomValueY
         columnWidth = rowHeadersWidth * 2.5f * zoomValueX
 
-        if (!zooming) {
-            rowHeight = ceil(rowHeight)
-            columnWidth = ceil(columnWidth)
-        }
 
-
-        // Size of timetable (bigger then the screen)
-        val contentWidth = rowHeadersWidth + 7 * columnWidth
-        val contentHeight = columnHeadersHeight + totalHours * rowHeight
+        // Size of timetable (only cells, not overlay)
+        val contentWidth = 7 * columnWidth
+        val contentHeight = totalHours * rowHeight
 
 
         // Stop timetable from being dragged off-screen
@@ -134,139 +145,182 @@ class TimetableView : View, GestureDetector.OnGestureListener {
             startY = 0.0f
         }
 
-        minStartX = -contentWidth + width.toFloat()
+        minStartX = -contentWidth - rowHeadersWidth + width.toFloat()
         if (startX < minStartX) {
             startX = minStartX
         }
 
-        minStartY = -contentHeight + height.toFloat()
+        minStartY = -contentHeight - columnHeadersHeight + height.toFloat()
         if (startY < minStartY) {
             startY = minStartY
         }
 
-        if (!zooming) {
-            startX = round(startX)
-            startY = round(startY)
-        }
+        startX = round(startX)
+        startY = round(startY)
 
         // Start drawing
 
+        // Fill white
+        canvas.drawRGB(255, 255, 255)
+
         // Vertical lines
+        canvas.translate(startX + rowHeadersWidth, 0.0f)
         for (i in 1..7) {
-            val x = startX + rowHeadersWidth + columnWidth * i.toFloat()
-            canvas.drawLine(x, startY, x, startY + contentHeight, linePaint)
+            val x = ceil(columnWidth * i.toFloat())
+            canvas.drawLine(x, columnHeadersHeight.toFloat(), x, height.toFloat(), linePaint)
         }
 
 
         // Horizontal lines
 
+        canvas.translate(-startX - rowHeadersWidth, startY + columnHeadersHeight)
         for (i in 0 until totalHours + 1) {
-            val y = startY + columnHeadersHeight + rowHeight * i.toFloat()
-            canvas.drawLine(startX + rowHeadersWidth, y, startX + contentWidth, y, linePaint)
+            val y = ceil(rowHeight * i.toFloat())
+            canvas.drawLine(rowHeadersWidth.toFloat(), y, width.toFloat(), y, linePaint)
         }
+
+        canvas.translate(startX + rowHeadersWidth, 0.0f)
+
 
         // Timetable events
 
-        var rectPaint: Paint = Paint()
-        rectPaint.style = Paint.Style.FILL
-        rectPaint.isAntiAlias = false
 
-        linePaint.strokeWidth = 2.0f
         textPaint.textSize *= 0.9f
 
         events.forEach {
+
             // Rectangle
 
 
-            it.ui_x = startX + rowHeadersWidth + columnWidth * it.day.toFloat() + 2.0f
-            it.ui_y =
-                startY + columnHeadersHeight + rowHeight * (it.e.startTime / 60.0f - startHour.toFloat())
-            it.ui_w = columnWidth - 4.0f
-            it.ui_h = rowHeight * (it.e.duration / 60.0f)
+            it.ui_x = ceil(columnWidth * it.day.toFloat()) + strokeWidth * 0.5f
+            it.ui_y = ceil(rowHeight * (it.e.startTime / 60.0f - startHour.toFloat())) + strokeWidth * 0.5f
 
-            if (it.e.startTime % 60 == 0) {
-                it.ui_y += 2.0f
-                it.ui_h -= 2.0f
+            val nextX = ceil(columnWidth * (it.day.toFloat() + 1)) + strokeWidth * 0.5f
+            val nextY = ceil(rowHeight * ((it.e.startTime+it.e.duration) / 60.0f - startHour.toFloat())) + strokeWidth * 0.5f
+
+            it.ui_w = (nextX - it.ui_x) - strokeWidth
+            it.ui_h = (nextY - it.ui_y) - strokeWidth
+
+            val visible = it.ui_x + startX <= width && it.ui_x + startX + it.ui_w >= 0
+                    && it.ui_y + startY <= height && it.ui_y + startY + it.ui_h >= 0
+
+
+            if (visible) {
+                rectPaint.color = ColourFunctions.lightenRGB(it.colour) or 0xff000000.toInt()
+                canvas.drawRect(it.ui_x, it.ui_y, it.ui_x + it.ui_w, it.ui_y + it.ui_h, rectPaint)
+
+
+                // Text
+
+                canvas.save() // push default clip area to stack
+                canvas.clipRect(it.ui_x, it.ui_y, it.ui_x + it.ui_w, it.ui_y + it.ui_h)
+
+
+
+                if (it.hasNotes) {
+                    // 3 dots
+                    val scale = resources.displayMetrics.density
+                    val x = it.ui_x + it.ui_w - 10 * scale
+                    val y = it.ui_y + 4 * scale
+                    rectPaint.color = 0xff000000.toInt()
+                    canvas.drawRect(x, y, x + 4 * scale, y + 4 * scale, rectPaint)
+                    canvas.drawRect(
+                        x - 10 * scale,
+                        y,
+                        x + (4 - 10) * scale,
+                        y + 4 * scale,
+                        rectPaint
+                    )
+                    canvas.drawRect(
+                        x - 20 * scale,
+                        y,
+                        x + (4 - 20) * scale,
+                        y + 4 * scale,
+                        rectPaint
+                    )
+                }
+
+                val staticLayout = StaticLayout(
+                    it.e.name,
+                    textPaint,
+                    columnWidth.toInt() - (4 * resources.displayMetrics.density).toInt(),
+                    Layout.Alignment.ALIGN_NORMAL,
+                    1.0f,
+                    0.0f,
+                    true
+                )
+
+
+                val y =
+                    if (staticLayout.height - 6 > (rowHeight * (it.e.duration / 60.0f)).toInt()) {
+                        it.ui_y + (2 * resources.displayMetrics.density).toInt()
+                    } else {
+                        it.ui_y + rowHeight * (it.e.duration / 60.0f) * 0.5f - staticLayout.height / 2
+                    }
+
+                canvas.withTranslation(
+                    round(it.ui_x + columnWidth / 2),
+                    round(y)
+                ) {
+                    staticLayout.draw(canvas)
+                }
+
+
+                canvas.restore() // pop default clip area back off the stack
+
+                // Top and bottom lines for event (to separate events that are between hours)
+
+                canvas.drawLine(
+                    it.ui_x,
+                    it.ui_y - strokeWidth * 0.5f,
+                    it.ui_x + it.ui_w,
+                    it.ui_y - strokeWidth * 0.5f,
+                    linePaint
+                )
+
+                canvas.drawLine(
+                    it.ui_x,
+                    it.ui_y + it.ui_h + strokeWidth * 0.5f,
+                    it.ui_x + it.ui_w,
+                    it.ui_y + it.ui_h + strokeWidth * 0.5f,
+                    linePaint
+                )
             }
-            if ((it.e.startTime + it.e.duration) % 60 == 0) {
-                it.ui_h -= 2.0f
-            }
-
-
-            rectPaint.color = it.colour or 0xff000000.toInt()
-            canvas.drawRect(it.ui_x, it.ui_y, it.ui_x + it.ui_w, it.ui_y + it.ui_h, rectPaint)
-
-
-            // Text
-
-            canvas.save() // push default clip area to stack
-            canvas.clipRect(it.ui_x, it.ui_y, it.ui_x + it.ui_w, it.ui_y + it.ui_h)
-
-
-
-            if (it.hasNotes) {
-                val scale = resources.displayMetrics.density
-                val x = it.ui_x + it.ui_w - 10 * scale;
-                val y = it.ui_y + 4 * scale;
-                rectPaint.color = 0xff000000.toInt()
-                canvas.drawRect(x, y, x + 4 * scale, y + 4 * scale, rectPaint)
-                canvas.drawRect(x - 10 * scale, y, x + (4 - 10) * scale, y + 4 * scale, rectPaint)
-                canvas.drawRect(x - 20 * scale, y, x + (4 - 20) * scale, y + 4 * scale, rectPaint)
-            }
-
-            val staticLayout = StaticLayout(
-                it.e.name,
-                textPaint,
-                columnWidth.toInt() - (4 * resources.displayMetrics.density).toInt(),
-                Layout.Alignment.ALIGN_NORMAL,
-                1.0f,
-                0.0f,
-                true
-            )
-
-
-            val y = if (staticLayout.height - 6 > (rowHeight * (it.e.duration / 60.0f)).toInt()) {
-                it.ui_y + (2 * resources.displayMetrics.density).toInt()
-            } else {
-                it.ui_y + rowHeight * (it.e.duration / 60.0f) * 0.5f - staticLayout.height / 2
-            }
-
-            canvas.withTranslation(
-                it.ui_x + columnWidth.toInt() / 2,
-                y
-            ) {
-                staticLayout.draw(canvas)
-            }
-
-
-            canvas.restore() // pop default clip area back off the stack
-
-            canvas.drawLine(it.ui_x, it.ui_y, it.ui_x + it.ui_w, it.ui_y, linePaint)
-            canvas.drawLine(
-                it.ui_x,
-                it.ui_y + it.ui_h,
-                it.ui_x + it.ui_w,
-                it.ui_y + it.ui_h,
-                linePaint
-            )
         }
+
+        // Reset translation
+        canvas.translate(-startX - rowHeadersWidth, -startY - columnHeadersHeight)
+
+
+
+
         textPaint.textSize /= 0.9f
         textPaint.textAlign = Paint.Align.CENTER
-        linePaint.strokeWidth = 4.0f
 
-        // Times on left hand side (overlayed, stays in place when scrolling)
+
+        // Times on left hand side (overlaid, stays in place when scrolling)
+
 
         rectPaint.color = 0xffffffff.toInt()
-        canvas.drawRect(0.0f, 0.0f, rowHeadersWidth - 2.0f, height.toFloat(), rectPaint)
+        canvas.drawRect(0.0f, 0.0f, rowHeadersWidth.toFloat(), height.toFloat(), rectPaint)
 
         for (i in 0 until totalHours) {
             val y = startY + columnHeadersHeight + rowHeight * i.toFloat()
+
+            if (y < -egTextBounds.height() + columnHeadersHeight) {
+                continue
+            }
+
             canvas.drawText(
                 (startHour + i).toString() + ":00",
                 rowHeadersWidth * 0.5f,
                 y,
                 textPaint
             )
+
+            if (y >= height) {
+                break
+            }
         }
 
 
@@ -277,11 +331,10 @@ class TimetableView : View, GestureDetector.OnGestureListener {
         val days2 = arrayOf("Mon", "Tue", "Wed", "Thurs", "Fri", "Sat", "Sun")
         var daysToUse = days
 
-        canvas.drawRect(0.0f, 0.0f, width.toFloat(), columnHeadersHeight - 2.0f, rectPaint)
+        canvas.drawRect(0.0f, 0.0f, width.toFloat(), columnHeadersHeight.toFloat(), rectPaint)
 
         // Decide whether to use short-form dates or not depending on whether
         // wednesday (the day with the longest name) fits in the space
-        var wednesdayBounds = Rect()
         textPaint.getTextBounds(days[2], 0, days[2].length, wednesdayBounds)
 
         if (wednesdayBounds.width() > columnWidth) {
@@ -291,18 +344,44 @@ class TimetableView : View, GestureDetector.OnGestureListener {
         for (i in 1..7) {
             val x = startX + rowHeadersWidth + columnWidth * i.toFloat()
 
+            if (x < -columnWidth) {
+                continue
+            }
+
             canvas.drawText(
                 daysToUse[i - 1],
                 x - columnWidth * 0.5f,
-                columnHeadersHeight * 0.5f + textPaint.textSize * 0.5f - 8,
+                columnHeadersHeight - textPaint.descent()*1.5f,
                 textPaint
             )
+
+            if (x > width) {
+                break
+            }
         }
 
-        canvas.drawRect(0.0f, 0.0f, rowHeadersWidth, columnHeadersHeight, rectPaint)
+        canvas.drawRect(
+            0.0f,
+            0.0f,
+            rowHeadersWidth.toFloat(),
+            columnHeadersHeight.toFloat(),
+            rectPaint
+        )
+        canvas.drawLine(
+            rowHeadersWidth.toFloat() - strokeWidth * 0.5f,
+            0.0f,
+            rowHeadersWidth.toFloat() - strokeWidth * 0.5f,
+            height.toFloat(),
+            linePaint
+        )
+        canvas.drawLine(
+            0.0f,
+            columnHeadersHeight.toFloat() - strokeWidth * 0.5f,
+            width.toFloat(),
+            columnHeadersHeight.toFloat() - strokeWidth * 0.5f,
+            linePaint
+        )
 
-        canvas.drawLine(rowHeadersWidth, 0.0f, rowHeadersWidth, height.toFloat(), linePaint)
-        canvas.drawLine(0.0f, columnHeadersHeight, width.toFloat(), columnHeadersHeight, linePaint)
 
     }
 
@@ -321,23 +400,23 @@ class TimetableView : View, GestureDetector.OnGestureListener {
 
         // Search for event that was tapped
         events.forEach {
-            if (event.x >= it.ui_x && event.x < it.ui_x + it.ui_w
-                && event.y >= it.ui_y && event.y < it.ui_y + it.ui_h
+            if (event.x >= it.ui_x + startX + rowHeadersWidth && event.x < it.ui_x + startX + rowHeadersWidth + it.ui_w
+                && event.y >= it.ui_y + startY + columnHeadersHeight && event.y < it.ui_y + startY + columnHeadersHeight + it.ui_h
             ) {
                 tEvent = it
             }
         }
 
-        var startTime: Int = 0
-        var endTime: Int = 0
-        var day: Int = 0
+        var startTime = 0
+        var endTime = 0
+        var day = 0
 
         if (tEvent == null) {
             // No event was tapped, figure out the day and start/end times of the area that was tapepd
 
             // Inverse of calculation done when drawing the timetable
             day = ((event.x - startX - rowHeadersWidth) / columnWidth).toInt()
-            var clickedTime =
+            val clickedTime =
                 ((((event.y - startY - columnHeadersHeight) / rowHeight) + startHour.toFloat()) * 60.0f).toInt()
 
             startTime = clickedTime - (clickedTime % 60)
@@ -389,6 +468,7 @@ class TimetableView : View, GestureDetector.OnGestureListener {
 
     // When the user swipes their finger fast and lifts off
     // The timetable keeps scrolling for a short while after the finger leaves the screen
+    @SuppressLint("AnimatorKeep")
     override fun onFling(
         e1: MotionEvent?,
         e2: MotionEvent?,
@@ -523,12 +603,13 @@ class TimetableView : View, GestureDetector.OnGestureListener {
                 val finger2X = event.getX(finger2Index)
                 val finger2Y = event.getY(finger2Index)
 
+
                 val newFingerDistanceX = abs(finger2X - finger1X)
                 val newFingerDistanceY = abs(finger2Y - finger1Y)
 
+
                 val zoomDeltaX = (newFingerDistanceX - fingerStartZoomDistanceX) * 0.001f
                 val zoomDeltaY = (newFingerDistanceY - fingerStartZoomDistanceY) * 0.001f
-
 
                 if (abs(zoomDeltaX) > abs(zoomDeltaY)) {
                     zoomValueX = zoomXOld + zoomDeltaX
@@ -570,8 +651,8 @@ class TimetableView : View, GestureDetector.OnGestureListener {
                 val finger2X = event.getX(event.actionIndex)
                 val finger2Y = event.getY(event.actionIndex)
 
-                fingerStartZoomDistanceX = kotlin.math.abs(finger2X - finger1X)
-                fingerStartZoomDistanceY = kotlin.math.abs(finger2Y - finger1Y)
+                fingerStartZoomDistanceX = abs(finger2X - finger1X)
+                fingerStartZoomDistanceY = abs(finger2Y - finger1Y)
 
                 zoomXOld = zoomValueX
                 zoomYOld = zoomValueY

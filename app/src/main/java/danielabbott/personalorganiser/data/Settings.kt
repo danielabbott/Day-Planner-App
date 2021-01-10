@@ -182,12 +182,12 @@ object Settings {
         return getInt(context, "lastPage", 0)
     }
 
-    fun getTimetableFontSize(context: Context): Float {
-        return getFloat(context, "timetableFontSize", 18.0f)
+    fun getTimetableFontSize(context: Context): Int {
+        return getFloat(context, "timetableFontSize", 18.0f).toInt()
     }
 
-    fun setTimetableFontSize(context: Context, sz: Float) {
-        setFloat(context, "timetableFontSize", sz)
+    fun setTimetableFontSize(context: Context, sz: Int) {
+        setFloat(context, "timetableFontSize", sz.toFloat())
     }
 
     fun getAlarmsEnabled(context: Context): Boolean {
@@ -255,6 +255,14 @@ object Settings {
         val lastTime = getLong(context, "appLastStarted", 0)
         setLong(context, "appLastStarted", System.currentTimeMillis())
         return lastTime
+    }
+
+    fun getTimetableLineWidth(context: Context): Float {
+        return getFloat(context, "timetableLineWidth", 1.0f)
+    }
+
+    fun setTimetableLineWidth(context: Context, w: Float) {
+        setFloat(context, "timetableLineWidth", w)
     }
 
 }

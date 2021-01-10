@@ -11,10 +11,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
-import danielabbott.personalorganiser.DateTimeUtil
-import danielabbott.personalorganiser.MainActivity
-import danielabbott.personalorganiser.Notifications
-import danielabbott.personalorganiser.R
+import danielabbott.personalorganiser.*
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.DB.context
 import danielabbott.personalorganiser.data.ToDoListTaskListData
@@ -87,7 +84,12 @@ class ToDoListRecyclerViewAdapter(
                     }
                 }
             }
-            val colour = it.colour ?: 0xffffff
+            val colour = if(it.colour != null) {
+                ColourFunctions.lightenRGB(it.colour!!)
+            }
+            else {
+                0xffffff
+            }
             items.add(
                 Item(
                     it.id,
