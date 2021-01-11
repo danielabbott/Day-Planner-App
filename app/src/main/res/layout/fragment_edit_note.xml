@@ -39,12 +39,12 @@
 
             <Button
                 android:id="@+id/addTag"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_margin="5dp"
                 android:background="@drawable/ic_new_note"
                 android:text="+"
-                android:textSize="30dp" />
+                android:textSize="22dp" />
 
             <HorizontalScrollView
                 android:layout_width="0dp"
@@ -63,9 +63,13 @@
 
             <ImageView
                 android:id="@+id/save"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="5dp"
                 android:layout_gravity="center"
+                android:layout_marginRight="3dp"
+                android:background="@drawable/ic_new_note"
+
                 app:srcCompat="@drawable/ic_save"/>
         </LinearLayout>
 
