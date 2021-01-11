@@ -1,12 +1,8 @@
 package danielabbott.personalorganiser.ui.notes
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.*
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.widget.addTextChangedListener
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import danielabbott.personalorganiser.MainActivity
 import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
@@ -16,7 +12,11 @@ import danielabbott.personalorganiser.data.Tag
 import danielabbott.personalorganiser.ui.DataEntryFragmentBasic
 
 // text_from_share is only used if noteId == null. It is the text provided by a share intent
-class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = null, var tagsToAdd: ArrayList<Tag>? = null) :
+class EditNoteFragment(
+    val noteId: Long? = null,
+    val text_from_share: String? = null,
+    var tagsToAdd: ArrayList<Tag>? = null
+) :
     DataEntryFragmentBasic() {
 
 
@@ -26,7 +26,7 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
 
     private var tags = ArrayList<Tag>()
     private var newTags = ArrayList<Tag>() // tags to be added to the note (tag IDs are -1)
-    private var deletedTags = ArrayList<Tag>()
+    private var tagsToRemove = ArrayList<Tag>()
 
 
     override fun onCreateView(
@@ -40,11 +40,11 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
         textArea = root.findViewById<EditText>(R.id.textArea)
         tagsll = root.findViewById<LinearLayout>(R.id.tagsll)
 
+        var originalNote: Note? = null
 
         if (noteId == null) {
             if (text_from_share != null) {
                 textArea.setText(text_from_share)
-                unsavedData = true
             }
 
             tagsToAdd?.forEach {
@@ -52,9 +52,8 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
                 addTagTV(it)
             }
         } else {
-            var e: Note
             try {
-                e = DB.getNote(noteId)
+                originalNote = DB.getNote(noteId)
             } catch (e: Exception) {
                 val fragmentTransaction = fragmentManager!!.beginTransaction()
                 fragmentTransaction.replace(R.id.fragmentView, NotesFragment())
@@ -62,9 +61,9 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
                 return root
             }
 
-            textArea.setText(e.contents)
+            textArea.setText(originalNote.contents)
 
-            tags = e.tags
+            tags = originalNote.tags
             tags.forEach {
                 addTagTV(it)
             }
@@ -88,16 +87,23 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
                 }
 
                 if (!tagAlreadyExists) {
-                    var tag = Tag(-1, tagName)
-                    newTags.add(tag)
+                    var tag: Tag? = null
+                    for (i in 0 until tagsToRemove.size) {
+                        if (tagsToRemove[i].tag.toUpperCase().equals(tagUpper)) {
+                            tag = tagsToRemove[i]
+                            tagsToRemove.removeAt(i)
+                            tags.add(tag)
+                            break
+                        }
+                    }
+
+                    if(tag == null) {
+                        tag = Tag(-1, tagName)
+                        newTags.add(tag)
+                    }
                     addTagTV(tag)
-                    unsavedData = true
                 }
             }.show(fragmentManager!!, null)
-        }
-
-        textArea.addTextChangedListener {
-            unsavedData = true
         }
 
         val save: ImageView = root.findViewById(R.id.save)
@@ -112,13 +118,23 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
                 DB.addTagToNote(newNoteId, tagID)
             }
 
+            tagsToRemove.forEach { tagObj ->
+                DB.removeTagFromNote(noteId!!, tagObj.id)
+            }
+
             (activity!! as MainActivity).hideKeyboard()
 
-            unsavedData = false
+            exitWithoutUnsavedChangesWarning = true
             (activity as MainActivity).onBackPressed()
         }
 
-
+        anyUnsavedChanges = { ->
+            if(noteId == null) true
+            else if(newTags.size > 0) true
+            else if(tagsToRemove.size > 0) true
+            else if (originalNote!!.contents.trim() != textArea.text.toString().trim()) true
+            else false
+        }
 
         setHasOptionsMenu(true)
         return root
@@ -133,12 +149,12 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
 
             if (tags.contains(tagObj)) {
                 tags.remove(tagObj)
-                DB.removeTagFromNote(noteId!!, tagObj.id)
+                tagsToRemove.add(tagObj)
             } else {
                 newTags.remove(tagObj)
             }
 
-            unsavedData = true
+
             true
         }
         tagsll.addView(tv)
@@ -159,7 +175,7 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
 
         replaceMenuItem = menu.add("Replace")
 
-        if(noteId != null) {
+        if (noteId != null) {
             deleteNoteMenuItem = menu.add("Delete")
         }
 
@@ -171,14 +187,14 @@ class EditNoteFragment(val noteId: Long? = null, val text_from_share: String? = 
             textArea.text.insert(textArea.selectionEnd, Settings.getQIT(context!!))
         } else if (item == replaceMenuItem) {
             var find: String? = null
-            if(textArea.selectionStart != textArea.selectionEnd) {
-                find = textArea.text.toString().substring(textArea.selectionStart, textArea.selectionEnd)
+            if (textArea.selectionStart != textArea.selectionEnd) {
+                find = textArea.text.toString()
+                    .substring(textArea.selectionStart, textArea.selectionEnd)
             }
-            DialogReplace (textArea.text.toString(), find) { new_text ->
+            DialogReplace(textArea.text.toString(), find) { new_text ->
                 textArea.setText(new_text)
             }.show(fragmentManager!!, null)
-        }
-        else if (deleteNoteMenuItem != null && item == deleteNoteMenuItem) {
+        } else if (deleteNoteMenuItem != null && item == deleteNoteMenuItem) {
             android.app.AlertDialog.Builder(activity)
                 .setTitle("Delete note")
                 .setMessage("Are you sure you want to delete this note? This cannot be undone.")

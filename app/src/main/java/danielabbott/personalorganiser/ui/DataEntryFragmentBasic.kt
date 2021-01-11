@@ -13,9 +13,20 @@ open class DataEntryFragmentBasic : Fragment(), OnBackPressed {
         const val TAG = "DataEntryFragmentBasic"
     }
 
-    var unsavedData: Boolean = false
+    var exitWithoutUnsavedChangesWarning: Boolean = false
+
+    var anyUnsavedChanges: (() -> Boolean)? = null
 
     override fun onBackPressed(onNoChangesOrDiscardChanges: () -> Unit) {
+        var unsavedData: Boolean = false
+
+        if(exitWithoutUnsavedChangesWarning) {
+            unsavedData = false
+        }
+        else if(anyUnsavedChanges != null) {
+            unsavedData = anyUnsavedChanges!!()
+        }
+
         if (unsavedData) {
             AlertDialog.Builder(context)
                 .setTitle("Unsaved changes")

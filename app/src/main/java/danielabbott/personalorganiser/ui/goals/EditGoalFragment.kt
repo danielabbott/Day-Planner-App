@@ -56,10 +56,11 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
         val recyclerView = root.findViewById<RecyclerView>(R.id.list)
         picturePreviewsView = root.findViewById<LinearLayout>(R.id.PicturePreviews)
 
+        var e: Goal? = null
 
         // Load data
         if (goalId != null) {
-            val e = DB.getGoal(goalId)
+            e = DB.getGoal(goalId)
 
             colour = e.colour
 
@@ -93,7 +94,6 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
                 {
                     // On single click, show modify dialog
                     MilestoneDialog({ name: String, deadline: Long? ->
-                        unsavedData = true
                         it.name = name
                         it.deadline = deadline
                         if (it.id >= 0) {
@@ -111,7 +111,6 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
                         .setMessage("Delete milestone '${it.name}'?")
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton("Delete") { _, _ ->
-                            unsavedData = true
                             if (it.id >= 0) {
                                 milestonesChanged.remove(it)
                                 milestonesToRemove.add(it)
@@ -148,7 +147,6 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
                 if (colourPicker.selectedColour != null) {
                     // A colour was picked
 
-                    super.unsavedData = true
                     colour = colourPicker.selectedColour!!
                     setGradient()
                 }
@@ -170,14 +168,14 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
             } else {
                 // Data is valid, update/insert in database
 
-                var e = Goal(
+                val e2 = Goal(
                     goalId ?: -1,
-                    name.text.toString(),
+                    name.text.toString().trim(),
                     colour,
-                    if (notes.text.isEmpty()) null else notes.text.toString()
+                    if (notes.text.trim().isEmpty()) null else notes.text.trim().toString()
                 )
 
-                val id = DB.updateOrCreateGoal(e)
+                val id = DB.updateOrCreateGoal(e2)
 
                 // Add/remove milestones
 
@@ -221,7 +219,7 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
 
                 (activity!! as MainActivity).hideKeyboard()
 
-                super.unsavedData = false
+                exitWithoutUnsavedChangesWarning = true
                 (activity as MainActivity).onBackPressed()
 
 
@@ -236,7 +234,7 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
         if (goalId != null) {
             deleteButton.setOnClickListener {
                 showDeleteDialog(context!!, goalId) {
-                    super.unsavedData = false
+                    exitWithoutUnsavedChangesWarning = true
                     (activity as MainActivity).onBackPressed()
                 }
             }
@@ -254,7 +252,6 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
 
         root.findViewById<Button>(R.id.addMilestone).setOnClickListener {
             MilestoneDialog({ name: String, date: Long? ->
-                unsavedData = true
                 val m = Milestone(-1, name, date, goalId ?: -1)
                 newMilestones.add(m)
                 if ((recyclerView.adapter as MilestoneRecyclerViewAdapter).add(m) == 1) {
@@ -270,11 +267,21 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
         }
 
         name.addTextChangedListener {
-            super.unsavedData = true
             nameWithColour.text = name.text
         }
-        notes.addTextChangedListener {
-            super.unsavedData = true
+
+        anyUnsavedChanges = { ->
+            if(goalId == null) true
+            else if(newMilestones.size > 0) true
+            else if(milestonesToRemove.size > 0) true
+            else if(milestonesChanged.size > 0) true
+            else if(newPhotos.size > 0) true
+            else if(imagesToRemove.size > 0) true
+            else if (e!!.name.trim() != name.text.toString().trim()) true
+            else if (e.colour != colour) true
+            else if ((e.notes == null) != notes.text.toString().trim().isEmpty()) true
+            else if (e.notes != null && e.notes?.trim() != notes.text.toString().trim()) true
+            else false
         }
 
         return root

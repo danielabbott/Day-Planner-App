@@ -11,7 +11,6 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.appcompat.widget.SwitchCompat
-import androidx.core.widget.addTextChangedListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import danielabbott.personalorganiser.MainActivity
 import danielabbott.personalorganiser.Notifications
@@ -19,7 +18,6 @@ import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.TimetableEvent
 import danielabbott.personalorganiser.ui.DataEntryFragment
-import danielabbott.personalorganiser.ui.SpinnerChangeDetector
 import danielabbott.personalorganiser.ui.TimeSelectView
 
 
@@ -152,7 +150,7 @@ class TimetableEditEventFragment(
                 startTime = startTimes[0].toInt() * 60 + startTimes[1].toInt()
                 endTime = endTimes[0].toInt() * 60 + endTimes[1].toInt()
 
-                val nameString = name.text.toString()
+                val nameString = name.text.toString().trim()
 
                 if (startTime == endTime) {
                     AlertDialog.Builder(context)
@@ -206,7 +204,7 @@ class TimetableEditEventFragment(
                         endTime - startTime,
                         daysBitmask,
                         nameString,
-                        if (notes.text.isEmpty()) null else notes.text.toString(),
+                        if (notes.text.trim().isEmpty()) null else notes.text.toString().trim(),
                         rOnTime.isChecked,
                         r30.isChecked,
                         r1.isChecked,
@@ -250,7 +248,7 @@ class TimetableEditEventFragment(
 
                     (activity!! as MainActivity).hideKeyboard()
 
-                    unsavedData = false
+                    exitWithoutUnsavedChangesWarning = true
                     (activity as MainActivity).onBackPressed()
                 }
             }
@@ -268,7 +266,7 @@ class TimetableEditEventFragment(
                     .setPositiveButton("Delete") { _, _ ->
                         Notifications.unscheduleNotificationsForTTEvent(context!!, eventId)
                         DB.deleteTimetableEvent(eventId)
-                        super.unsavedData = false
+                        exitWithoutUnsavedChangesWarning = true
                         (activity!! as MainActivity).hideKeyboard()
                         (activity as MainActivity).onBackPressed()
                     }
@@ -283,31 +281,39 @@ class TimetableEditEventFragment(
         tvStart.setTime(startTime / 60, startTime % 60)
         tvEnd.setTime(endTime / 60, endTime % 60)
 
-        tvStart.setOnClickListener {
-            unsavedData = true
-        }
+        anyUnsavedChanges = { ->
+            var daysBitmask = 0
+            dayCheckboxes.forEachIndexed { i: Int, checkBox: SwitchCompat ->
+                if (checkBox.isChecked) {
+                    daysBitmask = daysBitmask or (1 shl i)
+                }
+            }
 
-        tvEnd.setOnClickListener {
-            unsavedData = true
-        }
+            val startTimes = tvStart.text.split(":")
+            val endTimes = tvEnd.text.split(":")
 
+            startTime = startTimes[0].toInt() * 60 + startTimes[1].toInt()
+            endTime = endTimes[0].toInt() * 60 + endTimes[1].toInt()
 
-        val unsavedCL = { _: View ->
-            unsavedData = true
-        }
+            val new_goal = if (goal.selectedItemPosition == 0) null else goals[goal.selectedItemPosition - 1].id
 
-        name.addTextChangedListener { unsavedData = true }
-        goal.onItemSelectedListener =
-            SpinnerChangeDetector(unsavedCL)
-        notes.addTextChangedListener { unsavedData = true }
-        rOnTime.setOnClickListener(unsavedCL)
-        r30.setOnClickListener(unsavedCL)
-        r1.setOnClickListener(unsavedCL)
-        r2.setOnClickListener(unsavedCL)
-        rMorn.setOnClickListener(unsavedCL)
-
-        dayCheckboxes.forEach {
-            it.setOnClickListener(unsavedCL)
+            if(eventId == null) true
+            else if(newPhotos.size > 0) true
+            else if(imagesToRemove.size > 0) true
+            else if (originalEventData!!.name.trim() != name.text.toString().trim()) true
+            else if (originalEventData.startTime != startTime) true
+            else if (originalEventData.duration != endTime - startTime) true
+            else if (originalEventData.days != daysBitmask) true
+            else if (originalEventData.days != daysBitmask) true
+            else if ((originalEventData.notes == null) != notes.text.toString().trim().isEmpty()) true
+            else if (originalEventData.notes != null && originalEventData.notes?.trim() != notes.text.toString().trim()) true
+            else if (originalEventData.remindOnTime != rOnTime.isChecked) true
+            else if (originalEventData.remind30Mins != r30.isChecked) true
+            else if (originalEventData.remind1Hr != r1.isChecked) true
+            else if (originalEventData.remind2Hrs != r2.isChecked) true
+            else if (originalEventData.remindMorning != rMorn.isChecked) true
+            else if (originalEventData.goal_id != new_goal) true
+            else false
         }
 
         return root

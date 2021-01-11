@@ -46,7 +46,6 @@ open class DataEntryFragment : DataEntryFragmentBasic() {
         }
 
         root.findViewById<Button>(R.id.bAddPicture).setOnClickListener {
-            unsavedData = true
             ImagePick.pickImage(activity!!, this)
         }
     }
@@ -75,7 +74,6 @@ open class DataEntryFragment : DataEntryFragmentBasic() {
                 object : Thread() {
                     override fun run() {
                         addImage(uri)
-                        unsavedData = true
                     }
                 }.start()
                 newPhotos.add(uri.toString())
@@ -124,7 +122,6 @@ open class DataEntryFragment : DataEntryFragmentBasic() {
         // Set tap (view) and long tap (delete) handlers
 
         img.setOnLongClickListener {
-            unsavedData = true
             imagesToRemove.add(uri.toString())
             newPhotos.remove(uri.toString())
 
