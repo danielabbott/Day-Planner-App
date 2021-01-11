@@ -368,17 +368,17 @@ class TimetableView : View, GestureDetector.OnGestureListener {
             rectPaint
         )
         canvas.drawLine(
-            rowHeadersWidth.toFloat() - strokeWidth * 0.5f,
+            rowHeadersWidth.toFloat(),
             0.0f,
-            rowHeadersWidth.toFloat() - strokeWidth * 0.5f,
+            rowHeadersWidth.toFloat(),
             height.toFloat(),
             linePaint
         )
         canvas.drawLine(
             0.0f,
-            columnHeadersHeight.toFloat() - strokeWidth * 0.5f,
+            columnHeadersHeight.toFloat(),
             width.toFloat(),
-            columnHeadersHeight.toFloat() - strokeWidth * 0.5f,
+            columnHeadersHeight.toFloat(),
             linePaint
         )
 
@@ -633,8 +633,31 @@ class TimetableView : View, GestureDetector.OnGestureListener {
                     zoomValueY = 1.5f
                 }
 
-                startX = startXOld * (zoomValueX / zoomXOld)
-                startY = startYOld * (zoomValueY / zoomYOld)
+                val newStartY = startYOld * (zoomValueY / zoomYOld)
+                val newStartX = startXOld * (zoomValueX / zoomXOld)
+
+                if(zoomValueY >= zoomYOld) {
+                    if(newStartY < startY) {
+                        startY = newStartY
+                    }
+                }
+                else {
+                    if(newStartY > startY) {
+                        startY = newStartY
+                    }
+                }
+
+                if(zoomValueX >= zoomXOld) {
+                    if(newStartX < startX) {
+                        startX = newStartX
+                    }
+                }
+                else {
+                    if(newStartX > startX) {
+                        startX = newStartX
+                    }
+                }
+
 
                 invalidate()
 
