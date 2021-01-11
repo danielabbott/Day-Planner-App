@@ -141,14 +141,18 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                     date.setDate(System.currentTimeMillis())
                 }
 
-                val dateTime = if (date.dateSelected) DateTimeUtil.getDateTimeMillis(
+                var dateTime = if (date.dateSelected) DateTimeUtil.getDateTimeMillis(
                     date.year,
                     date.month,
                     date.day,
                     if (time.timeSelected) time.hour else 23,
                     if (time.timeSelected) time.minute else 59
-                )% 1000
+                )
                 else null
+
+                if(dateTime != null) {
+                    dateTime = dateTime - dateTime % 1000
+                }
 
                 var newTask = ToDoListTask(
                     taskId ?: -1,
@@ -345,18 +349,16 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             else null
 
             if(dateTime != null) {
-                dateTime = dateTime - dateTime % 1000
+                dateTime = dateTime!! - dateTime!! % 1000
             }
 
             val new_goal = if (goal.selectedItemPosition == 0) null else goals[goal.selectedItemPosition - 1].id
-
-            Log.e("a", "dateTime $dateTime, originalTaskData!!.dateTime ${originalTaskData!!.dateTime}")
 
             if(taskId == null) true
             else if(newPhotos.size > 0) true
             else if(imagesToRemove.size > 0) true
             else if (originalTaskData!!.dateTime != dateTime) true
-            else if (originalTaskData!!.hasTime != time.timeSelected) true
+            else if (originalTaskData.hasTime != time.timeSelected) true
             else if (originalTaskData.name.trim() != name.text.toString().trim()) true
             else if ((originalTaskData.notes == null) != notes.toString().trim().isEmpty()) true
             else if (originalTaskData.notes != null && originalTaskData.notes?.trim() != notes.toString().trim()) true
