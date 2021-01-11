@@ -57,7 +57,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:backgroundTint="@color/buttonColour"
+                app:backgroundTint="@color/buttonColour"
                 android:text="&lt;" />
 
             <TextView
@@ -76,7 +76,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:backgroundTint="@color/buttonColour"
+                app:backgroundTint="@color/buttonColour"
                 android:text="&gt;" />
 
 
@@ -103,7 +103,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:backgroundTint="@color/buttonColour"
+                app:backgroundTint="@color/buttonColour"
                 android:text="&lt;" />
 
             <TextView
@@ -122,7 +122,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:backgroundTint="@color/buttonColour"
+                app:backgroundTint="@color/buttonColour"
                 android:text="&gt;" />
 
 
@@ -290,7 +290,7 @@
             android:id="@+id/optimiseDB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/buttonColour"
+            app:backgroundTint="@color/buttonColour"
             android:text="Optimise Database"
             android:textAllCaps="false" />
 
@@ -298,7 +298,7 @@
             android:id="@+id/exportDB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/buttonColour"
+            app:backgroundTint="@color/buttonColour"
             android:text="Export Database"
             android:textAllCaps="false" />
 
@@ -306,7 +306,7 @@
             android:id="@+id/importDB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/buttonColour"
+            app:backgroundTint="@color/buttonColour"
             android:text="Import Database"
             android:textAllCaps="false" />
 
@@ -318,7 +318,7 @@
             android:id="@+id/disableAllReminders"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/buttonColour"
+            app:backgroundTint="@color/buttonColour"
             android:text="Disable all reminders"
             android:textAllCaps="false" />
 

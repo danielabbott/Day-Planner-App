@@ -30,11 +30,11 @@
     </string-array>
 
     <string-array name="repeat_values">
-        <item>None</item>
-        <item>Daily</item>
-        <item>Every other day</item>
-        <item>Weekly</item>
-        <item>Monthly</item>
+        <item>Don\'t Repeat</item>
+        <item>Repeat Daily</item>
+        <item>Repeat Every other day</item>
+        <item>Repeat Weekly</item>
+        <item>Repeat Monthly</item>
     </string-array>
 
     <!--Do not change without changing code in SettingsFragment.kt-->

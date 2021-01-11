@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffffff"
     android:fitsSystemWindows="true"
-    tools:context=".ui.todolist.EditToDoListTaskFragment"
-    android:background="#ffffffff">
+    tools:context=".ui.todolist.EditToDoListTaskFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,71 +18,44 @@
             android:orientation="vertical"
             android:padding="10dp">
 
-            <LinearLayout
+
+            <EditText
+                android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3">
+                android:ems="10"
+                android:hint="Task name"
+                android:imeOptions="actionDone"
+                android:inputType="textCapSentences" />
 
-                <TextView
-                    android:id="@+id/textView9"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Name" />
-
-                <EditText
-                    android:id="@+id/name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:ems="10"
-                    android:hint="Task name"
-                    android:imeOptions="actionDone"
-                    android:inputType="textCapSentences" />
-
-            </LinearLayout>
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="20dp" />
 
-            <LinearLayout
+
+            <Spinner
+                android:id="@+id/goal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Goal" />
-
-                <Spinner
-                    android:id="@+id/goal"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2" />
-
-            </LinearLayout>
+                android:layout_height="wrap_content" />
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="20dp" />
+                android:layout_height="30dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="3">
+                android:weightSum="2">
 
-                <TextView
-                    android:id="@+id/lblDate"
+                <Button
+                    android:id="@+id/dateBack"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Date" />
+                    android:layout_weight="0.4"
+                    android:text="&lt;"
+                    app:backgroundTint="@color/buttonColour" />
 
                 <danielabbott.personalorganiser.ui.DateSelectView
                     android:id="@+id/date"
@@ -91,16 +64,11 @@
                     android:layout_weight="1.2"
                     android:clickable="true"
                     android:focusable="true"
+                    android:gravity="center_horizontal"
                     android:text="----/--/--"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
                     android:textSize="20sp" />
-
-                <Button
-                    android:id="@+id/dateBack"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.4"
-                    android:text="&lt;"
-                    android:backgroundTint="@color/buttonColour" />
 
                 <Button
                     android:id="@+id/dateForwards"
@@ -108,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.4"
                     android:text="&gt;"
-                    android:backgroundTint="@color/buttonColour" />
+                    app:backgroundTint="@color/buttonColour" />
 
 
             </LinearLayout>
@@ -118,80 +86,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="20dp" />
 
-            <LinearLayout
+            <danielabbott.personalorganiser.ui.TimeSelectView
+                android:id="@+id/time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3">
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_horizontal"
+                android:text="00:00"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="24sp" />
 
-                <TextView
-                    android:id="@+id/lblTime"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Time" />
-
-                <danielabbott.personalorganiser.ui.TimeSelectView
-                    android:id="@+id/time"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:text="00:00"
-                    android:textSize="24sp" />
-
-            </LinearLayout>
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="30dp" />
+                android:layout_height="50dp" />
 
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Notes" />
-
-
-            <EditText
-                android:id="@+id/notes"
+            <Spinner
+                android:id="@+id/repeat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:gravity="start|top"
-                android:inputType="textMultiLine|textCapSentences"
-                android:lines="6" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="30dp" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3">
-
-                <TextView
-                    android:id="@+id/textView14"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Repeat" />
-
-                <Spinner
-                    android:id="@+id/repeat"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:entries="@array/repeat_values" />
-            </LinearLayout>
+                android:entries="@array/repeat_values" />
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="40dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reminder notifications" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
 
             <TableLayout
                 android:layout_width="match_parent"
@@ -205,14 +135,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Remind on time" />
+                        android:text="On time" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/rOnTime"
                         android:layout_width="70dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@null" />
+                        android:background="@null"
+                        android:gravity="center_horizontal"
+                        android:textAlignment="center" />
                 </TableRow>
 
                 <TableRow
@@ -223,7 +155,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Remind 30 mins prior" />
+                        android:text="30 minutes prior" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/r30"
@@ -241,7 +173,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Remind 1 hour prior" />
+                        android:text="1 hour prior" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/r1"
@@ -259,7 +191,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Remind 2 hours prior" />
+                        android:text="2 hours prior" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/r2"
@@ -277,7 +209,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Remind in the morning" />
+                        android:text="Morning of" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/rMorn"
@@ -291,17 +223,34 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="40dp" />
+                android:layout_height="30dp" />
 
+
+            <EditText
+                android:id="@+id/notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="start|top"
+                android:hint="Notes"
+                android:inputType="textMultiLine|textCapSentences"
+                android:lines="6" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
 
             <Button
                 android:id="@+id/bAddPicture"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:backgroundTint="@color/buttonColour"
                 android:text="Add Picture"
-                android:textAllCaps="false" />
+                android:textAllCaps="false"
+                app:backgroundTint="@color/buttonColour" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -322,9 +271,9 @@
                 android:id="@+id/bDelete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/buttonColour"
                 android:text="Delete Task"
-                android:textAllCaps="false" />
+                android:textAllCaps="false"
+                app:backgroundTint="@color/buttonColour" />
         </LinearLayout>
     </ScrollView>
 
@@ -336,8 +285,8 @@
         android:layout_marginEnd="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
-        app:backgroundTint="#00BCD4"
+        app:backgroundTint="#4040c0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_save" />
+        app:srcCompat="@drawable/ic_fab_save" />
 </androidx.constraintlayout.widget.ConstraintLayout>
