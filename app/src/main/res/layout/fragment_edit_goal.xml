@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="#ffffffff">
+    android:fitsSystemWindows="true">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll"
@@ -62,11 +61,13 @@
                     android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ems="10"
+                    android:textSize="@dimen/form_text_size"
                     android:hint="Name"
+                    android:padding = "5dp"
                     android:imeOptions="actionDone"
                     android:inputType="textCapSentences"
-                    tools:ignore="Autofill" />
+                    tools:ignore="Autofill"
+                    android:background="@drawable/rounded_corners" />
 
                 <Space
                     android:layout_width="match_parent"
@@ -77,21 +78,14 @@
                     android:id="@+id/setColour"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:backgroundTint="@color/buttonColour"
+                    android:textSize="@dimen/form_text_size"
                     android:text="Set Colour"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    android:background="@drawable/rounded_corners" />
 
                 <Space
                     android:layout_width="match_parent"
                     android:layout_height="20dp" />
-
-                <TextView
-                    android:id="@+id/textView13"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Notes" />
 
 
                 <EditText
@@ -99,28 +93,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:ems="10"
+                    android:hint="Notes"
+                    android:textSize="@dimen/form_text_size"
                     android:gravity="start|top"
                     android:inputType="textMultiLine|textCapSentences"
-                    android:lines="6" />
+                    android:lines="6"
+                    android:background="@drawable/rounded_corners"
+                    android:padding="5dp"/>
 
                 <Space
                     android:layout_width="match_parent"
                     android:layout_height="20dp" />
 
-                <LinearLayout
+                <Button
+                    android:id="@+id/bAddPicture"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:text="Add Picture"
+                    android:textSize="@dimen/form_text_size"
+                    android:textAllCaps="false"
+                    android:background="@drawable/rounded_corners" />
 
-                    <Button
-                        android:id="@+id/bAddPicture"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:backgroundTint="@color/buttonColour"
-                        android:text="Add Picture"
-                        android:textAllCaps="false" />
-                </LinearLayout>
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -135,28 +131,36 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="20dp" />
+                    android:layout_height="10dp" />
+
 
                 <Button
                     android:id="@+id/bDelete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:backgroundTint="@color/buttonColour"
+                    android:textSize="@dimen/form_text_size"
                     android:text="Delete Goal"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    android:background="@drawable/rounded_corners" />
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="20dp" />
+                    android:layout_height="10dp" />
+
 
                 <Button
                     android:id="@+id/addMilestone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:backgroundTint="@color/buttonColour"
+                    android:background="@drawable/rounded_corners"
+                    android:textSize="@dimen/form_text_size"
                     android:text="Add Milestone"
                     android:textAllCaps="false" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/list"

@@ -3,6 +3,7 @@ package danielabbott.personalorganiser.ui.timetable
 import android.app.AlertDialog
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -81,6 +82,7 @@ class TimetableEditEventFragment(
             try {
                 originalEventData = DB.getTimetableEvent(eventId)
             } catch (e: Exception) {
+                Log.e("TTEdit", "Error loading data: $e")
                 val fragmentTransaction = fragmentManager!!.beginTransaction()
                 fragmentTransaction.replace(R.id.fragmentView, TimetableFragment())
                 fragmentTransaction.commit()

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -38,6 +39,8 @@ class GoalRecyclerViewAdapter(
             holder.clickableArea.setOnClickListener(null)
             holder.clickableArea.setOnLongClickListener(null)
             holder.circle.setOnClickListener(null)
+            holder.dots?.visibility = View.INVISIBLE
+            holder.camera?.visibility = View.INVISIBLE
             return
         }
 
@@ -45,6 +48,8 @@ class GoalRecyclerViewAdapter(
         holder.name.text = item.name
         holder.circle.colour = item.colour
         holder.mView.tag = item.id
+        holder.dots?.visibility = if (item.hasNotes) View.VISIBLE else View.INVISIBLE
+        holder.camera?.visibility = if (item.hasImages) View.VISIBLE else View.INVISIBLE
 
         holder.clickableArea.setOnClickListener {
             // When clicked, open edit page for the goal
@@ -87,5 +92,7 @@ class GoalRecyclerViewAdapter(
         val clickableArea: LinearLayout = mView.findViewById(R.id.goalClickable)
         val name: TextView = mView.findViewById(R.id.name)
         val circle: CircleView = mView.findViewById(R.id.circle)
+        val dots: TextView? = mView.findViewById(R.id.dots)
+        val camera: ImageView? = mView.findViewById(R.id.camera)
     }
 }

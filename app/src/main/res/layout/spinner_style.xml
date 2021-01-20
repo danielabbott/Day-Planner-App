@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    android:gravity="center"
+    android:textColor="#000000"
+    android:textSize="@dimen/form_text_size"
+    android:paddingBottom="8dp"
+    android:paddingTop="8dp" />

@@ -61,7 +61,7 @@ open class DataEntryFragment : DataEntryFragmentBasic() {
         }
         goal.adapter = ArrayAdapter<String>(
             context!!,
-            android.R.layout.simple_spinner_dropdown_item,
+            R.layout.spinner_style,
             testArray
         )
     }

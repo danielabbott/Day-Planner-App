@@ -14,7 +14,9 @@
             android:id="@+id/tagSelect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:spinnerMode="dialog"/>
+            android:spinnerMode="dialog"
+            app:backgroundTint="@color/pageBackground"
+            android:layout_margin="5dp"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list"

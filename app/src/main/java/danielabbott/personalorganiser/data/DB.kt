@@ -163,8 +163,9 @@ object DB {
 
         override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
             if(oldVersion >= 4 && newVersion < 4) {
-                db.execSQL("ALTER TABLE TBL_TIMETABLE_EVENT DROP COLUMN remindOnTime")
-                db.execSQL("ALTER TABLE TBL_TODO_LIST_TASK DROP COLUMN remindOnTime")
+                // sqlite does not support dropping columns
+                //db.execSQL("ALTER TABLE TBL_TIMETABLE_EVENT DROP COLUMN remindOnTime")
+                //db.execSQL("ALTER TABLE TBL_TODO_LIST_TASK DROP COLUMN remindOnTime")
             }
             if(oldVersion >= 3 && newVersion < 3) {
                 db.execSQL("DROP TABLE IF EXISTS TBL_NOTIFICATIONS")
@@ -333,7 +334,7 @@ object DB {
         val db = dbHelper.readableDatabase
 
         val cursor = db.rawQuery(
-            "SELECT *,(SELECT colour FROM TBL_GOAL WHERE _id=goal_id) as gcol FROM TBL_TIMETABLE_EVENT WHERE timetable_id=?",
+            "SELECT *,(SELECT colour FROM TBL_GOAL WHERE _id=goal_id) as gcol, (SELECT 1 FROM TBL_TIMETABLE_EVENT_PHOTOS WHERE event_id=_id) AS photos FROM TBL_TIMETABLE_EVENT WHERE timetable_id=?",
             arrayOf(timetableId.toString())
         )
 
@@ -353,6 +354,7 @@ object DB {
                     cursor.getInt(cursor.getColumnIndexOrThrow("remind2Hrs")) != 0,
                     cursor.getInt(cursor.getColumnIndexOrThrow("remindMorning")) != 0,
                     cursor.getLong(cursor.getColumnIndexOrThrow("goal_id")),
+                    cursor.getIntOrNull(cursor.getColumnIndexOrThrow("photos")) != null,
                     cursor.getIntOrNull(cursor.getColumnIndexOrThrow("gcol"))
                 )
             )
@@ -550,7 +552,8 @@ object DB {
 
 
         val cursor = db.rawQuery(
-            "SELECT *,(SELECT colour FROM TBL_GOAL WHERE _id=goal_id) AS gcol, (LENGTH(notes)) AS notesLength " +
+            "SELECT *,(SELECT colour FROM TBL_GOAL WHERE _id=goal_id) AS gcol, (LENGTH(notes)) AS notesLength," +
+                    "(SELECT 1 FROM TBL_TODO_LIST_TASK_PHOTOS WHERE task_id=_id) AS photos " +
                     "FROM TBL_TODO_LIST_TASK ORDER BY dateTime ASC",
             arrayOf()
         )
@@ -564,7 +567,8 @@ object DB {
                     cursor.getLongOrNull(cursor.getColumnIndexOrThrow("dateTime")),
                     cursor.getInt(cursor.getColumnIndexOrThrow("has_time")) != 0,
                     cursor.getIntOrNull(cursor.getColumnIndexOrThrow("gcol")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("notesLength")) > 0
+                    cursor.getInt(cursor.getColumnIndexOrThrow("notesLength")) > 0,
+                    cursor.getIntOrNull(cursor.getColumnIndexOrThrow("photos")) != null
                 )
             )
         }
@@ -745,7 +749,7 @@ object DB {
 
 
         val cursor = db.rawQuery(
-            "SELECT _id,name,colour FROM TBL_GOAL",
+            "SELECT _id,name,colour, (SELECT 1 FROM TBL_GOAL_PHOTOS WHERE goal_id=_id) AS photos, (LENGTH(notes)) AS notesLength FROM TBL_GOAL",
             arrayOf()
         )
 
@@ -754,7 +758,9 @@ object DB {
                 GoalListData(
                     cursor.getLong(cursor.getColumnIndexOrThrow("_id")),
                     cursor.getString(cursor.getColumnIndexOrThrow("name")),
-                    cursor.getInt(cursor.getColumnIndexOrThrow("colour"))
+                    cursor.getInt(cursor.getColumnIndexOrThrow("colour")),
+                    cursor.getInt(cursor.getColumnIndexOrThrow("notesLength")) > 0,
+                    cursor.getIntOrNull(cursor.getColumnIndexOrThrow("photos")) != null
                 )
             )
         }

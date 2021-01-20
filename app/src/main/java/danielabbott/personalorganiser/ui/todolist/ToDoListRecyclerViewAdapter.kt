@@ -7,6 +7,7 @@ import android.graphics.PorterDuffColorFilter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
@@ -33,7 +34,8 @@ class ToDoListRecyclerViewAdapter(
         val dateTime: Long?,
         val hasTime: Boolean,
         val colour: Int,
-        val hasNotes: Boolean
+        val hasNotes: Boolean,
+        val hasImages: Boolean = false
     )
 
     private var items = ArrayList<Item>()
@@ -98,7 +100,8 @@ class ToDoListRecyclerViewAdapter(
                     it.dateTime,
                     it.hasTime,
                     (colour and 0xffffff) or 0x80000000.toInt(),
-                    it.hasNotes
+                    it.hasNotes,
+                    it.hasImages
                 )
             )
         }
@@ -129,6 +132,7 @@ class ToDoListRecyclerViewAdapter(
             holder.dateTime?.text = ""
             holder.divider?.visibility = View.INVISIBLE
             holder.dots?.visibility = View.INVISIBLE
+            holder.camera?.visibility = View.INVISIBLE
             holder.layout.setOnClickListener(null)
             holder.layout.setOnLongClickListener(null)
             return
@@ -140,8 +144,10 @@ class ToDoListRecyclerViewAdapter(
             // Task (not section header)
 
             //holder.colourLayout.setBackgroundColor(item.colour)
-            holder.colourLayout.background!!.colorFilter =
-                PorterDuffColorFilter(item.colour, PorterDuff.Mode.MULTIPLY)
+            if(item.colour and 0xffffff != 0xffffff) {
+                holder.colourLayout.background!!.colorFilter =
+                    PorterDuffColorFilter(item.colour, PorterDuff.Mode.MULTIPLY)
+            }
 
             holder.divider?.visibility = View.INVISIBLE
 
@@ -159,9 +165,9 @@ class ToDoListRecyclerViewAdapter(
                 }
             }
 
-            if (holder.dots != null) {
-                holder.dots.visibility = if (item.hasNotes) View.VISIBLE else View.INVISIBLE;
-            }
+            holder.dots?.visibility = if (item.hasNotes) View.VISIBLE else View.INVISIBLE
+            holder.camera?.visibility = if (item.hasImages) View.VISIBLE else View.INVISIBLE
+
 
             holder.layout.setOnClickListener {
                 // When clicked, open edit page for the task
@@ -231,6 +237,7 @@ class ToDoListRecyclerViewAdapter(
         val name: TextView = mView.findViewById(R.id.name)
         val dateTime: TextView? = mView.findViewById(R.id.date_time)
         val dots: TextView? = mView.findViewById(R.id.dots)
+        val camera: ImageView? = mView.findViewById(R.id.camera)
         val divider: View? = mView.findViewById(R.id.divider)
     }
 }

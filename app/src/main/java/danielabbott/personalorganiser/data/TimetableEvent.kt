@@ -15,6 +15,9 @@ class TimetableEvent(
     var remindMorning: Boolean,
     var goal_id: Long?,
 
+    // Set when loading multiple timetable events from the DB, ignored when otherwise
+    var hasImages: Boolean = false,
+
     // Set when data is loaded from database, ignored when storing in database
     var goal_colour: Int? = null
 )

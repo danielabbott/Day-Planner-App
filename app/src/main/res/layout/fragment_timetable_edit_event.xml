@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffffff"
     android:fitsSystemWindows="true"
     tools:context=".ui.timetable.TimetableEditEventFragment">
 
@@ -23,10 +22,12 @@
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:textSize="@dimen/form_text_size"
                 android:hint="Name"
+                android:padding="5dp"
                 android:imeOptions="actionDone"
-                android:inputType="textCapSentences" />
+                android:inputType="textCapSentences"
+                android:background="@drawable/rounded_corners" />
 
             <Space
                 android:layout_width="match_parent"
@@ -36,11 +37,13 @@
             <Spinner
                 android:id="@+id/goal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:spinnerMode="dialog"
+                android:background="@drawable/rounded_corners"/>
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="40dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -57,9 +60,11 @@
                     android:focusable="true"
                     android:gravity="center_horizontal"
                     android:text="00:00"
+                    android:padding="5dp"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="24sp" />
+                    android:textSize="@dimen/form_text_size_date_time"
+                    android:background="@drawable/rounded_corners" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -67,8 +72,9 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:text="to"
+                    android:textColor="#303030"
                     android:textAlignment="center"
-                    android:textSize="20sp" />
+                    android:textSize="@dimen/form_label_text_size" />
 
                 <danielabbott.personalorganiser.ui.TimeSelectView
                     android:id="@+id/tvEnd"
@@ -79,15 +85,17 @@
                     android:focusable="true"
                     android:gravity="center_horizontal"
                     android:text="00:00"
+                    android:padding="5dp"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="24sp" />
+                    android:textSize="@dimen/form_text_size_date_time"
+                    android:background="@drawable/rounded_corners"/>
             </LinearLayout>
 
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="40dp" />
 
             <TableLayout
                 android:layout_width="match_parent"
@@ -103,6 +111,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="center"
+                        android:textColor="#303030"
+                        android:textSize="@dimen/form_label_text_size"
                         android:text="Monday" />
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -118,6 +128,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="center"
+                        android:textColor="#303030"
+                        android:textSize="@dimen/form_label_text_size"
                         android:text="Tuesday" />
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -139,6 +151,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="center"
+                        android:textColor="#303030"
+                        android:textSize="@dimen/form_label_text_size"
                         android:text="Wednesday" />
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -153,6 +167,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="center"
+                        android:textColor="#303030"
+                        android:textSize="@dimen/form_label_text_size"
                         android:text="Thursday" />
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -174,6 +190,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="center"
+                        android:textColor="#303030"
+                        android:textSize="@dimen/form_label_text_size"
                         android:text="Friday" />
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -188,6 +206,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="center"
+                        android:textColor="#303030"
+                        android:textSize="@dimen/form_label_text_size"
                         android:text="Saturday" />
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -209,6 +229,8 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="center"
+                        android:textColor="#303030"
+                        android:textSize="@dimen/form_label_text_size"
                         android:text="Sunday" />
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -222,12 +244,14 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="40dp" />
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="#303030"
+                android:textSize="@dimen/form_label_text_size"
                 android:text="Reminder notifications" />
 
             <Space
@@ -246,6 +270,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:textColor="#303030"
+                        android:textSize="@dimen/form_label_text_size"
                         android:text="On time" />
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -266,6 +292,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:textColor="#303030"
+                        android:textSize="@dimen/form_label_text_size"
                         android:text="30 minutes prior" />
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -284,6 +312,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:textColor="#303030"
+                        android:textSize="@dimen/form_label_text_size"
                         android:text="1 hour prior" />
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -302,6 +332,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:textColor="#303030"
+                        android:textSize="@dimen/form_label_text_size"
                         android:text="2 hours prior" />
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -320,6 +352,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:textColor="#303030"
+                        android:textSize="@dimen/form_label_text_size"
                         android:text="Morning of" />
 
                     <androidx.appcompat.widget.SwitchCompat
@@ -341,11 +375,13 @@
                 android:id="@+id/notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
+                android:textSize="@dimen/form_text_size"
                 android:gravity="start|top"
                 android:hint="Notes"
+                android:padding="5dp"
                 android:inputType="textMultiLine|textCapSentences"
-                android:lines="6" />
+                android:lines="6"
+                android:background="@drawable/rounded_corners"/>
 
             <Space
                 android:layout_width="match_parent"
@@ -356,8 +392,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Add Picture"
+                android:textSize="@dimen/form_text_size"
                 android:textAllCaps="false"
-                app:backgroundTint="@color/buttonColour" />
+                android:background="@drawable/rounded_corners" />
 
             <Space
                 android:layout_width="match_parent"
@@ -376,15 +413,16 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="30dp" />
+                android:layout_height="10dp" />
 
             <Button
                 android:id="@+id/bDelete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Delete Event"
+                android:textSize="@dimen/form_text_size"
                 android:textAllCaps="false"
-                app:backgroundTint="@color/buttonColour" />
+                android:background="@drawable/rounded_corners" />
         </LinearLayout>
     </ScrollView>
 

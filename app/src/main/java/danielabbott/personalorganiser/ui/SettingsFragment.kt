@@ -46,6 +46,8 @@ class SettingsFragment : Fragment() {
         }
 
         timetableFontSize = root.findViewById<Spinner>(R.id.timetableFontSize)
+        timetableFontSize.adapter = ArrayAdapter<String>(context!!, R.layout.spinner_style, arrayOf("16", "18", "20", "22", "24"))
+
 
         timetableFontSize.onItemSelectedListener = SpinnerChangeDetector {
             Settings.setTimetableFontSize(
@@ -68,6 +70,7 @@ class SettingsFragment : Fragment() {
         }
 
         timetableLineWidth = root.findViewById<Spinner>(R.id.timetableLineWidth)
+        timetableLineWidth.adapter = ArrayAdapter<String>(context!!, R.layout.spinner_style, arrayOf("0.5", "0.75", "1.0", "1.25", "1.5", "1.75", "2.0"))
 
         timetableLineWidth.onItemSelectedListener = SpinnerChangeDetector {
             Settings.setTimetableLineWidth(

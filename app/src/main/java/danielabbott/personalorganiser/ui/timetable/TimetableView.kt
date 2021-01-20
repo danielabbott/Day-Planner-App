@@ -3,9 +3,8 @@ package danielabbott.personalorganiser.ui.timetable
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Rect
+import android.graphics.*
+import android.graphics.drawable.Drawable
 import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
@@ -13,6 +12,7 @@ import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.withTranslation
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.FragmentManager
@@ -83,7 +83,9 @@ class TimetableView : View, GestureDetector.OnGestureListener {
     private val textPaint = TextPaint()
     private val egTextBounds = Rect()
     private val rectPaint: Paint = Paint()
+    private val circlePaint: Paint = Paint()
     private val wednesdayBounds = Rect()
+    private var cameraDrawable: Drawable? = null
 
     override fun onDraw(canvas: Canvas) {
         validateValues()
@@ -124,6 +126,10 @@ class TimetableView : View, GestureDetector.OnGestureListener {
 
         rectPaint.style = Paint.Style.FILL
         rectPaint.isAntiAlias = false
+
+
+        circlePaint.style = Paint.Style.FILL
+        circlePaint.isAntiAlias = true
 
         // Width and height of columns and rows
 
@@ -219,25 +225,26 @@ class TimetableView : View, GestureDetector.OnGestureListener {
 
                 if (it.hasNotes) {
                     // 3 dots
-                    val scale = resources.displayMetrics.density
-                    val x = it.ui_x + it.ui_w - 10 * scale
-                    val y = it.ui_y + 4 * scale
+                    val scale = resources.displayMetrics.density * 0.5f
+                    var x = it.ui_x + it.ui_w - 20 * scale
+                    val y = it.ui_y + 12 * scale
                     rectPaint.color = 0xff000000.toInt()
-                    canvas.drawRect(x, y, x + 4 * scale, y + 4 * scale, rectPaint)
-                    canvas.drawRect(
-                        x - 10 * scale,
-                        y,
-                        x + (4 - 10) * scale,
-                        y + 4 * scale,
-                        rectPaint
-                    )
-                    canvas.drawRect(
-                        x - 20 * scale,
-                        y,
-                        x + (4 - 20) * scale,
-                        y + 4 * scale,
-                        rectPaint
-                    )
+                    canvas.drawCircle(x, y, 5*scale, circlePaint)
+                    x -= 15*scale
+                    canvas.drawCircle(x, y, 5*scale, circlePaint)
+                    x -= 15*scale
+                    canvas.drawCircle(x, y, 5*scale, circlePaint)
+                }
+
+                if(it.hasImages && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                        val scale = ceil(resources.displayMetrics.density).toInt()
+                        if(cameraDrawable == null) {
+                            cameraDrawable = ResourcesCompat.getDrawable(context!!.resources, R.drawable.ic_camera, null)
+                            cameraDrawable!!.setTint(0xff000000.toInt())
+                        }
+
+                        cameraDrawable!!.setBounds(it.ui_x.toInt()+scale, it.ui_y.toInt()+scale, it.ui_x.toInt()+scale+scale*16, it.ui_y.toInt()+scale+scale*16)
+                        cameraDrawable!!.draw(canvas)
                 }
 
                 val staticLayout = StaticLayout(
@@ -406,6 +413,7 @@ class TimetableView : View, GestureDetector.OnGestureListener {
                 tEvent = it
             }
         }
+
 
         var startTime = 0
         var endTime = 0

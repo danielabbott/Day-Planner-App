@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    android:background="#ffffffff">
+    app:layout_constraintTop_toTopOf="parent">
 
     <LinearLayout
         android:id="@+id/settingsContents"
@@ -19,12 +18,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="3">
+            android:weightSum="2">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:text="Morning reminder time" />
 
             <danielabbott.personalorganiser.ui.TimeSelectView
@@ -32,7 +31,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textSize="30sp" />
+                android:padding="5dp"
+                android:textColor="#000000"
+                android:textAlignment="center"
+                android:textSize="30sp"
+                android:background="@drawable/rounded_corners"
+                android:gravity="center_horizontal" />
 
         </LinearLayout>
 
@@ -57,7 +61,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                app:backgroundTint="@color/buttonColour"
+                android:background="@drawable/rounded_corners"
                 android:text="&lt;" />
 
             <TextView
@@ -76,7 +80,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                app:backgroundTint="@color/buttonColour"
+                android:background="@drawable/rounded_corners"
                 android:text="&gt;" />
 
 
@@ -103,7 +107,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                app:backgroundTint="@color/buttonColour"
+                android:background="@drawable/rounded_corners"
                 android:text="&lt;" />
 
             <TextView
@@ -122,7 +126,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                app:backgroundTint="@color/buttonColour"
+                android:background="@drawable/rounded_corners"
                 android:text="&gt;" />
 
 
@@ -136,20 +140,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="3">
+            android:weightSum="2">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:text="Timetable font size" />
 
             <Spinner
                 android:id="@+id/timetableFontSize"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:entries="@array/timetable_font_sizes" />
+                android:layout_weight="1"
+                android:background="@drawable/rounded_corners"
+                android:spinnerMode="dialog" />
 
         </LinearLayout>
 
@@ -161,20 +166,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="3">
+            android:weightSum="2">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:text="Timetable line width" />
 
             <Spinner
                 android:id="@+id/timetableLineWidth"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:entries="@array/timetable_line_widths" />
+                android:layout_weight="1"
+                android:background="@drawable/rounded_corners"
+                android:spinnerMode="dialog" />
 
         </LinearLayout>
 
@@ -278,6 +284,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:maxLines="1"
+                android:background="@drawable/rounded_corners"
+                android:padding="5dp"
                 android:inputType="text"/>
 
         </LinearLayout>

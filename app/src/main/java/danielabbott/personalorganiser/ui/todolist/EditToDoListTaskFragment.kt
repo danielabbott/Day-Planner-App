@@ -6,10 +6,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Spinner
+import android.widget.*
 import androidx.appcompat.widget.ShareActionProvider
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.MenuItemCompat
@@ -22,10 +19,7 @@ import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.Repeat
 import danielabbott.personalorganiser.data.ToDoListTask
-import danielabbott.personalorganiser.ui.DataEntryFragment
-import danielabbott.personalorganiser.ui.DateSelectView
-import danielabbott.personalorganiser.ui.SpinnerChangeDetector
-import danielabbott.personalorganiser.ui.TimeSelectView
+import danielabbott.personalorganiser.ui.*
 
 class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
 
@@ -70,6 +64,8 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
         super.initGoals(goal)
 
 
+        repeat.adapter = ArrayAdapter<String>(context!!, R.layout.spinner_style, arrayOf("Don't Repeat", "Repeat Daily", "Repeat Every other day", "Repeat Weekly", "Repeat Monthly"))
+
         var originalTaskData: ToDoListTask? = null
 
         if (taskId != null) {
@@ -87,6 +83,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             notes.setText(if (originalTaskData.notes == null) "" else originalTaskData.notes!!)
             name.setText(originalTaskData.name)
             repeat.setSelection(originalTaskData.repeat.n)
+//            rOnTime.activeState = originalTaskData.remindOnTime
             rOnTime.isChecked = originalTaskData.remindOnTime
             r30.isChecked = originalTaskData.remind30Mins
             r1.isChecked = originalTaskData.remind1Hr
@@ -160,6 +157,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                     time.timeSelected,
                     nameString,
                     if (notes.isEmpty()) null else notes.toString(),
+//                    rOnTime.activeState,
                     rOnTime.isChecked,
                     r30.isChecked,
                     r1.isChecked,
@@ -362,6 +360,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             else if (originalTaskData.name.trim() != name.text.toString().trim()) true
             else if ((originalTaskData.notes == null) != notes.toString().trim().isEmpty()) true
             else if (originalTaskData.notes != null && originalTaskData.notes?.trim() != notes.toString().trim()) true
+//            else if (originalTaskData.remindOnTime != rOnTime.activeState) true
             else if (originalTaskData.remindOnTime != rOnTime.isChecked) true
             else if (originalTaskData.remind30Mins != r30.isChecked) true
             else if (originalTaskData.remind1Hr != r1.isChecked) true
@@ -387,6 +386,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             r30.isEnabled = false
             r1.isEnabled = false
             r2.isEnabled = false
+//            rOnTime.activeState = false
             rOnTime.isChecked = false
             r30.isChecked = false
             r1.isChecked = false

@@ -6,7 +6,8 @@ class TimetableEventUI(
     var colour: Int,
     val e: TimetableEvent,
     val day: Int,
-    val hasNotes: Boolean
+    val hasNotes: Boolean,
+    val hasImages: Boolean
 ) {
     // ui_x and ui_y are relative to the top left of the timetable cells (add startX/Y to get canvas posiiton)
 

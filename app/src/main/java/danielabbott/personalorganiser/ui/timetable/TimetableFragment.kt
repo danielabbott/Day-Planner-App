@@ -76,7 +76,8 @@ class TimetableFragment : Fragment(), OnBackPressed {
                             it.goal_colour ?: 0xffd0d0d0.toInt(),
                             it,
                             day,
-                            it.notes != null && it.notes!!.isNotEmpty()
+                            it.notes != null && it.notes!!.isNotEmpty(),
+                            it.hasImages
                         )
                     )
                 }
