@@ -231,7 +231,12 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             object : Thread() {
                 override fun run() {
                     DB.getToDoListTaskPhotos(taskId).forEach {
-                        addImage(Uri.parse(it))
+                        try {
+                            addImage(Uri.parse(it))
+                        }
+                        catch (e: Exception) {
+                            DB.removeToDoListTaskPhoto(taskId, it)
+                        }
                     }
                 }
             }.start()

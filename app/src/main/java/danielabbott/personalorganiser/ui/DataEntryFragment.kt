@@ -95,6 +95,7 @@ open class DataEntryFragment : DataEntryFragmentBasic() {
         }
     }
 
+    // Throws if the image could not be loaded from the cache or from the original file
     protected fun addImage(uri: Uri) {
         // Get/Create entry in database
         val photoId_ = DB.getPhoto(uri.toString())
@@ -111,13 +112,8 @@ open class DataEntryFragment : DataEntryFragmentBasic() {
 
         // Create image view
 
-        var img: ImageView
-        try {
-            img = ImagePick.createImage(context!!, uri, useCacheFile, photoId)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error loading image file $uri: $e")
-            return
-        }
+        val img = ImagePick.createImage(context!!, uri, useCacheFile, photoId)
+
 
         // Set tap (view) and long tap (delete) handlers
 

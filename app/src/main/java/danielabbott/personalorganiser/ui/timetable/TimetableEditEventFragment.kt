@@ -109,7 +109,12 @@ class TimetableEditEventFragment(
             object : Thread() {
                 override fun run() {
                     DB.getTimetableEventPhotos(eventId).forEach {
-                        addImage(Uri.parse(it))
+                        try {
+                            addImage(Uri.parse(it))
+                        }
+                        catch (e: Exception) {
+                            DB.removeTimetableEventPhoto(eventId, it)
+                        }
                     }
                 }
             }.start()

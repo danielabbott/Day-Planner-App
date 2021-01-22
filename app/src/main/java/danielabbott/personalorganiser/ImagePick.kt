@@ -80,32 +80,30 @@ object ImagePick {
             // Load and shrink image
             // Without shrinking, high resolution images will not display (OpenGL error in Android UI)
 
-            val stream = context.contentResolver.openInputStream(uri)
-            if (stream != null) {
-                var bitmap = BitmapDrawable(context.resources, stream).bitmap
+            val stream = context.contentResolver.openInputStream(uri) ?: throw Exception()
+            var bitmap = BitmapDrawable(context.resources, stream).bitmap
 
-                if (bitmap.width > maxSize || bitmap.height > maxSize) {
-                    bitmap = Bitmap.createScaledBitmap(
-                        bitmap, maxSize,
-                        (bitmap.height * (maxSize / bitmap.width.toFloat())).toInt(), true
-                    )
-                }
-
-                try {
-                    val cacheFile = File("${context.applicationContext.cacheDir}/img$photoId")
-                    cacheFile.createNewFile()
-                    val outStream = cacheFile.outputStream()
-                    if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 60, outStream)) {
-                        throw Exception("Bitmap compress error")
-                    }
-                    outStream.close()
-                } catch (e: Exception) {
-                    Log.e(TAG, "Error saving cache file for image: $e")
-                }
-
-                img.setImageBitmap(bitmap)
-                stream.close()
+            if (bitmap.width > maxSize || bitmap.height > maxSize) {
+                bitmap = Bitmap.createScaledBitmap(
+                    bitmap, maxSize,
+                    (bitmap.height * (maxSize / bitmap.width.toFloat())).toInt(), true
+                )
             }
+
+            try {
+                val cacheFile = File("${context.applicationContext.cacheDir}/img$photoId")
+                cacheFile.createNewFile()
+                val outStream = cacheFile.outputStream()
+                if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 60, outStream)) {
+                    throw Exception("Bitmap compress error")
+                }
+                outStream.close()
+            } catch (e: Exception) {
+                Log.e(TAG, "Error saving cache file for image: $e")
+            }
+
+            img.setImageBitmap(bitmap)
+            stream.close()
         }
 
         img.layoutParams = ViewGroup.LayoutParams(

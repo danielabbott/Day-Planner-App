@@ -244,7 +244,12 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
             object : Thread() {
                 override fun run() {
                     DB.getGoalPhotos(goalId).forEach {
-                        addImage(Uri.parse(it))
+                        try {
+                            addImage(Uri.parse(it))
+                        }
+                        catch (e: Exception) {
+                            DB.removeGoalPhoto(goalId, it)
+                        }
                     }
                 }
             }.start()
