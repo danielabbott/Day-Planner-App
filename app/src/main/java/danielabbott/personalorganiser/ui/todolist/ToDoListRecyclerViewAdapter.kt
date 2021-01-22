@@ -148,6 +148,9 @@ class ToDoListRecyclerViewAdapter(
                 holder.colourLayout.background!!.colorFilter =
                     PorterDuffColorFilter(item.colour, PorterDuff.Mode.MULTIPLY)
             }
+            else {
+                holder.colourLayout.background!!.colorFilter = null
+            }
 
             holder.divider?.visibility = View.INVISIBLE
 
@@ -209,8 +212,7 @@ class ToDoListRecyclerViewAdapter(
         } else {
             holder.name.text = item.header_title
             //holder.colourLayout.setBackgroundColor(0x00ffffff)
-            holder.colourLayout.background!!.colorFilter =
-                PorterDuffColorFilter(0xffffffff.toInt(), PorterDuff.Mode.MULTIPLY)
+            holder.colourLayout.background!!.colorFilter = null
             holder.layout.setOnClickListener(null)
             holder.layout.setOnLongClickListener(null)
             if (position == 0) {
