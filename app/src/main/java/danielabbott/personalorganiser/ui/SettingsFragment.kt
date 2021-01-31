@@ -46,7 +46,11 @@ class SettingsFragment : Fragment() {
         }
 
         timetableFontSize = root.findViewById<Spinner>(R.id.timetableFontSize)
-        timetableFontSize.adapter = ArrayAdapter<String>(context!!, R.layout.spinner_style, arrayOf("16", "18", "20", "22", "24"))
+        timetableFontSize.adapter = ArrayAdapter<String>(
+            context!!,
+            R.layout.spinner_style,
+            arrayOf("16", "18", "20", "22", "24")
+        )
 
 
         timetableFontSize.onItemSelectedListener = SpinnerChangeDetector {
@@ -70,7 +74,11 @@ class SettingsFragment : Fragment() {
         }
 
         timetableLineWidth = root.findViewById<Spinner>(R.id.timetableLineWidth)
-        timetableLineWidth.adapter = ArrayAdapter<String>(context!!, R.layout.spinner_style, arrayOf("0.5", "0.75", "1.0", "1.25", "1.5", "1.75", "2.0"))
+        timetableLineWidth.adapter = ArrayAdapter<String>(
+            context!!,
+            R.layout.spinner_style,
+            arrayOf("0.5", "0.75", "1.0", "1.25", "1.5", "1.75", "2.0")
+        )
 
         timetableLineWidth.onItemSelectedListener = SpinnerChangeDetector {
             Settings.setTimetableLineWidth(
@@ -198,7 +206,10 @@ class SettingsFragment : Fragment() {
                             addCategory(Intent.CATEGORY_OPENABLE)
                             type = "*/*"
                         }
-                        activity!!.startActivityForResult(intent, MainActivity.OPEN_FILE_REQUEST_CODE)
+                        activity!!.startActivityForResult(
+                            intent,
+                            MainActivity.OPEN_FILE_REQUEST_CODE
+                        )
                     }
                     .setNegativeButton("Cancel", null)
                     .show()

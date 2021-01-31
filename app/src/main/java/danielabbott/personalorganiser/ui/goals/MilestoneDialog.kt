@@ -11,7 +11,6 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
-import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.ui.DateSelectView
 
 
@@ -57,7 +56,7 @@ class MilestoneDialog(
         layout.addView(textBox)
         layout.addView(space)
         layout.addView(date)
-        layout.setPadding(15,15,15,15)
+        layout.setPadding(15, 15, 15, 15)
 
         val builder = AlertDialog.Builder(activity!!)
             .setView(layout)

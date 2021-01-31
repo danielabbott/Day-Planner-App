@@ -69,9 +69,10 @@ class TimetableFragment : Fragment(), OnBackPressed {
 
         val eventsUI = ArrayList<TimetableEventUI>()
         events.forEach {
+            val eList = ArrayList<TimetableEventUI>()
             for (day in 0..6) {
                 if ((it.days and (1 shl day)) != 0) {
-                    eventsUI.add(
+                    eList.add(
                         TimetableEventUI(
                             it.goal_colour ?: 0xffd0d0d0.toInt(),
                             it,
@@ -80,6 +81,14 @@ class TimetableFragment : Fragment(), OnBackPressed {
                             it.hasImages
                         )
                     )
+                }
+            }
+            if (eList.size == 1) {
+                eventsUI.add(eList[0])
+            } else {
+                eList.forEach {
+                    it.allDays = eList
+                    eventsUI.add(it)
                 }
             }
         }

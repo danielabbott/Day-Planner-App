@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputType
-import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -13,7 +12,11 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.DialogFragment
 import danielabbott.personalorganiser.data.Settings
 
-class DialogReplace(val original_text: String, val initial_find_val: String?, val callback: (String) -> Unit) : DialogFragment() {
+class DialogReplace(
+    val original_text: String,
+    val initial_find_val: String?,
+    val callback: (String) -> Unit
+) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
@@ -35,10 +38,9 @@ class DialogReplace(val original_text: String, val initial_find_val: String?, va
         replace.layoutParams = lp
 
 
-        if(initial_find_val == null) {
+        if (initial_find_val == null) {
             find.setText(Settings.getMostRecentFindString(context!!))
-        }
-        else {
+        } else {
             find.setText(initial_find_val)
         }
 
@@ -59,8 +61,14 @@ class DialogReplace(val original_text: String, val initial_find_val: String?, va
             .setPositiveButton("Replace", DialogInterface.OnClickListener { _, _ ->
                 Settings.setMostRecentFindString(context!!, find.text.toString())
                 Settings.setMostRecentReplaceString(context!!, replace.text.toString())
-                if(find.text.isNotEmpty()) {
-                    callback(original_text.replace(find.text.toString(), replace.text.toString(), ignoreCase.isChecked))
+                if (find.text.isNotEmpty()) {
+                    callback(
+                        original_text.replace(
+                            find.text.toString(),
+                            replace.text.toString(),
+                            ignoreCase.isChecked
+                        )
+                    )
                 }
             })
             .setNegativeButton("Cancel", null)

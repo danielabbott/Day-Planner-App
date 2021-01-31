@@ -18,12 +18,12 @@
 
             <EditText
                 android:id="@+id/textArea"
-                android:background="#00ffffff"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="top|start"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:layout_gravity="top|start"
+                android:background="#00ffffff"
                 android:gravity="start|top"
                 android:inputType="textMultiLine|textCapSentences"
                 app:layout_constraintBottom_toTopOf="parent"
@@ -48,8 +48,8 @@
 
             <HorizontalScrollView
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
                 <LinearLayout
                     android:id="@+id/tagsll"
@@ -65,12 +65,12 @@
                 android:id="@+id/save"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
-                android:padding="5dp"
                 android:layout_gravity="center"
                 android:layout_marginRight="3dp"
                 android:background="@drawable/ic_new_note"
+                android:padding="5dp"
 
-                app:srcCompat="@drawable/ic_save"/>
+                app:srcCompat="@drawable/ic_save" />
         </LinearLayout>
 
     </LinearLayout>

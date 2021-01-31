@@ -97,7 +97,7 @@ class EditNoteFragment(
                         }
                     }
 
-                    if(tag == null) {
+                    if (tag == null) {
                         tag = Tag(-1, tagName)
                         newTags.add(tag)
                     }
@@ -129,9 +129,9 @@ class EditNoteFragment(
         }
 
         anyUnsavedChanges = { ->
-            if(noteId == null) true
-            else if(newTags.size > 0) true
-            else if(tagsToRemove.size > 0) true
+            if (noteId == null) true
+            else if (newTags.size > 0) true
+            else if (tagsToRemove.size > 0) true
             else if (originalNote!!.contents.trim() != textArea.text.toString().trim()) true
             else false
         }

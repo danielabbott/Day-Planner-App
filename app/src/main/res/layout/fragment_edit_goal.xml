@@ -61,16 +61,16 @@
                     android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/form_text_size"
+                    android:background="@drawable/rounded_corners_no_shadow"
                     android:hint="Name"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
                     android:imeOptions="actionDone"
                     android:inputType="textCapSentences"
-                    tools:ignore="Autofill"
-                    android:background="@drawable/rounded_corners_no_shadow" />
+                    android:paddingLeft="5dp"
+                    android:paddingTop="8dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="8dp"
+                    android:textSize="@dimen/form_text_size"
+                    tools:ignore="Autofill" />
 
                 <Space
                     android:layout_width="match_parent"
@@ -81,10 +81,10 @@
                     android:id="@+id/setColour"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/form_text_size"
+                    android:background="@drawable/rounded_corners"
                     android:text="Set Colour"
                     android:textAllCaps="false"
-                    android:background="@drawable/rounded_corners" />
+                    android:textSize="@dimen/form_text_size" />
 
                 <Space
                     android:layout_width="match_parent"
@@ -96,13 +96,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Notes"
-                    android:textSize="@dimen/form_text_size"
+                    android:background="@drawable/rounded_corners_no_shadow"
                     android:gravity="start|top"
+                    android:hint="Notes"
                     android:inputType="textMultiLine|textCapSentences"
                     android:lines="6"
-                    android:background="@drawable/rounded_corners_no_shadow"
-                    android:padding="5dp"/>
+                    android:padding="5dp"
+                    android:textSize="@dimen/form_text_size" />
 
                 <Space
                     android:layout_width="match_parent"
@@ -112,10 +112,10 @@
                     android:id="@+id/bAddPicture"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_corners"
                     android:text="Add Picture"
-                    android:textSize="@dimen/form_text_size"
                     android:textAllCaps="false"
-                    android:background="@drawable/rounded_corners" />
+                    android:textSize="@dimen/form_text_size" />
 
                 <Space
                     android:layout_width="match_parent"
@@ -141,10 +141,10 @@
                     android:id="@+id/bDelete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/form_text_size"
+                    android:background="@drawable/rounded_corners"
                     android:text="Delete Goal"
                     android:textAllCaps="false"
-                    android:background="@drawable/rounded_corners" />
+                    android:textSize="@dimen/form_text_size" />
 
                 <Space
                     android:layout_width="match_parent"
@@ -157,9 +157,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_corners"
-                    android:textSize="@dimen/form_text_size"
                     android:text="Add Milestone"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"
+                    android:textSize="@dimen/form_text_size" />
 
                 <Space
                     android:layout_width="match_parent"

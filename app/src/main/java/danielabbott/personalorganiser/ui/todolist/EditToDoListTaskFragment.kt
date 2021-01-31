@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.appcompat.widget.ShareActionProvider
@@ -19,7 +18,10 @@ import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.Repeat
 import danielabbott.personalorganiser.data.ToDoListTask
-import danielabbott.personalorganiser.ui.*
+import danielabbott.personalorganiser.ui.DataEntryFragment
+import danielabbott.personalorganiser.ui.DateSelectView
+import danielabbott.personalorganiser.ui.SpinnerChangeDetector
+import danielabbott.personalorganiser.ui.TimeSelectView
 
 class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
 
@@ -64,7 +66,17 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
         super.initGoals(goal)
 
 
-        repeat.adapter = ArrayAdapter<String>(context!!, R.layout.spinner_style, arrayOf("Don't Repeat", "Repeat Daily", "Repeat Every other day", "Repeat Weekly", "Repeat Monthly"))
+        repeat.adapter = ArrayAdapter<String>(
+            context!!,
+            R.layout.spinner_style,
+            arrayOf(
+                "Don't Repeat",
+                "Repeat Daily",
+                "Repeat Every other day",
+                "Repeat Weekly",
+                "Repeat Monthly"
+            )
+        )
 
         var originalTaskData: ToDoListTask? = null
 
@@ -94,14 +106,14 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             if (originalTaskData.repeat != Repeat.NEVER && originalTaskData.dateTime != null) {
                 dateForwards.visibility = View.VISIBLE
                 dateBack.visibility = View.VISIBLE
-            }
-            else {
+            } else {
                 dateForwards.visibility = View.INVISIBLE
                 dateBack.visibility = View.INVISIBLE
             }
 
             if (originalTaskData.dateTime != null) {
-                originalTaskData.dateTime = originalTaskData.dateTime!! - originalTaskData.dateTime!! % 1000
+                originalTaskData.dateTime =
+                    originalTaskData.dateTime!! - originalTaskData.dateTime!! % 1000
                 if (originalTaskData.hasTime) {
                     val t = DateTimeUtil.getHoursAndMinutes(originalTaskData.dateTime!!)
                     time.setTime(t.first, t.second)
@@ -109,8 +121,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                 val d = DateTimeUtil.getYearMonthDay(originalTaskData.dateTime!!)
                 date.setDate(d.first, d.second, d.third)
             }
-        }
-        else {
+        } else {
             dateForwards.visibility = View.INVISIBLE
             dateBack.visibility = View.INVISIBLE
         }
@@ -147,7 +158,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                 )
                 else null
 
-                if(dateTime != null) {
+                if (dateTime != null) {
                     dateTime = dateTime - dateTime % 1000
                 }
 
@@ -190,13 +201,13 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
 
                 var needToRescheduleNotifications = true
 
-                if(!newTask.remindOnTime && !newTask.remind30Mins && !newTask.remind1Hr && !newTask.remind2Hrs && !newTask.remindMorning) {
-                    if (taskId == null || (!originalTaskData!!.remindOnTime && !originalTaskData.remind30Mins && !originalTaskData.remind1Hr && !originalTaskData.remind2Hrs && !originalTaskData.remindMorning)){
+                if (!newTask.remindOnTime && !newTask.remind30Mins && !newTask.remind1Hr && !newTask.remind2Hrs && !newTask.remindMorning) {
+                    if (taskId == null || (!originalTaskData!!.remindOnTime && !originalTaskData.remind30Mins && !originalTaskData.remind1Hr && !originalTaskData.remind2Hrs && !originalTaskData.remindMorning)) {
                         needToRescheduleNotifications = false
                     }
                 }
 
-                if(needToRescheduleNotifications) {
+                if (needToRescheduleNotifications) {
                     Notifications.scheduleForTask(context!!, newTask, taskId == null)
                 }
 
@@ -233,8 +244,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                     DB.getToDoListTaskPhotos(taskId).forEach {
                         try {
                             addImage(Uri.parse(it))
-                        }
-                        catch (e: Exception) {
+                        } catch (e: Exception) {
                             DB.removeToDoListTaskPhoto(taskId, it)
                         }
                     }
@@ -351,20 +361,23 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             )
             else null
 
-            if(dateTime != null) {
+            if (dateTime != null) {
                 dateTime = dateTime!! - dateTime!! % 1000
             }
 
-            val new_goal = if (goal.selectedItemPosition == 0) null else goals[goal.selectedItemPosition - 1].id
+            val new_goal =
+                if (goal.selectedItemPosition == 0) null else goals[goal.selectedItemPosition - 1].id
 
-            if(taskId == null) true
-            else if(newPhotos.size > 0) true
-            else if(imagesToRemove.size > 0) true
+            if (taskId == null) true
+            else if (newPhotos.size > 0) true
+            else if (imagesToRemove.size > 0) true
             else if (originalTaskData!!.dateTime != dateTime) true
             else if (originalTaskData.hasTime != time.timeSelected) true
             else if (originalTaskData.name.trim() != name.text.toString().trim()) true
             else if ((originalTaskData.notes == null) != notes.toString().trim().isEmpty()) true
-            else if (originalTaskData.notes != null && originalTaskData.notes?.trim() != notes.toString().trim()) true
+            else if (originalTaskData.notes != null && originalTaskData.notes?.trim() != notes.toString()
+                    .trim()
+            ) true
 //            else if (originalTaskData.remindOnTime != rOnTime.activeState) true
             else if (originalTaskData.remindOnTime != rOnTime.isChecked) true
             else if (originalTaskData.remind30Mins != r30.isChecked) true

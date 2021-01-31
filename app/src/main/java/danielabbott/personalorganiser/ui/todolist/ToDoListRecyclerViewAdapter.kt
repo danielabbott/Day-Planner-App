@@ -86,10 +86,9 @@ class ToDoListRecyclerViewAdapter(
                     }
                 }
             }
-            val colour = if(it.colour != null) {
+            val colour = if (it.colour != null) {
                 ColourFunctions.lightenRGB(it.colour!!)
-            }
-            else {
+            } else {
                 0xffffff
             }
             items.add(
@@ -144,11 +143,10 @@ class ToDoListRecyclerViewAdapter(
             // Task (not section header)
 
             //holder.colourLayout.setBackgroundColor(item.colour)
-            if(item.colour and 0xffffff != 0xffffff) {
+            if (item.colour and 0xffffff != 0xffffff) {
                 holder.colourLayout.background!!.colorFilter =
                     PorterDuffColorFilter(item.colour, PorterDuff.Mode.MULTIPLY)
-            }
-            else {
+            } else {
                 holder.colourLayout.background!!.colorFilter = null
             }
 
@@ -195,7 +193,10 @@ class ToDoListRecyclerViewAdapter(
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton("Delete") { _, _ ->
                         DB.deleteToDoListTask(item.id)
-                        Notifications.unscheduleNotificationsForTask(activity.applicationContext, item.id)
+                        Notifications.unscheduleNotificationsForTask(
+                            activity.applicationContext,
+                            item.id
+                        )
 
                         // Reload page
                         val f = parentFragmentManager.fragments[0]

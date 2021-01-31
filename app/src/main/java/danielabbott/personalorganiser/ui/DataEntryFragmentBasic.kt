@@ -20,10 +20,9 @@ open class DataEntryFragmentBasic : Fragment(), OnBackPressed {
     override fun onBackPressed(onNoChangesOrDiscardChanges: () -> Unit) {
         var unsavedData: Boolean = false
 
-        if(exitWithoutUnsavedChangesWarning) {
+        if (exitWithoutUnsavedChangesWarning) {
             unsavedData = false
-        }
-        else if(anyUnsavedChanges != null) {
+        } else if (anyUnsavedChanges != null) {
             unsavedData = anyUnsavedChanges!!()
         }
 

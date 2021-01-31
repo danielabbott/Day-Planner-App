@@ -70,8 +70,6 @@ class TimetableEditEventFragment(
         super.initGoals(goal)
 
 
-
-
         var startTime: Int
         var endTime: Int
 
@@ -111,8 +109,7 @@ class TimetableEditEventFragment(
                     DB.getTimetableEventPhotos(eventId).forEach {
                         try {
                             addImage(Uri.parse(it))
-                        }
-                        catch (e: Exception) {
+                        } catch (e: Exception) {
                             DB.removeTimetableEventPhoto(eventId, it)
                         }
                     }
@@ -243,13 +240,13 @@ class TimetableEditEventFragment(
 
                     var needToRescheduleNotifications = true
 
-                    if(!newEvent.remindOnTime && !newEvent.remind30Mins && !newEvent.remind1Hr && !newEvent.remind2Hrs && !newEvent.remindMorning) {
-                        if (eventId == null || (!originalEventData!!.remindOnTime && !originalEventData!!.remind30Mins && !originalEventData.remind1Hr && !originalEventData.remind2Hrs && !originalEventData.remindMorning)){
+                    if (!newEvent.remindOnTime && !newEvent.remind30Mins && !newEvent.remind1Hr && !newEvent.remind2Hrs && !newEvent.remindMorning) {
+                        if (eventId == null || (!originalEventData!!.remindOnTime && !originalEventData!!.remind30Mins && !originalEventData.remind1Hr && !originalEventData.remind2Hrs && !originalEventData.remindMorning)) {
                             needToRescheduleNotifications = false
                         }
                     }
 
-                    if(needToRescheduleNotifications) {
+                    if (needToRescheduleNotifications) {
                         Notifications.scheduleForTTEvent(context!!, newEvent, eventId == null)
                     }
 
@@ -302,18 +299,23 @@ class TimetableEditEventFragment(
             startTime = startTimes[0].toInt() * 60 + startTimes[1].toInt()
             endTime = endTimes[0].toInt() * 60 + endTimes[1].toInt()
 
-            val new_goal = if (goal.selectedItemPosition == 0) null else goals[goal.selectedItemPosition - 1].id
+            val new_goal =
+                if (goal.selectedItemPosition == 0) null else goals[goal.selectedItemPosition - 1].id
 
-            if(eventId == null) true
-            else if(newPhotos.size > 0) true
-            else if(imagesToRemove.size > 0) true
+            if (eventId == null) true
+            else if (newPhotos.size > 0) true
+            else if (imagesToRemove.size > 0) true
             else if (originalEventData!!.name.trim() != name.text.toString().trim()) true
             else if (originalEventData.startTime != startTime) true
             else if (originalEventData.duration != endTime - startTime) true
             else if (originalEventData.days != daysBitmask) true
             else if (originalEventData.days != daysBitmask) true
-            else if ((originalEventData.notes == null) != notes.text.toString().trim().isEmpty()) true
-            else if (originalEventData.notes != null && originalEventData.notes?.trim() != notes.text.toString().trim()) true
+            else if ((originalEventData.notes == null) != notes.text.toString().trim()
+                    .isEmpty()
+            ) true
+            else if (originalEventData.notes != null && originalEventData.notes?.trim() != notes.text.toString()
+                    .trim()
+            ) true
             else if (originalEventData.remindOnTime != rOnTime.isChecked) true
             else if (originalEventData.remind30Mins != r30.isChecked) true
             else if (originalEventData.remind1Hr != r1.isChecked) true

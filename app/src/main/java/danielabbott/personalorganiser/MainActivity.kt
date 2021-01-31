@@ -4,11 +4,9 @@ import android.animation.ObjectAnimator
 import android.app.Activity
 import android.app.AlarmManager
 import android.app.PendingIntent
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -20,7 +18,8 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import danielabbott.personalorganiser.data.*
+import danielabbott.personalorganiser.data.DB
+import danielabbott.personalorganiser.data.Settings
 import danielabbott.personalorganiser.ui.OnBackPressed
 import danielabbott.personalorganiser.ui.SettingsFragment
 import danielabbott.personalorganiser.ui.goals.GoalsFragment
@@ -235,7 +234,7 @@ class MainActivity : AppCompatActivity() {
         Notifications.createChannels(this)
 
         val lastAppStartTime = Settings.appStarted(this)
-        if(System.currentTimeMillis() - lastAppStartTime > 6*24*60*60*1000) {
+        if (System.currentTimeMillis() - lastAppStartTime > 6 * 24 * 60 * 60 * 1000) {
             Notifications.scheduleAllNotifications(this)
             enableWeeklyNotificationReschedule()
         }
@@ -247,8 +246,8 @@ class MainActivity : AppCompatActivity() {
             loadLastPage()
 
         } else {
-            if(intent.action == Intent.ACTION_SEND) {
-                if(intent.type == "text/plain") {
+            if (intent.action == Intent.ACTION_SEND) {
+                if (intent.type == "text/plain") {
                     // Launched from a different app to create a new note
 
                     // Go to notes page
@@ -259,19 +258,16 @@ class MainActivity : AppCompatActivity() {
 
 
                     // Go to edit notes page
-                    if(text == null) {
+                    if (text == null) {
                         switchToFragment(EditNoteFragment(null), true)
-                    }
-                    else {
+                    } else {
                         switchToFragment(EditNoteFragment(null, text), true)
                     }
 
-                }
-                else {
+                } else {
                     loadLastPage()
                 }
-            }
-            else {
+            } else {
 
                 val type = intent.extras!!.getString("WHAT_LOAD")
                 val id = intent.extras!!.getLong("TASK_EVENT_ID")
@@ -299,16 +295,13 @@ class MainActivity : AppCompatActivity() {
                             ),
                             true
                         )
-                    }
-                    else {
+                    } else {
                         // Go to timers page
                         switchToFragment(TimersFragment())
                     }
                 }
             }
         }
-
-
 
 
     }

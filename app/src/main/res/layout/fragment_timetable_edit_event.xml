@@ -22,15 +22,15 @@
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/form_text_size"
+                android:background="@drawable/rounded_corners_no_shadow"
                 android:hint="Name"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
                 android:imeOptions="actionDone"
                 android:inputType="textCapSentences"
-                android:background="@drawable/rounded_corners_no_shadow" />
+                android:paddingLeft="5dp"
+                android:paddingTop="8dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="8dp"
+                android:textSize="@dimen/form_text_size" />
 
             <Space
                 android:layout_width="match_parent"
@@ -41,8 +41,8 @@
                 android:id="@+id/goal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:spinnerMode="dialog"
-                android:background="@drawable/rounded_corners"/>
+                android:background="@drawable/rounded_corners"
+                android:spinnerMode="dialog" />
 
             <Space
                 android:layout_width="match_parent"
@@ -59,15 +59,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@drawable/rounded_corners"
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center_horizontal"
-                    android:text="00:00"
                     android:padding="5dp"
+                    android:text="00:00"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="@dimen/form_text_size_date_time"
-                    android:background="@drawable/rounded_corners" />
+                    android:textSize="@dimen/form_text_size_date_time" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -75,8 +75,8 @@
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
                     android:text="to"
-                    android:textColor="#303030"
                     android:textAlignment="center"
+                    android:textColor="#303030"
                     android:textSize="@dimen/form_label_text_size" />
 
                 <danielabbott.personalorganiser.ui.TimeSelectView
@@ -84,15 +84,15 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@drawable/rounded_corners"
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center_horizontal"
-                    android:text="00:00"
                     android:padding="5dp"
+                    android:text="00:00"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="@dimen/form_text_size_date_time"
-                    android:background="@drawable/rounded_corners"/>
+                    android:textSize="@dimen/form_text_size_date_time" />
             </LinearLayout>
 
 
@@ -114,9 +114,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="center"
+                        android:text="Monday"
                         android:textColor="#303030"
-                        android:textSize="@dimen/form_label_text_size"
-                        android:text="Monday" />
+                        android:textSize="@dimen/form_label_text_size" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/monday"
@@ -131,9 +131,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="center"
+                        android:text="Tuesday"
                         android:textColor="#303030"
-                        android:textSize="@dimen/form_label_text_size"
-                        android:text="Tuesday" />
+                        android:textSize="@dimen/form_label_text_size" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/tuesday"
@@ -154,9 +154,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="center"
+                        android:text="Wednesday"
                         android:textColor="#303030"
-                        android:textSize="@dimen/form_label_text_size"
-                        android:text="Wednesday" />
+                        android:textSize="@dimen/form_label_text_size" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/wednesday"
@@ -170,9 +170,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="center"
+                        android:text="Thursday"
                         android:textColor="#303030"
-                        android:textSize="@dimen/form_label_text_size"
-                        android:text="Thursday" />
+                        android:textSize="@dimen/form_label_text_size" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/thursday"
@@ -193,9 +193,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="center"
+                        android:text="Friday"
                         android:textColor="#303030"
-                        android:textSize="@dimen/form_label_text_size"
-                        android:text="Friday" />
+                        android:textSize="@dimen/form_label_text_size" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/friday"
@@ -209,9 +209,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="center"
+                        android:text="Saturday"
                         android:textColor="#303030"
-                        android:textSize="@dimen/form_label_text_size"
-                        android:text="Saturday" />
+                        android:textSize="@dimen/form_label_text_size" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/saturday"
@@ -232,9 +232,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:gravity="center"
+                        android:text="Sunday"
                         android:textColor="#303030"
-                        android:textSize="@dimen/form_label_text_size"
-                        android:text="Sunday" />
+                        android:textSize="@dimen/form_label_text_size" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/sunday"
@@ -253,9 +253,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Reminder notifications"
                 android:textColor="#303030"
-                android:textSize="@dimen/form_label_text_size"
-                android:text="Reminder notifications" />
+                android:textSize="@dimen/form_label_text_size" />
 
             <Space
                 android:layout_width="match_parent"
@@ -273,9 +273,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:text="On time"
                         android:textColor="#303030"
-                        android:textSize="@dimen/form_label_text_size"
-                        android:text="On time" />
+                        android:textSize="@dimen/form_label_text_size" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/rOnTime"
@@ -295,9 +295,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:text="30 minutes prior"
                         android:textColor="#303030"
-                        android:textSize="@dimen/form_label_text_size"
-                        android:text="30 minutes prior" />
+                        android:textSize="@dimen/form_label_text_size" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/r30"
@@ -315,9 +315,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:text="1 hour prior"
                         android:textColor="#303030"
-                        android:textSize="@dimen/form_label_text_size"
-                        android:text="1 hour prior" />
+                        android:textSize="@dimen/form_label_text_size" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/r1"
@@ -335,9 +335,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:text="2 hours prior"
                         android:textColor="#303030"
-                        android:textSize="@dimen/form_label_text_size"
-                        android:text="2 hours prior" />
+                        android:textSize="@dimen/form_label_text_size" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/r2"
@@ -355,9 +355,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:text="Morning of"
                         android:textColor="#303030"
-                        android:textSize="@dimen/form_label_text_size"
-                        android:text="Morning of" />
+                        android:textSize="@dimen/form_label_text_size" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/rMorn"
@@ -378,13 +378,13 @@
                 android:id="@+id/notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/form_text_size"
+                android:background="@drawable/rounded_corners_no_shadow"
                 android:gravity="start|top"
                 android:hint="Notes"
-                android:padding="5dp"
                 android:inputType="textMultiLine|textCapSentences"
                 android:lines="6"
-                android:background="@drawable/rounded_corners_no_shadow"/>
+                android:padding="5dp"
+                android:textSize="@dimen/form_text_size" />
 
             <Space
                 android:layout_width="match_parent"
@@ -394,10 +394,10 @@
                 android:id="@+id/bAddPicture"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/rounded_corners"
                 android:text="Add Picture"
-                android:textSize="@dimen/form_text_size"
                 android:textAllCaps="false"
-                android:background="@drawable/rounded_corners" />
+                android:textSize="@dimen/form_text_size" />
 
             <Space
                 android:layout_width="match_parent"
@@ -422,10 +422,10 @@
                 android:id="@+id/bDelete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/rounded_corners"
                 android:text="Delete Event"
-                android:textSize="@dimen/form_text_size"
                 android:textAllCaps="false"
-                android:background="@drawable/rounded_corners" />
+                android:textSize="@dimen/form_text_size" />
         </LinearLayout>
     </ScrollView>
 

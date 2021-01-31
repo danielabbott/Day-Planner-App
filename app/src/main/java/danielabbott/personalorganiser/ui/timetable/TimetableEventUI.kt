@@ -4,10 +4,13 @@ import danielabbott.personalorganiser.data.TimetableEvent
 
 class TimetableEventUI(
     var colour: Int,
-    val e: TimetableEvent,
+    var e: TimetableEvent,
     val day: Int,
     val hasNotes: Boolean,
-    val hasImages: Boolean
+    val hasImages: Boolean,
+
+    // includes this object
+    var allDays: ArrayList<TimetableEventUI>? = null
 ) {
     // ui_x and ui_y are relative to the top left of the timetable cells (add startX/Y to get canvas posiiton)
 

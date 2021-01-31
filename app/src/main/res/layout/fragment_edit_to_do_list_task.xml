@@ -22,15 +22,15 @@
                 android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/form_text_size"
+                android:background="@drawable/rounded_corners_no_shadow"
                 android:hint="Task name"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
                 android:imeOptions="actionDone"
                 android:inputType="textCapSentences"
-                android:background="@drawable/rounded_corners_no_shadow" />
+                android:paddingLeft="5dp"
+                android:paddingTop="8dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="8dp"
+                android:textSize="@dimen/form_text_size" />
 
 
             <Space
@@ -42,8 +42,8 @@
                 android:id="@+id/goal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:spinnerMode="dialog"
-                android:background="@drawable/rounded_corners" />
+                android:background="@drawable/rounded_corners"
+                android:spinnerMode="dialog" />
 
             <Space
                 android:layout_width="match_parent"
@@ -59,36 +59,36 @@
                     android:id="@+id/dateBack"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.4"
-                    android:text="&lt;"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:background="@drawable/rounded_corners" />
+                    android:layout_weight="0.4"
+                    android:background="@drawable/rounded_corners"
+                    android:text="&lt;" />
 
                 <danielabbott.personalorganiser.ui.DateSelectView
                     android:id="@+id/date"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.2"
+                    android:background="@drawable/rounded_corners"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="5dp"
                     android:gravity="center_horizontal"
+                    android:padding="5dp"
                     android:text="----/--/--"
                     android:textAlignment="center"
                     android:textColor="#000000"
-                    android:textSize="@dimen/form_text_size_date_time"
-                    android:background="@drawable/rounded_corners" />
+                    android:textSize="@dimen/form_text_size_date_time" />
 
                 <Button
                     android:id="@+id/dateForwards"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.4"
-                    android:text="&gt;"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:background="@drawable/rounded_corners" />
+                    android:layout_weight="0.4"
+                    android:background="@drawable/rounded_corners"
+                    android:text="&gt;" />
 
 
             </LinearLayout>
@@ -106,12 +106,12 @@
                 android:background="@drawable/rounded_corners"
                 android:clickable="true"
                 android:focusable="true"
-                android:padding="5dp"
                 android:gravity="center_horizontal"
+                android:padding="5dp"
                 android:text="00:00"
                 android:textAlignment="center"
                 android:textColor="#000000"
-                android:textSize="@dimen/form_text_size_date_time"/>
+                android:textSize="@dimen/form_text_size_date_time" />
 
             <Space
                 android:layout_width="match_parent"
@@ -131,27 +131,27 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="Reminder notifications"
                 android:textColor="#303030"
-                android:textSize="@dimen/form_label_text_size"
-                android:text="Reminder notifications" />
+                android:textSize="@dimen/form_label_text_size" />
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="20dp" />
 
-<!--            <danielabbott.personalorganiser.ui.BetterSwitch-->
-<!--                android:id="@+id/rOnTime_"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:textAllCaps="false"-->
-<!--                android:text="On time"-->
-<!--                android:padding="5dp"-->
-<!--                android:textColor="#000000"-->
-<!--                android:clickable="true"-->
-<!--                android:background="@drawable/rounded_corners"-->
-<!--                android:gravity="center"-->
-<!--                android:textAlignment="center"-->
-<!--                android:focusable="true" />-->
+            <!--            <danielabbott.personalorganiser.ui.BetterSwitch-->
+            <!--                android:id="@+id/rOnTime_"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:textAllCaps="false"-->
+            <!--                android:text="On time"-->
+            <!--                android:padding="5dp"-->
+            <!--                android:textColor="#000000"-->
+            <!--                android:clickable="true"-->
+            <!--                android:background="@drawable/rounded_corners"-->
+            <!--                android:gravity="center"-->
+            <!--                android:textAlignment="center"-->
+            <!--                android:focusable="true" />-->
 
             <TableLayout
                 android:layout_width="match_parent"
@@ -165,9 +165,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:text="On time"
                         android:textColor="#303030"
-                        android:textSize="@dimen/form_label_text_size"
-                        android:text="On time" />
+                        android:textSize="@dimen/form_label_text_size" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/rOnTime"
@@ -185,9 +185,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:text="30 minutes prior"
                         android:textColor="#303030"
-                        android:textSize="@dimen/form_label_text_size"
-                        android:text="30 minutes prior" />
+                        android:textSize="@dimen/form_label_text_size" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/r30"
@@ -205,9 +205,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:text="1 hour prior"
                         android:textColor="#303030"
-                        android:textSize="@dimen/form_label_text_size"
-                        android:text="1 hour prior" />
+                        android:textSize="@dimen/form_label_text_size" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/r1"
@@ -225,9 +225,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:text="2 hours prior"
                         android:textColor="#303030"
-                        android:textSize="@dimen/form_label_text_size"
-                        android:text="2 hours prior" />
+                        android:textSize="@dimen/form_label_text_size" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/r2"
@@ -245,9 +245,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:text="Morning of"
                         android:textColor="#303030"
-                        android:textSize="@dimen/form_label_text_size"
-                        android:text="Morning of" />
+                        android:textSize="@dimen/form_label_text_size" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/rMorn"
@@ -268,13 +268,13 @@
                 android:id="@+id/notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/form_text_size"
+                android:background="@drawable/rounded_corners_no_shadow"
                 android:gravity="start|top"
                 android:hint="Notes"
-                android:padding="5dp"
                 android:inputType="textMultiLine|textCapSentences"
                 android:lines="6"
-                android:background="@drawable/rounded_corners_no_shadow" />
+                android:padding="5dp"
+                android:textSize="@dimen/form_text_size" />
 
             <Space
                 android:layout_width="match_parent"
@@ -282,13 +282,13 @@
 
             <Button
                 android:id="@+id/bAddPicture"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/rounded_corners"
                 android:text="Add Picture"
-                android:textSize="@dimen/form_text_size"
                 android:textAllCaps="false"
-                style="?android:attr/borderlessButtonStyle"
-                android:background="@drawable/rounded_corners"/>
+                android:textSize="@dimen/form_text_size" />
 
             <Space
                 android:layout_width="match_parent"
@@ -311,13 +311,14 @@
 
             <Button
                 android:id="@+id/bDelete"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/rounded_corners"
                 android:text="Delete Task"
                 android:textAllCaps="false"
-                android:textSize="@dimen/form_text_size"
-                android:background="@drawable/rounded_corners"
-                style="?android:attr/borderlessButtonStyle"/>
+                android:textSize="@dimen/form_text_size" />
+
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="10dp" />

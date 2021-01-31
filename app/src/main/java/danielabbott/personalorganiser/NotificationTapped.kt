@@ -24,11 +24,10 @@ class NotificationTapped : BroadcastReceiver() {
                     putExtra("WHAT_LOAD", "TODO")
                 } else if (channel == Notifications.Channel.TIMETABLE) {
                     putExtra("WHAT_LOAD", "TIMETABLE")
-                }
-                else {
+                } else {
                     putExtra("WHAT_LOAD", "TIMER")
                 }
-                if(id > 0) {
+                if (id > 0) {
                     putExtra("TASK_EVENT_ID", id)
                 }
             }

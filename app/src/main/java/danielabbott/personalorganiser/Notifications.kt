@@ -110,7 +110,7 @@ object Notifications {
     // Tell android to cancel every scheduled alarm
     // ^ except for the weeklyish reschedule alarm (request code -1) and timer alarms
     fun clearPendingNotifications(context: Context) {
-        DB.getActiveAlarmReqCodes().forEach {c->
+        DB.getActiveAlarmReqCodes().forEach { c ->
             clearPendingNotification(context.applicationContext, c)
         }
         DB.clearNotifications()
@@ -172,7 +172,10 @@ object Notifications {
         }
     }
 
-    private fun scheduleAllNotificationsForToDoListTask(context: Context, it: ToDoListTaskNotificationData) {
+    private fun scheduleAllNotificationsForToDoListTask(
+        context: Context,
+        it: ToDoListTaskNotificationData
+    ) {
         val dayMillis = 24 * 60 * 60 * 1000
         val taskDateTime = if (it.repeat == Repeat.DAILY) it.dateTime
             ?: System.currentTimeMillis() - dayMillis else it.dateTime
@@ -294,38 +297,40 @@ object Notifications {
     }
 
     fun unscheduleNotificationsForTask(context: Context, taskId: Long) {
-        DB.getActiveAlarmReqCodesForTaskAndRemove(taskId).forEach {c->
+        DB.getActiveAlarmReqCodesForTaskAndRemove(taskId).forEach { c ->
             clearPendingNotification(context, c)
         }
     }
 
     fun unscheduleNotificationsForTTEvent(context: Context, eventId: Long) {
-        DB.getActiveAlarmReqCodesForTTEventAndRemove(eventId).forEach {c->
+        DB.getActiveAlarmReqCodesForTTEventAndRemove(eventId).forEach { c ->
             clearPendingNotification(context, c)
         }
     }
 
     fun scheduleForTask(context: Context, task: ToDoListTask, newTask: Boolean) {
-        if(!newTask) {
+        if (!newTask) {
             unscheduleNotificationsForTask(context, task.id)
         }
 
-        scheduleAllNotificationsForToDoListTask(context, ToDoListTaskNotificationData(
-            task.id,
-            task.dateTime,
-            task.hasTime,
-            task.name,
-            task.remindOnTime,
-            task.remind30Mins,
-            task.remind1Hr,
-            task.remind2Hrs,
-            task.remindMorning,
-            task.repeat
-        ))
+        scheduleAllNotificationsForToDoListTask(
+            context, ToDoListTaskNotificationData(
+                task.id,
+                task.dateTime,
+                task.hasTime,
+                task.name,
+                task.remindOnTime,
+                task.remind30Mins,
+                task.remind1Hr,
+                task.remind2Hrs,
+                task.remindMorning,
+                task.repeat
+            )
+        )
     }
 
     fun scheduleForTTEvent(context: Context, event: TimetableEvent, newEvent: Boolean) {
-        if(!newEvent) {
+        if (!newEvent) {
             unscheduleNotificationsForTTEvent(context, event.id)
         }
 

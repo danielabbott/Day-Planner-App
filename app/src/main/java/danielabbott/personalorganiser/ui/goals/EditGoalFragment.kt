@@ -246,8 +246,7 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
                     DB.getGoalPhotos(goalId).forEach {
                         try {
                             addImage(Uri.parse(it))
-                        }
-                        catch (e: Exception) {
+                        } catch (e: Exception) {
                             DB.removeGoalPhoto(goalId, it)
                         }
                     }
@@ -276,12 +275,12 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
         }
 
         anyUnsavedChanges = { ->
-            if(goalId == null) true
-            else if(newMilestones.size > 0) true
-            else if(milestonesToRemove.size > 0) true
-            else if(milestonesChanged.size > 0) true
-            else if(newPhotos.size > 0) true
-            else if(imagesToRemove.size > 0) true
+            if (goalId == null) true
+            else if (newMilestones.size > 0) true
+            else if (milestonesToRemove.size > 0) true
+            else if (milestonesChanged.size > 0) true
+            else if (newPhotos.size > 0) true
+            else if (imagesToRemove.size > 0) true
             else if (e!!.name.trim() != name.text.toString().trim()) true
             else if (e.colour != colour) true
             else if ((e.notes == null) != notes.text.toString().trim().isEmpty()) true

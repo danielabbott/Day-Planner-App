@@ -52,7 +52,7 @@ class NoteRecyclerViewAdapter(
                 break
             }
         }
-        if(cutShort || item.full_contents_length > 100) {
+        if (cutShort || item.full_contents_length > 100) {
             s2 += "..."
         }
 

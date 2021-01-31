@@ -152,22 +152,22 @@ object DB {
         }
 
         override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-            if(oldVersion < 3) {
+            if (oldVersion < 3) {
                 db.execSQL("ALTER TABLE TBL_NOTIFICATIONS ADD COLUMN reqCode INT NOT NULL DEFAULT 0")
             }
-            if(oldVersion < 4) {
+            if (oldVersion < 4) {
                 db.execSQL("ALTER TABLE TBL_TIMETABLE_EVENT ADD COLUMN remindOnTime INT NOT NULL DEFAULT 0")
                 db.execSQL("ALTER TABLE TBL_TODO_LIST_TASK ADD COLUMN remindOnTime INT NOT NULL DEFAULT 0")
             }
         }
 
         override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-            if(oldVersion >= 4 && newVersion < 4) {
+            if (oldVersion >= 4 && newVersion < 4) {
                 // sqlite does not support dropping columns
                 //db.execSQL("ALTER TABLE TBL_TIMETABLE_EVENT DROP COLUMN remindOnTime")
                 //db.execSQL("ALTER TABLE TBL_TODO_LIST_TASK DROP COLUMN remindOnTime")
             }
-            if(oldVersion >= 3 && newVersion < 3) {
+            if (oldVersion >= 3 && newVersion < 3) {
                 db.execSQL("DROP TABLE IF EXISTS TBL_NOTIFICATIONS")
             }
         }
@@ -544,6 +544,44 @@ object DB {
         return list
     }
 
+
+    fun splitTTEvent(id: Long, day: Int): TimetableEvent {
+        val db = dbHelper.writableDatabase
+
+        // Get event
+
+        val oldEvent = getTimetableEvent(id)
+
+        // Unset day
+
+        val values = ContentValues().apply {
+            put("days", oldEvent.days and (1 shl day).inv())
+        }
+
+        db.update("TBL_TIMETABLE_EVENT", values, "_id=?", arrayOf(id.toString()))
+
+
+        val newEvent = oldEvent
+        newEvent.days = 1 shl day
+        newEvent.id = -1
+
+
+        val newID = updateOrCreateTimetableEvent(newEvent)
+
+        newEvent.id = newID
+
+        db.execSQL(
+            "INSERT INTO TBL_TIMETABLE_EVENT_PHOTOS (event_id, photo_id) " +
+                    " SELECT ?, photo_id from TBL_TIMETABLE_EVENT_PHOTOS where event_id=?",
+            arrayOf(
+                newID.toString(),
+                id.toString()
+            )
+        )
+
+        return newEvent
+
+    }
 
     fun getToDoListTasks(): List<ToDoListTaskListData> {
         val list = ArrayList<ToDoListTaskListData>()
@@ -1168,17 +1206,20 @@ object DB {
         }
         cursor.close()
 
-        if(reqCodeToDelete != null) {
-            db.delete("TBL_NOTIFICATIONS", "time <= ? OR reqCode=?", arrayOf(maxTime, reqCodeToDelete.toString()))
-        }
-        else {
+        if (reqCodeToDelete != null) {
+            db.delete(
+                "TBL_NOTIFICATIONS",
+                "time <= ? OR reqCode=?",
+                arrayOf(maxTime, reqCodeToDelete.toString())
+            )
+        } else {
             db.delete("TBL_NOTIFICATIONS", "time <= ?", arrayOf(maxTime))
         }
 
         return notifications
     }
 
-    fun getActiveAlarmReqCodesAndRemove(channel: Int, id: Long) : List<Int> {
+    fun getActiveAlarmReqCodesAndRemove(channel: Int, id: Long): List<Int> {
         val db = dbHelper.writableDatabase
 
         val projection =
@@ -1201,17 +1242,21 @@ object DB {
         }
         cursor.close()
 
-        db.delete("TBL_NOTIFICATIONS", "channel=? AND task_or_event_id=?", arrayOf(channel.toString(), id.toString()))
+        db.delete(
+            "TBL_NOTIFICATIONS",
+            "channel=? AND task_or_event_id=?",
+            arrayOf(channel.toString(), id.toString())
+        )
 
 
         return codes
     }
 
-    fun getActiveAlarmReqCodesForTaskAndRemove(id: Long) : List<Int> {
+    fun getActiveAlarmReqCodesForTaskAndRemove(id: Long): List<Int> {
         return getActiveAlarmReqCodesAndRemove(1, id)
     }
 
-    fun getActiveAlarmReqCodesForTTEventAndRemove(id: Long) : List<Int> {
+    fun getActiveAlarmReqCodesForTTEventAndRemove(id: Long): List<Int> {
         return getActiveAlarmReqCodesAndRemove(0, id)
     }
 

@@ -251,7 +251,7 @@ object Settings {
         setString(context, "replace", s)
     }
 
-    fun appStarted(context: Context) : Long {
+    fun appStarted(context: Context): Long {
         val lastTime = getLong(context, "appLastStarted", 0)
         setLong(context, "appLastStarted", System.currentTimeMillis())
         return lastTime

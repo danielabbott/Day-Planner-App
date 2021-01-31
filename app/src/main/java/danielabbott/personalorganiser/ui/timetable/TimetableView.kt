@@ -2,8 +2,11 @@ package danielabbott.personalorganiser.ui.timetable
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
-import android.graphics.*
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.text.Layout
 import android.text.StaticLayout
@@ -17,7 +20,9 @@ import androidx.core.graphics.withTranslation
 import androidx.core.view.GestureDetectorCompat
 import androidx.fragment.app.FragmentManager
 import danielabbott.personalorganiser.ColourFunctions
+import danielabbott.personalorganiser.Notifications
 import danielabbott.personalorganiser.R
+import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.Settings
 import kotlin.math.*
 
@@ -119,7 +124,8 @@ class TimetableView : View, GestureDetector.OnGestureListener {
         // Figure out how big to make the table headers to fit the text
 
         textPaint.getTextBounds("by", 0, 2, egTextBounds)
-        columnHeadersHeight = ceil(egTextBounds.height().toFloat() + 6f * resources.displayMetrics.density).toInt()
+        columnHeadersHeight =
+            ceil(egTextBounds.height().toFloat() + 6f * resources.displayMetrics.density).toInt()
 
         textPaint.getTextBounds("44:444", 0, 6, egTextBounds)
         rowHeadersWidth = egTextBounds.width()
@@ -199,10 +205,12 @@ class TimetableView : View, GestureDetector.OnGestureListener {
 
 
             it.ui_x = ceil(columnWidth * it.day.toFloat()) + strokeWidth * 0.5f
-            it.ui_y = ceil(rowHeight * (it.e.startTime / 60.0f - startHour.toFloat())) + strokeWidth * 0.5f
+            it.ui_y =
+                ceil(rowHeight * (it.e.startTime / 60.0f - startHour.toFloat())) + strokeWidth * 0.5f
 
             val nextX = ceil(columnWidth * (it.day.toFloat() + 1)) + strokeWidth * 0.5f
-            val nextY = ceil(rowHeight * ((it.e.startTime+it.e.duration) / 60.0f - startHour.toFloat())) + strokeWidth * 0.5f
+            val nextY =
+                ceil(rowHeight * ((it.e.startTime + it.e.duration) / 60.0f - startHour.toFloat())) + strokeWidth * 0.5f
 
             it.ui_w = (nextX - it.ui_x) - strokeWidth
             it.ui_h = (nextY - it.ui_y) - strokeWidth
@@ -229,22 +237,31 @@ class TimetableView : View, GestureDetector.OnGestureListener {
                     var x = it.ui_x + it.ui_w - 20 * scale
                     val y = it.ui_y + 12 * scale
                     rectPaint.color = 0xff000000.toInt()
-                    canvas.drawCircle(x, y, 5*scale, circlePaint)
-                    x -= 15*scale
-                    canvas.drawCircle(x, y, 5*scale, circlePaint)
-                    x -= 15*scale
-                    canvas.drawCircle(x, y, 5*scale, circlePaint)
+                    canvas.drawCircle(x, y, 5 * scale, circlePaint)
+                    x -= 15 * scale
+                    canvas.drawCircle(x, y, 5 * scale, circlePaint)
+                    x -= 15 * scale
+                    canvas.drawCircle(x, y, 5 * scale, circlePaint)
                 }
 
-                if(it.hasImages && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                        val scale = ceil(resources.displayMetrics.density).toInt()
-                        if(cameraDrawable == null) {
-                            cameraDrawable = ResourcesCompat.getDrawable(context!!.resources, R.drawable.ic_camera, null)
-                            cameraDrawable!!.setTint(0xff000000.toInt())
-                        }
+                if (it.hasImages && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                    val scale = ceil(resources.displayMetrics.density).toInt()
+                    if (cameraDrawable == null) {
+                        cameraDrawable = ResourcesCompat.getDrawable(
+                            context!!.resources,
+                            R.drawable.ic_camera,
+                            null
+                        )
+                        cameraDrawable!!.setTint(0xff000000.toInt())
+                    }
 
-                        cameraDrawable!!.setBounds(it.ui_x.toInt()+scale, it.ui_y.toInt()+scale, it.ui_x.toInt()+scale+scale*16, it.ui_y.toInt()+scale+scale*16)
-                        cameraDrawable!!.draw(canvas)
+                    cameraDrawable!!.setBounds(
+                        it.ui_x.toInt() + scale,
+                        it.ui_y.toInt() + scale,
+                        it.ui_x.toInt() + scale + scale * 16,
+                        it.ui_y.toInt() + scale + scale * 16
+                    )
+                    cameraDrawable!!.draw(canvas)
                 }
 
                 val staticLayout = StaticLayout(
@@ -358,7 +375,7 @@ class TimetableView : View, GestureDetector.OnGestureListener {
             canvas.drawText(
                 daysToUse[i - 1],
                 x - columnWidth * 0.5f,
-                columnHeadersHeight - textPaint.descent()*1.5f,
+                columnHeadersHeight - textPaint.descent() * 1.5f,
                 textPaint
             )
 
@@ -420,7 +437,7 @@ class TimetableView : View, GestureDetector.OnGestureListener {
         var day = 0
 
         if (tEvent == null) {
-            // No event was tapped, figure out the day and start/end times of the area that was tapepd
+            // No event was tapped, figure out the day and start/end times of the area that was tappd
 
             // Inverse of calculation done when drawing the timetable
             day = ((event.x - startX - rowHeadersWidth) / columnWidth).toInt()
@@ -572,7 +589,92 @@ class TimetableView : View, GestureDetector.OnGestureListener {
         return true
     }
 
-    override fun onLongPress(e: MotionEvent?) {
+    override fun onLongPress(event: MotionEvent?) {
+        if (event == null) {
+            return
+        }
+
+        val startHour = Settings.getTimetableStartHour(context)
+
+        var tEvent: TimetableEventUI? = null
+
+        // Search for event that was tapped
+        events.forEach {
+            if (event.x >= it.ui_x + startX + rowHeadersWidth && event.x < it.ui_x + startX + rowHeadersWidth + it.ui_w
+                && event.y >= it.ui_y + startY + columnHeadersHeight && event.y < it.ui_y + startY + columnHeadersHeight + it.ui_h
+            ) {
+                tEvent = it
+            }
+        }
+
+        if (tEvent == null) {
+            return
+        }
+
+        var days = 0
+
+        for (day in 0..6) {
+            if ((tEvent!!.e.days and (1 shl day)) != 0) {
+                days += 1
+            }
+        }
+
+        var name = tEvent!!.e.name
+        if (name.length > 20) {
+            name = name.substring(0, 17) + "..."
+        }
+
+        val showDeleteDialog = {
+            AlertDialog.Builder(context)
+                .setTitle("Delete event")
+                .setMessage("Are you sure you want to delete the event '$name'? This cannot be undone.")
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton("Delete") { _, _ ->
+                    Notifications.unscheduleNotificationsForTTEvent(context!!, tEvent!!.e.id)
+                    DB.deleteTimetableEvent(tEvent!!.e.id)
+
+                    if (days == 1) {
+                        events.remove(tEvent)
+                    } else {
+                        val toDelete = tEvent!!.allDays!!
+                        toDelete.forEach {
+                            it.allDays = null
+                            events.remove(it)
+                        }
+                    }
+
+
+                    invalidate()
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
+
+        if (days == 1) {
+            showDeleteDialog()
+        } else {
+            AlertDialog.Builder(context)
+                .setTitle("Actions for '$name'")
+                .setItems(
+                    arrayOf("Split", "Delete")
+                ) { _, which ->
+                    if (which == 0) {
+                        // SPLIT
+
+                        val newEvent = DB.splitTTEvent(tEvent!!.e.id, tEvent!!.day)
+                        tEvent!!.allDays!!.remove(tEvent!!)
+                        tEvent!!.allDays = null
+                        tEvent!!.e = newEvent
+
+                    } else {
+                        // DELETE
+                        showDeleteDialog()
+                    }
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
+
     }
 
 
@@ -644,24 +746,22 @@ class TimetableView : View, GestureDetector.OnGestureListener {
                 val newStartY = startYOld * (zoomValueY / zoomYOld)
                 val newStartX = startXOld * (zoomValueX / zoomXOld)
 
-                if(zoomValueY >= zoomYOld) {
-                    if(newStartY < startY) {
+                if (zoomValueY >= zoomYOld) {
+                    if (newStartY < startY) {
                         startY = newStartY
                     }
-                }
-                else {
-                    if(newStartY > startY) {
+                } else {
+                    if (newStartY > startY) {
                         startY = newStartY
                     }
                 }
 
-                if(zoomValueX >= zoomXOld) {
-                    if(newStartX < startX) {
+                if (zoomValueX >= zoomXOld) {
+                    if (newStartX < startX) {
                         startX = newStartX
                     }
-                }
-                else {
-                    if(newStartX > startX) {
+                } else {
+                    if (newStartX > startX) {
                         startX = newStartX
                     }
                 }

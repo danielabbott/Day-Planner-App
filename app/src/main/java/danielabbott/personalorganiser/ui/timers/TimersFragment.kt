@@ -14,7 +14,6 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.core.math.MathUtils
 import androidx.core.math.MathUtils.clamp
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import danielabbott.personalorganiser.EventSchedule

@@ -2,7 +2,7 @@ package danielabbott.personalorganiser
 
 object ColourFunctions {
 
-    fun lightenRGB(rgb: Int): Int{
+    fun lightenRGB(rgb: Int): Int {
         var r = rgb and 0xff
         var g = (rgb shr 8) and 0xff
         var b = (rgb shr 16) and 0xff

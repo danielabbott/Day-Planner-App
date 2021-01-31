@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.util.Log
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.ViewCompat
 import danielabbott.personalorganiser.R
 
@@ -29,16 +28,18 @@ class BetterSwitch : AppCompatButton {
         }
 
     private fun setColour() {
-        if(disabled) {
-            ViewCompat.setBackgroundTintList(this, AppCompatResources.getColorStateList(context!!, R.color.disabled))
-        }
-        else {
-            if(activeState) {
+        if (disabled) {
+            ViewCompat.setBackgroundTintList(
+                this,
+                AppCompatResources.getColorStateList(context!!, R.color.disabled)
+            )
+        } else {
+            if (activeState) {
                 ViewCompat.setBackgroundTintList(
                     this,
                     AppCompatResources.getColorStateList(context!!, R.color.activestate)
                 )
-            }else {
+            } else {
                 ViewCompat.setBackgroundTintList(
                     this,
                     AppCompatResources.getColorStateList(context!!, R.color.inactivestate)
@@ -71,7 +72,7 @@ class BetterSwitch : AppCompatButton {
         Log.e("a", "uwu")
         setOnClickListener {
             Log.e("a", "122333")
-            if(!disabled) {
+            if (!disabled) {
                 Log.e("a", "12233wete4tberte3")
                 activeState = !activeState
             }

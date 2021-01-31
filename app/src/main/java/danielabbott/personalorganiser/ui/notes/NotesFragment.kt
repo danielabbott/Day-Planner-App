@@ -1,7 +1,9 @@
 package danielabbott.personalorganiser.ui.notes
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
@@ -31,8 +33,9 @@ class NotesFragment : Fragment() {
         with(recyclerView) {
             layoutManager = LinearLayoutManager(context)
             val selected = Settings.getSelectedTagID(context!!)
-            var previews = if (selected == -2L) DB.getNotesPreviewsUntagged() else (DB.getNotesPreviews(if (selected < 0) null else selected))
-            if(previews.isEmpty() && selected != -1L) {
+            var previews =
+                if (selected == -2L) DB.getNotesPreviewsUntagged() else (DB.getNotesPreviews(if (selected < 0) null else selected))
+            if (previews.isEmpty() && selected != -1L) {
                 Settings.setSelectedTagID(context!!, -1)
                 previews = DB.getNotesPreviews(null)
             }

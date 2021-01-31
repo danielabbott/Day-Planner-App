@@ -31,12 +31,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="5dp"
-                android:textColor="#000000"
-                android:textAlignment="center"
-                android:textSize="30sp"
                 android:background="@drawable/rounded_corners"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:padding="5dp"
+                android:textAlignment="center"
+                android:textColor="#000000"
+                android:textSize="30sp" />
 
         </LinearLayout>
 
@@ -283,13 +283,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:maxLines="1"
                 android:background="@drawable/rounded_corners_no_shadow"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:inputType="text"
+                android:maxLines="1"
                 android:paddingLeft="5dp"
+                android:paddingTop="8dp"
                 android:paddingRight="5dp"
-                android:inputType="text"/>
+                android:paddingBottom="8dp" />
 
         </LinearLayout>
 
@@ -301,25 +301,25 @@
             android:id="@+id/optimiseDB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:backgroundTint="@color/buttonColour"
             android:text="Optimise Database"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            app:backgroundTint="@color/buttonColour" />
 
         <Button
             android:id="@+id/exportDB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:backgroundTint="@color/buttonColour"
             android:text="Export Database"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            app:backgroundTint="@color/buttonColour" />
 
         <Button
             android:id="@+id/importDB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:backgroundTint="@color/buttonColour"
             android:text="Import Database"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            app:backgroundTint="@color/buttonColour" />
 
         <Space
             android:layout_width="match_parent"
@@ -329,9 +329,9 @@
             android:id="@+id/disableAllReminders"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:backgroundTint="@color/buttonColour"
             android:text="Disable all reminders"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            app:backgroundTint="@color/buttonColour" />
 
         <Space
             android:layout_width="match_parent"
@@ -348,11 +348,11 @@
             android:layout_height="30dp" />
 
         <TextView
-            android:text="https://github.com/danielabbott/Day-Planner-App"
-            android:autoLink="web"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal" />
+            android:autoLink="web"
+            android:gravity="center_horizontal"
+            android:text="https://github.com/danielabbott/Day-Planner-App" />
 
 
     </LinearLayout>
