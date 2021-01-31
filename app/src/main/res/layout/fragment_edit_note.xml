@@ -42,7 +42,7 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_margin="5dp"
-                android:background="@drawable/ic_new_note"
+                android:background="@drawable/circle_button"
                 android:text="+"
                 android:textSize="22dp" />
 
@@ -67,7 +67,7 @@
                 android:layout_height="45dp"
                 android:layout_gravity="center"
                 android:layout_marginRight="3dp"
-                android:background="@drawable/ic_new_note"
+                android:background="@drawable/circle_button"
                 android:padding="5dp"
 
                 app:srcCompat="@drawable/ic_save" />

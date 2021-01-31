@@ -81,7 +81,7 @@
                     android:id="@+id/setColour"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_corners"
+                    android:background="@drawable/rounded_rectangle_button"
                     android:text="Set Colour"
                     android:textAllCaps="false"
                     android:textSize="@dimen/form_text_size" />
@@ -112,7 +112,7 @@
                     android:id="@+id/bAddPicture"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_corners"
+                    android:background="@drawable/rounded_rectangle_button"
                     android:text="Add Picture"
                     android:textAllCaps="false"
                     android:textSize="@dimen/form_text_size" />
@@ -141,7 +141,7 @@
                     android:id="@+id/bDelete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_corners"
+                    android:background="@drawable/rounded_rectangle_button"
                     android:text="Delete Goal"
                     android:textAllCaps="false"
                     android:textSize="@dimen/form_text_size" />
@@ -156,7 +156,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@drawable/rounded_corners"
+                    android:background="@drawable/rounded_rectangle_button"
                     android:text="Add Milestone"
                     android:textAllCaps="false"
                     android:textSize="@dimen/form_text_size" />

@@ -61,7 +61,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:background="@drawable/rounded_corners"
+                android:background="@drawable/rounded_rectangle_button"
                 android:text="&lt;" />
 
             <TextView
@@ -80,7 +80,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:background="@drawable/rounded_corners"
+                android:background="@drawable/rounded_rectangle_button"
                 android:text="&gt;" />
 
 
@@ -107,7 +107,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:background="@drawable/rounded_corners"
+                android:background="@drawable/rounded_rectangle_button"
                 android:text="&lt;" />
 
             <TextView
@@ -126,7 +126,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.2"
-                android:background="@drawable/rounded_corners"
+                android:background="@drawable/rounded_rectangle_button"
                 android:text="&gt;" />
 
 
@@ -153,7 +153,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/rounded_corners"
+                android:background="@drawable/rounded_rectangle_button"
                 android:spinnerMode="dialog" />
 
         </LinearLayout>
@@ -179,7 +179,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/rounded_corners"
+                android:background="@drawable/rounded_rectangle_button"
                 android:spinnerMode="dialog" />
 
         </LinearLayout>
@@ -303,7 +303,11 @@
             android:layout_height="wrap_content"
             android:text="Optimise Database"
             android:textAllCaps="false"
-            app:backgroundTint="@color/buttonColour" />
+            android:background="@drawable/rounded_rectangle_button" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
 
         <Button
             android:id="@+id/exportDB"
@@ -311,7 +315,11 @@
             android:layout_height="wrap_content"
             android:text="Export Database"
             android:textAllCaps="false"
-            app:backgroundTint="@color/buttonColour" />
+            android:background="@drawable/rounded_rectangle_button" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
 
         <Button
             android:id="@+id/importDB"
@@ -319,7 +327,7 @@
             android:layout_height="wrap_content"
             android:text="Import Database"
             android:textAllCaps="false"
-            app:backgroundTint="@color/buttonColour" />
+            android:background="@drawable/rounded_rectangle_button" />
 
         <Space
             android:layout_width="match_parent"
@@ -330,8 +338,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Disable all reminders"
-            android:textAllCaps="false"
-            app:backgroundTint="@color/buttonColour" />
+            android:background="@drawable/rounded_rectangle_button"
+            android:textAllCaps="false" />
 
         <Space
             android:layout_width="match_parent"

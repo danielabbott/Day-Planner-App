@@ -1,14 +1,18 @@
 package danielabbott.personalorganiser.ui
 
 import android.content.Context
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.util.AttributeSet
 import android.util.Log
+import android.view.MotionEvent
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.ViewCompat
 import danielabbott.personalorganiser.R
 
-class BetterSwitch : AppCompatButton {
+class BetterSwitch : AppCompatTextView {
 
     private var disabled_ = false
     private var activeState_ = false
@@ -27,23 +31,27 @@ class BetterSwitch : AppCompatButton {
             setColour()
         }
 
+
+    var isChecked: Boolean
+        get() = activeState
+        set(value) {
+            activeState = value
+        }
+
+
     private fun setColour() {
         if (disabled) {
-            ViewCompat.setBackgroundTintList(
-                this,
-                AppCompatResources.getColorStateList(context!!, R.color.disabled)
-            )
+            setBackgroundResource(R.drawable.rounded_corners_no_shadow)
+            setPadding(6, 6, 6, 6)
+            background!!.colorFilter = PorterDuffColorFilter(0xffc0c0c0.toInt(), PorterDuff.Mode.MULTIPLY)
         } else {
+            setBackgroundResource(R.drawable.rounded_corners)
+            setPadding(6, 6, 6, 6)
             if (activeState) {
-                ViewCompat.setBackgroundTintList(
-                    this,
-                    AppCompatResources.getColorStateList(context!!, R.color.activestate)
-                )
+                background!!.colorFilter = PorterDuffColorFilter(0xffc2ffc4.toInt(), PorterDuff.Mode.MULTIPLY)
+
             } else {
-                ViewCompat.setBackgroundTintList(
-                    this,
-                    AppCompatResources.getColorStateList(context!!, R.color.inactivestate)
-                )
+                background!!.colorFilter = null
             }
         }
         invalidate() // TODO: Needed?
@@ -68,15 +76,26 @@ class BetterSwitch : AppCompatButton {
 
     private fun init() {
         setColour()
+    }
 
-        Log.e("a", "uwu")
-        setOnClickListener {
-            Log.e("a", "122333")
-            if (!disabled) {
-                Log.e("a", "12233wete4tberte3")
-                activeState = !activeState
-            }
+    override fun performClick(): Boolean {
+        if (!disabled) {
+            activeState = !activeState
         }
+        return super.performClick()
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        if (event == null) {
+            return true
+        }
+
+        if (event.actionMasked == MotionEvent.ACTION_UP) {
+            performClick()
+            return true
+        }
+
+        return true
     }
 
 }

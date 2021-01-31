@@ -11,13 +11,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Spinner
-import androidx.appcompat.widget.SwitchCompat
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import danielabbott.personalorganiser.MainActivity
 import danielabbott.personalorganiser.Notifications
 import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.TimetableEvent
+import danielabbott.personalorganiser.ui.BetterSwitch
 import danielabbott.personalorganiser.ui.DataEntryFragment
 import danielabbott.personalorganiser.ui.TimeSelectView
 
@@ -32,7 +32,7 @@ class TimetableEditEventFragment(
     private val days_: Int = 0
 ) : DataEntryFragment() {
 
-    val dayCheckboxes = ArrayList<SwitchCompat>(7)
+    val dayCheckboxes = ArrayList<BetterSwitch>(7)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,20 +46,20 @@ class TimetableEditEventFragment(
         val name = root.findViewById<EditText>(R.id.name)
 
         dayCheckboxes.clear()
-        dayCheckboxes.add(root.findViewById<SwitchCompat>(R.id.monday))
-        dayCheckboxes.add(root.findViewById<SwitchCompat>(R.id.tuesday))
-        dayCheckboxes.add(root.findViewById<SwitchCompat>(R.id.wednesday))
-        dayCheckboxes.add(root.findViewById<SwitchCompat>(R.id.thursday))
-        dayCheckboxes.add(root.findViewById<SwitchCompat>(R.id.friday))
-        dayCheckboxes.add(root.findViewById<SwitchCompat>(R.id.saturday))
-        dayCheckboxes.add(root.findViewById<SwitchCompat>(R.id.sunday))
+        dayCheckboxes.add(root.findViewById<BetterSwitch>(R.id.monday))
+        dayCheckboxes.add(root.findViewById<BetterSwitch>(R.id.tuesday))
+        dayCheckboxes.add(root.findViewById<BetterSwitch>(R.id.wednesday))
+        dayCheckboxes.add(root.findViewById<BetterSwitch>(R.id.thursday))
+        dayCheckboxes.add(root.findViewById<BetterSwitch>(R.id.friday))
+        dayCheckboxes.add(root.findViewById<BetterSwitch>(R.id.saturday))
+        dayCheckboxes.add(root.findViewById<BetterSwitch>(R.id.sunday))
 
 
-        val r30 = root.findViewById<SwitchCompat>(R.id.r30)
-        val rOnTime = root.findViewById<SwitchCompat>(R.id.rOnTime)
-        val r1 = root.findViewById<SwitchCompat>(R.id.r1)
-        val r2 = root.findViewById<SwitchCompat>(R.id.r2)
-        val rMorn = root.findViewById<SwitchCompat>(R.id.rMorn)
+        val r30 = root.findViewById<BetterSwitch>(R.id.r30)
+        val rOnTime = root.findViewById<BetterSwitch>(R.id.rOnTime)
+        val r1 = root.findViewById<BetterSwitch>(R.id.r1)
+        val r2 = root.findViewById<BetterSwitch>(R.id.r2)
+        val rMorn = root.findViewById<BetterSwitch>(R.id.rMorn)
         val tvStart = root.findViewById<TimeSelectView>(R.id.tvStart)
         val tvEnd = root.findViewById<TimeSelectView>(R.id.tvEnd)
         val goal = root.findViewById<Spinner>(R.id.goal)
@@ -195,7 +195,7 @@ class TimetableEditEventFragment(
                     // Data is valid, update/insert in database
 
                     var daysBitmask = 0
-                    dayCheckboxes.forEachIndexed { i: Int, checkBox: SwitchCompat ->
+                    dayCheckboxes.forEachIndexed { i: Int, checkBox: BetterSwitch ->
                         if (checkBox.isChecked) {
                             daysBitmask = daysBitmask or (1 shl i)
                         }
@@ -287,22 +287,27 @@ class TimetableEditEventFragment(
 
         anyUnsavedChanges = { ->
             var daysBitmask = 0
-            dayCheckboxes.forEachIndexed { i: Int, checkBox: SwitchCompat ->
+            dayCheckboxes.forEachIndexed { i: Int, checkBox: BetterSwitch ->
                 if (checkBox.isChecked) {
                     daysBitmask = daysBitmask or (1 shl i)
                 }
             }
 
-            val startTimes = tvStart.text.split(":")
-            val endTimes = tvEnd.text.split(":")
 
-            startTime = startTimes[0].toInt() * 60 + startTimes[1].toInt()
-            endTime = endTimes[0].toInt() * 60 + endTimes[1].toInt()
+            if (!tvStart.timeSelected || !tvEnd.timeSelected) {
+                // Times couldn't have been blank when event was las saved
+            } else {
+                val startTimes = tvStart.text.split(":")
+                val endTimes = tvEnd.text.split(":")
+                startTime = startTimes[0].toInt() * 60 + startTimes[1].toInt()
+                endTime = endTimes[0].toInt() * 60 + endTimes[1].toInt()
+            }
 
             val new_goal =
                 if (goal.selectedItemPosition == 0) null else goals[goal.selectedItemPosition - 1].id
 
             if (eventId == null) true
+            else if (!tvStart.timeSelected || !tvEnd.timeSelected) true
             else if (newPhotos.size > 0) true
             else if (imagesToRemove.size > 0) true
             else if (originalEventData!!.name.trim() != name.text.toString().trim()) true

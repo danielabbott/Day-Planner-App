@@ -18,10 +18,7 @@ import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.Repeat
 import danielabbott.personalorganiser.data.ToDoListTask
-import danielabbott.personalorganiser.ui.DataEntryFragment
-import danielabbott.personalorganiser.ui.DateSelectView
-import danielabbott.personalorganiser.ui.SpinnerChangeDetector
-import danielabbott.personalorganiser.ui.TimeSelectView
+import danielabbott.personalorganiser.ui.*
 
 class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
 
@@ -32,11 +29,11 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
     private lateinit var time: TimeSelectView
     private lateinit var date: DateSelectView
     private lateinit var repeat: Spinner
-    private lateinit var rOnTime: SwitchCompat
-    private lateinit var r30: SwitchCompat
-    private lateinit var r1: SwitchCompat
-    private lateinit var r2: SwitchCompat
-    private lateinit var rMorn: SwitchCompat
+    private lateinit var rOnTime: BetterSwitch
+    private lateinit var r30: BetterSwitch
+    private lateinit var r1: BetterSwitch
+    private lateinit var r2: BetterSwitch
+    private lateinit var rMorn: BetterSwitch
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,11 +48,11 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
         notes = root.findViewById<EditText>(R.id.notes)
         name = root.findViewById<EditText>(R.id.name)
         repeat = root.findViewById<Spinner>(R.id.repeat)
-        rOnTime = root.findViewById<SwitchCompat>(R.id.rOnTime)
-        r30 = root.findViewById<SwitchCompat>(R.id.r30)
-        r1 = root.findViewById<SwitchCompat>(R.id.r1)
-        r2 = root.findViewById<SwitchCompat>(R.id.r2)
-        rMorn = root.findViewById<SwitchCompat>(R.id.rMorn)
+        rOnTime = root.findViewById<BetterSwitch>(R.id.rOnTime)
+        r30 = root.findViewById<BetterSwitch>(R.id.r30)
+        r1 = root.findViewById<BetterSwitch>(R.id.r1)
+        r2 = root.findViewById<BetterSwitch>(R.id.r2)
+        rMorn = root.findViewById<BetterSwitch>(R.id.rMorn)
         time = root.findViewById<TimeSelectView>(R.id.time)
         date = root.findViewById<DateSelectView>(R.id.date)
         dateForwards = root.findViewById<Button>(R.id.dateForwards)
@@ -95,7 +92,6 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             notes.setText(if (originalTaskData.notes == null) "" else originalTaskData.notes!!)
             name.setText(originalTaskData.name)
             repeat.setSelection(originalTaskData.repeat.n)
-//            rOnTime.activeState = originalTaskData.remindOnTime
             rOnTime.isChecked = originalTaskData.remindOnTime
             r30.isChecked = originalTaskData.remind30Mins
             r1.isChecked = originalTaskData.remind1Hr
@@ -168,7 +164,6 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                     time.timeSelected,
                     nameString,
                     if (notes.isEmpty()) null else notes.toString(),
-//                    rOnTime.activeState,
                     rOnTime.isChecked,
                     r30.isChecked,
                     r1.isChecked,
@@ -378,7 +373,6 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             else if (originalTaskData.notes != null && originalTaskData.notes?.trim() != notes.toString()
                     .trim()
             ) true
-//            else if (originalTaskData.remindOnTime != rOnTime.activeState) true
             else if (originalTaskData.remindOnTime != rOnTime.isChecked) true
             else if (originalTaskData.remind30Mins != r30.isChecked) true
             else if (originalTaskData.remind1Hr != r1.isChecked) true
@@ -395,16 +389,15 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
     private fun setNotificationCheckboxesEnabledState() {
         val rep = Repeat.fromInt(repeat.selectedItemPosition)
         if (time.timeSelected) {
-            rOnTime.isEnabled = true
-            r30.isEnabled = true
-            r1.isEnabled = true
-            r2.isEnabled = true
+            rOnTime.disabled = false
+            r30.disabled = false
+            r1.disabled = false
+            r2.disabled = false
         } else {
-            rOnTime.isEnabled = false
-            r30.isEnabled = false
-            r1.isEnabled = false
-            r2.isEnabled = false
-//            rOnTime.activeState = false
+            rOnTime.disabled = true
+            r30.disabled = true
+            r1.disabled = true
+            r2.disabled = true
             rOnTime.isChecked = false
             r30.isChecked = false
             r1.isChecked = false
@@ -412,9 +405,9 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
         }
 
         if (date.dateSelected || rep == Repeat.DAILY) {
-            rMorn.isEnabled = true
+            rMorn.disabled = false
         } else {
-            rMorn.isEnabled = false
+            rMorn.disabled = true
             rMorn.isChecked = false
         }
     }
