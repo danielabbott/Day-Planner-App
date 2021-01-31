@@ -154,7 +154,7 @@ class TimetableEditEventFragment(
                 startTime = startTimes[0].toInt() * 60 + startTimes[1].toInt()
                 endTime = endTimes[0].toInt() * 60 + endTimes[1].toInt()
 
-                val nameString = name.text.toString().trim()
+                var nameString = name.text.toString().trim()
 
                 if (startTime == endTime) {
                     AlertDialog.Builder(context)
@@ -181,13 +181,6 @@ class TimetableEditEventFragment(
                     AlertDialog.Builder(context)
                         .setTitle("Invalid data")
                         .setMessage("Minimum event duration is 10 minutes")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton("Okay", null)
-                        .show()
-                } else if (nameString.isEmpty()) {
-                    AlertDialog.Builder(context)
-                        .setTitle("Invalid data")
-                        .setMessage("Event name cannot be blank")
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .setPositiveButton("Okay", null)
                         .show()

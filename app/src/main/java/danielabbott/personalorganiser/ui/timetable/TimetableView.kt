@@ -625,9 +625,13 @@ class TimetableView : View, GestureDetector.OnGestureListener {
         }
 
         val showDeleteDialog = {
+            val msg = if(name.trim().isEmpty())
+                "Are you sure you want to delete this event? This cannot be undone."
+                else "Are you sure you want to delete the event '$name'? This cannot be undone."
+
             AlertDialog.Builder(context)
                 .setTitle("Delete event")
-                .setMessage("Are you sure you want to delete the event '$name'? This cannot be undone.")
+                .setMessage(msg)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton("Delete") { _, _ ->
                     Notifications.unscheduleNotificationsForTTEvent(context!!, tEvent!!.e.id)
@@ -653,8 +657,11 @@ class TimetableView : View, GestureDetector.OnGestureListener {
         if (days == 1) {
             showDeleteDialog()
         } else {
+            val title = if(name.trim().isEmpty())
+                "Actions for event"
+                else "Actions for '$name'"
             AlertDialog.Builder(context)
-                .setTitle("Actions for '$name'")
+                .setTitle(title)
                 .setItems(
                     arrayOf("Split", "Delete")
                 ) { _, which ->
