@@ -241,7 +241,7 @@ class TimetableEditEventFragment(
                     var needToRescheduleNotifications = true
 
                     if (!newEvent.remindOnTime && !newEvent.remind30Mins && !newEvent.remind1Hr && !newEvent.remind2Hrs && !newEvent.remindMorning) {
-                        if (eventId == null || (!originalEventData!!.remindOnTime && !originalEventData!!.remind30Mins && !originalEventData.remind1Hr && !originalEventData.remind2Hrs && !originalEventData.remindMorning)) {
+                        if (eventId == null || (!originalEventData!!.remindOnTime && !originalEventData.remind30Mins && !originalEventData.remind1Hr && !originalEventData.remind2Hrs && !originalEventData.remindMorning)) {
                             needToRescheduleNotifications = false
                         }
                     }
@@ -306,7 +306,10 @@ class TimetableEditEventFragment(
             val new_goal =
                 if (goal.selectedItemPosition == 0) null else goals[goal.selectedItemPosition - 1].id
 
-            if (eventId == null) true
+            if (eventId == null) {
+                notes.text.toString().trim().isNotEmpty() ||
+                        name.text.toString().trim().isNotEmpty() || newPhotos.size > 0
+            }
             else if (!tvStart.timeSelected || !tvEnd.timeSelected) true
             else if (newPhotos.size > 0) true
             else if (imagesToRemove.size > 0) true

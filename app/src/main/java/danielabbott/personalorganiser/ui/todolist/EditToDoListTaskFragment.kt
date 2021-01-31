@@ -345,7 +345,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             }
 
         anyUnsavedChanges = { ->
-            val notes = notes.text
+            val notes = notes.text.toString().trim()
 
             var dateTime = if (date.dateSelected) DateTimeUtil.getDateTimeMillis(
                 date.year,
@@ -363,14 +363,16 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             val new_goal =
                 if (goal.selectedItemPosition == 0) null else goals[goal.selectedItemPosition - 1].id
 
-            if (taskId == null) true
+            if (taskId == null) {
+                notes.isNotEmpty() || name.text.toString().trim().isNotEmpty() || date.dateSelected || newPhotos.size > 0
+            }
             else if (newPhotos.size > 0) true
             else if (imagesToRemove.size > 0) true
             else if (originalTaskData!!.dateTime != dateTime) true
             else if (originalTaskData.hasTime != time.timeSelected) true
             else if (originalTaskData.name.trim() != name.text.toString().trim()) true
-            else if ((originalTaskData.notes == null) != notes.toString().trim().isEmpty()) true
-            else if (originalTaskData.notes != null && originalTaskData.notes?.trim() != notes.toString()
+            else if ((originalTaskData.notes == null) != notes.isEmpty()) true
+            else if (originalTaskData.notes != null && originalTaskData.notes?.trim() != notes
                     .trim()
             ) true
             else if (originalTaskData.remindOnTime != rOnTime.isChecked) true

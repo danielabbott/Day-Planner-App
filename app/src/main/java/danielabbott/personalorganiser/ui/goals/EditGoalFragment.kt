@@ -275,7 +275,10 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
         }
 
         anyUnsavedChanges = { ->
-            if (goalId == null) true
+            if (goalId == null) {
+                notes.text.toString().trim().isNotEmpty() ||
+                        name.text.toString().trim().isNotEmpty() || newPhotos.size > 0
+            }
             else if (newMilestones.size > 0) true
             else if (milestonesToRemove.size > 0) true
             else if (milestonesChanged.size > 0) true
