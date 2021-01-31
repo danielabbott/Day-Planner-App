@@ -30,7 +30,7 @@
                 android:paddingRight="5dp"
                 android:imeOptions="actionDone"
                 android:inputType="textCapSentences"
-                android:background="@drawable/rounded_corners" />
+                android:background="@drawable/rounded_corners_no_shadow" />
 
 
             <Space
@@ -140,11 +140,12 @@
                 android:layout_height="20dp" />
 
 <!--            <danielabbott.personalorganiser.ui.BetterSwitch-->
-<!--                android:id="@+id/rOnTime"-->
+<!--                android:id="@+id/rOnTime_"-->
 <!--                android:layout_width="match_parent"-->
 <!--                android:layout_height="wrap_content"-->
+<!--                android:textAllCaps="false"-->
 <!--                android:text="On time"-->
-<!--                android:padding="7dp"-->
+<!--                android:padding="5dp"-->
 <!--                android:textColor="#000000"-->
 <!--                android:clickable="true"-->
 <!--                android:background="@drawable/rounded_corners"-->
@@ -273,7 +274,7 @@
                 android:padding="5dp"
                 android:inputType="textMultiLine|textCapSentences"
                 android:lines="6"
-                android:background="@drawable/rounded_corners" />
+                android:background="@drawable/rounded_corners_no_shadow" />
 
             <Space
                 android:layout_width="match_parent"

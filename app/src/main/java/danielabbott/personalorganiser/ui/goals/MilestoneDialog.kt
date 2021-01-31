@@ -32,8 +32,6 @@ class MilestoneDialog(
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         textBox.layoutParams = lp
-        textBox.setBackgroundResource(R.drawable.rounded_corners)
-        textBox.setPadding(5,5,5,5)
 
         if (name_ != null) {
             textBox.setText(name_)
@@ -43,7 +41,6 @@ class MilestoneDialog(
         date.gravity = Gravity.CENTER_HORIZONTAL
         date.layoutParams = lp
         date.textSize = 20.0f
-        date.setBackgroundResource(R.drawable.rounded_corners)
 
         if (date_ != null) {
             date.setDate(date_)
@@ -51,7 +48,7 @@ class MilestoneDialog(
 
         var space = View(context!!)
         space.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
             20
         )
 

@@ -70,7 +70,7 @@
                     android:imeOptions="actionDone"
                     android:inputType="textCapSentences"
                     tools:ignore="Autofill"
-                    android:background="@drawable/rounded_corners" />
+                    android:background="@drawable/rounded_corners_no_shadow" />
 
                 <Space
                     android:layout_width="match_parent"
@@ -101,7 +101,7 @@
                     android:gravity="start|top"
                     android:inputType="textMultiLine|textCapSentences"
                     android:lines="6"
-                    android:background="@drawable/rounded_corners"
+                    android:background="@drawable/rounded_corners_no_shadow"
                     android:padding="5dp"/>
 
                 <Space

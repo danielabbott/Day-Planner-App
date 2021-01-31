@@ -284,7 +284,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:maxLines="1"
-                android:background="@drawable/rounded_corners"
+                android:background="@drawable/rounded_corners_no_shadow"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
                 android:paddingLeft="5dp"
