@@ -194,4 +194,10 @@ class TimetableFragment : Fragment(), OnBackPressed {
         Settings.setTimetableZoom(context!!, timetableView.zoomValueX, timetableView.zoomValueY)
         onNoChangesOrDiscardChanges()
     }
+
+    override fun onStop() {
+        Settings.setTimetablePosition(context!!, timetableView.startX, timetableView.startY)
+        Settings.setTimetableZoom(context!!, timetableView.zoomValueX, timetableView.zoomValueY)
+        super.onStop()
+    }
 }
