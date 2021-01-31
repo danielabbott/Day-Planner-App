@@ -53,7 +53,7 @@ class DateSelectView : AppCompatTextView {
         }
 
         setOnLongClickListener {
-            text = "----/--/--"
+            setTextToBlank()
             dateSelected = false
             onLongClick?.onLongClick(this)
             if (onDateCleared != null) {
@@ -63,8 +63,13 @@ class DateSelectView : AppCompatTextView {
         }
 
 
-        text = "----/--/--"
+        setTextToBlank()
         initDone = true
+    }
+
+    private fun setTextToBlank() {
+        text = DateTimeUtil.getDateString(context, 2000, 12,22)
+            .replace('0', '-').replace('1', '-').replace('2', '-')
     }
 
 
