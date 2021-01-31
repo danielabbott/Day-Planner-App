@@ -40,13 +40,14 @@ class BetterSwitch : AppCompatTextView {
 
 
     private fun setColour() {
+        val padding = 10
         if (disabled) {
             setBackgroundResource(R.drawable.rounded_corners_no_shadow)
-            setPadding(6, 6, 6, 6)
+            setPadding(padding, padding, padding, padding)
             background!!.colorFilter = PorterDuffColorFilter(0xffc0c0c0.toInt(), PorterDuff.Mode.MULTIPLY)
         } else {
             setBackgroundResource(R.drawable.rounded_corners)
-            setPadding(6, 6, 6, 6)
+            setPadding(padding, padding, padding, padding)
             if (activeState) {
                 background!!.colorFilter = PorterDuffColorFilter(0xffc2ffc4.toInt(), PorterDuff.Mode.MULTIPLY)
 

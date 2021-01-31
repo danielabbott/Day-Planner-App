@@ -63,6 +63,7 @@
                     android:layout_marginRight="5dp"
                     android:layout_weight="0.4"
                     android:background="@drawable/rounded_rectangle_button"
+                    style="?android:attr/borderlessButtonStyle"
                     android:text="&lt;" />
 
                 <danielabbott.personalorganiser.ui.DateSelectView
@@ -88,6 +89,7 @@
                     android:layout_marginRight="5dp"
                     android:layout_weight="0.4"
                     android:background="@drawable/rounded_rectangle_button"
+                    style="?android:attr/borderlessButtonStyle"
                     android:text="&gt;" />
 
 
@@ -236,10 +238,10 @@
 
             <Button
                 android:id="@+id/bAddPicture"
-                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_rectangle_button"
+                style="?android:attr/borderlessButtonStyle"
                 android:text="Add Picture"
                 android:textAllCaps="false"
                 android:textSize="@dimen/form_text_size" />
@@ -265,10 +267,10 @@
 
             <Button
                 android:id="@+id/bDelete"
-                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_rectangle_button"
+                style="?android:attr/borderlessButtonStyle"
                 android:text="Delete Task"
                 android:textAllCaps="false"
                 android:textSize="@dimen/form_text_size" />
