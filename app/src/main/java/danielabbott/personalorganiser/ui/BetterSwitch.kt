@@ -55,7 +55,6 @@ class BetterSwitch : AppCompatTextView {
                 background!!.colorFilter = null
             }
         }
-        invalidate() // TODO: Needed?
     }
 
     constructor(context: Context) : super(context) {

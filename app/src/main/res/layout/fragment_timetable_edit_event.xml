@@ -36,18 +36,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp" />
 
-
-            <Spinner
-                android:id="@+id/goal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/rounded_rectangle_button"
-                android:spinnerMode="dialog" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="40dp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -98,7 +86,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="40dp" />
+                android:layout_height="30dp" />
 
             <TableLayout
                 android:layout_width="match_parent"
@@ -183,7 +171,6 @@
                         android:layout_marginLeft="2dp"/>
                 </TableRow>
 
-
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -246,9 +233,22 @@
                 </TableRow>
             </TableLayout>
 
+
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="40dp" />
+                android:layout_height="30dp" />
+
+            <Spinner
+                android:id="@+id/goal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_rectangle_button"
+                android:spinnerMode="dialog" />
+
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="30dp" />
 
             <danielabbott.personalorganiser.ui.BetterSwitch
                 android:id="@+id/rOnTime"
@@ -326,7 +326,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="40dp" />
+                android:layout_height="30dp" />
 
 
             <EditText
@@ -343,7 +343,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:layout_height="30dp" />
 
             <Button
                 android:id="@+id/bAddPicture"

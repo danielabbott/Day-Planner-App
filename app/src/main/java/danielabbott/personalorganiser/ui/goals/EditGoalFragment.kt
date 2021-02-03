@@ -31,7 +31,6 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
 
 
     private var colour = LimitedColourPickerView.colours[0]
-    private lateinit var goalColourView: LinearLayout
 
     private var newMilestones = ArrayList<Milestone>()
     private var milestonesToRemove = ArrayList<Milestone>()
@@ -47,12 +46,9 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
 
         super.init(root)
 
-        val goalName = root.findViewById<TextView>(R.id.goalName)
-        val nameWithColour = root.findViewById<TextView>(R.id.goalName)
         val name = root.findViewById<EditText>(R.id.name)
         val notes = root.findViewById<EditText>(R.id.notes)
-        val colourChangeButton = root.findViewById<Button>(R.id.setColour)
-        goalColourView = root.findViewById<LinearLayout>(R.id.goalNameColour)
+        val colourChangeButton = root.findViewById<GoalColourPickerButton>(R.id.setColour)
         val recyclerView = root.findViewById<RecyclerView>(R.id.list)
         picturePreviewsView = root.findViewById<LinearLayout>(R.id.PicturePreviews)
 
@@ -65,7 +61,6 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
             colour = e.colour
 
             notes.setText(e.notes ?: "")
-            goalName.text = e.name
             name.setText(e.name)
 
         }
@@ -132,12 +127,13 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
         if (goalId == null) {
             findUnusedColour()
         }
-        setGradient()
+
+        colourChangeButton.colour = colour
 
 
         // Button for setting colour of goal
         colourChangeButton.setOnClickListener {
-            var colourPicker = LimitedColourPickerView(context!!)
+            val colourPicker = LimitedColourPickerView(context!!)
 
             val builder = AlertDialog.Builder(activity!!)
                 .setView(colourPicker)
@@ -148,7 +144,7 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
                     // A colour was picked
 
                     colour = colourPicker.selectedColour!!
-                    setGradient()
+                    colourChangeButton.colour = colour
                 }
                 builder.dismiss()
             }
@@ -270,9 +266,6 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
             }, null, null).show(fragmentManager!!, null)
         }
 
-        name.addTextChangedListener {
-            nameWithColour.text = name.text
-        }
 
         anyUnsavedChanges = { ->
             if (goalId == null) {
@@ -356,15 +349,5 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
             }
             i += 3
         }
-    }
-
-    // Sets the colour at the top of the page
-    private fun setGradient() {
-        val gradient = GradientDrawable()
-        val c = IntArray(2) { 0xffffff }
-        c[0] = ColourFunctions.lightenRGB(colour) or 0xff000000.toInt()
-        gradient.colors = c
-        gradient.gradientType = GradientDrawable.LINEAR_GRADIENT
-        goalColourView.background = gradient
     }
 }

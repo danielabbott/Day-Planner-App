@@ -17,45 +17,10 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/goalNameColour"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" />
-
-                <TextView
-                    android:id="@+id/goalName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:textColor="#000000"
-                    android:textSize="36sp" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" />
-            </LinearLayout>
-
-            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="10dp">
-
-                <View
-                    android:id="@+id/divider2"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:background="?android:attr/listDivider" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp" />
 
                 <EditText
                     android:id="@+id/name"
@@ -77,7 +42,7 @@
                     android:layout_height="20dp" />
 
 
-                <Button
+                <danielabbott.personalorganiser.ui.goals.GoalColourPickerButton
                     android:id="@+id/setColour"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

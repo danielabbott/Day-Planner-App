@@ -352,7 +352,7 @@ class TimetableView : View, GestureDetector.OnGestureListener {
 
         val days =
             arrayOf("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
-        val days2 = arrayOf("Mon", "Tue", "Wed", "Thurs", "Fri", "Sat", "Sun")
+        val days2 = arrayOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
         var daysToUse = days
 
         canvas.drawRect(0.0f, 0.0f, width.toFloat(), columnHeadersHeight.toFloat(), rectPaint)
@@ -743,8 +743,8 @@ class TimetableView : View, GestureDetector.OnGestureListener {
                     zoomValueY = 0.5f
                 }
 
-                if (zoomValueX > 1.5f) {
-                    zoomValueX = 1.5f
+                if (zoomValueX > 1.8f) {
+                    zoomValueX = 1.8f
                 }
                 if (zoomValueY > 1.5f) {
                     zoomValueY = 1.5f
