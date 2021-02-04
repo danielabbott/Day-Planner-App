@@ -3,6 +3,7 @@ package danielabbott.personalorganiser.ui
 import android.content.Context
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.graphics.Typeface
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
@@ -44,14 +45,16 @@ class BetterSwitch : AppCompatTextView {
         if (disabled) {
             setBackgroundResource(R.drawable.rounded_corners_no_shadow)
             setPadding(padding, padding, padding, padding)
+            setTypeface(null, Typeface.NORMAL)
             background!!.colorFilter = PorterDuffColorFilter(0xffc0c0c0.toInt(), PorterDuff.Mode.MULTIPLY)
         } else {
             setBackgroundResource(R.drawable.rounded_corners)
             setPadding(padding, padding, padding, padding)
             if (activeState) {
+                setTypeface(null, Typeface.BOLD)
                 background!!.colorFilter = PorterDuffColorFilter(0xffc2ffc4.toInt(), PorterDuff.Mode.MULTIPLY)
-
             } else {
+                setTypeface(null, Typeface.NORMAL)
                 background!!.colorFilter = null
             }
         }
