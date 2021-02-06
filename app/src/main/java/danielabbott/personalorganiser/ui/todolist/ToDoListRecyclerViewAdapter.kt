@@ -14,7 +14,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import danielabbott.personalorganiser.*
 import danielabbott.personalorganiser.data.DB
-import danielabbott.personalorganiser.data.DB.context
 import danielabbott.personalorganiser.data.ToDoListTaskListData
 
 // List of tasks
@@ -157,7 +156,7 @@ class ToDoListRecyclerViewAdapter(
             if (item.dateTime == null) {
                 holder.dateTime!!.text = ""
             } else {
-                val date = DateTimeUtil.getDateString(context, item.dateTime)
+                val date = DateTimeUtil.getDateString(activity, item.dateTime)
                 if (item.hasTime) {
                     val time = DateTimeUtil.getTimeString(item.dateTime)
                     holder.dateTime!!.text = "$date $time"

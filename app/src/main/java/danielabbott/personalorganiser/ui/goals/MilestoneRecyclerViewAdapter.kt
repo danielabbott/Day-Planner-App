@@ -1,5 +1,6 @@
 package danielabbott.personalorganiser.ui.goals
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,14 +9,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import danielabbott.personalorganiser.DateTimeUtil
 import danielabbott.personalorganiser.R
-import danielabbott.personalorganiser.data.DB.context
 import danielabbott.personalorganiser.data.Milestone
 
 
 class MilestoneRecyclerViewAdapter(
     private var mValues: ArrayList<Milestone>,
     private val onClick: (Milestone) -> Unit,
-    private val onLongClick: (Milestone) -> Unit
+    private val onLongClick: (Milestone) -> Unit,
+    private val context: Context
 ) : RecyclerView.Adapter<MilestoneRecyclerViewAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

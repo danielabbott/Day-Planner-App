@@ -445,7 +445,7 @@ class MainActivity : AppCompatActivity() {
                         if (it?.fileDescriptor != null) {
                             FileOutputStream(it.fileDescriptor).use { fos ->
                                 fos.write(
-                                    DB.getDBFileBytes()
+                                    DB.getDBFileBytes(this)
                                 )
                             }
                         }
@@ -456,7 +456,7 @@ class MainActivity : AppCompatActivity() {
             } else if (requestCode == OPEN_FILE_REQUEST_CODE) {
                 val uri = resultData.data!!
 
-                DB.getOutputStream().use { out ->
+                DB.getOutputStream(this).use { out ->
                     contentResolver.openInputStream(uri)?.use { inputStream ->
                         while (inputStream.available() > 0) {
                             val bytes = ByteArray(inputStream.available())

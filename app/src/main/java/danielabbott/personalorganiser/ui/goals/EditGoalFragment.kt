@@ -121,7 +121,7 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
                         }
                         .setNegativeButton("Cancel", null)
                         .show()
-                })
+                }, context!!)
         }
 
         if (goalId == null) {

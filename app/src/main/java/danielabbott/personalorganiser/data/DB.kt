@@ -177,17 +177,15 @@ object DB {
 
     private var initDone = false
     private lateinit var dbHelper: DBHelper
-    lateinit var context: Context
 
     // Opens the database file
-    fun init(context_: Context) {
+    fun init(context: Context) {
         if (initDone) {
             return
         }
         initDone = true
 
-        context = context_.applicationContext
-        dbHelper = DBHelper(context)
+        dbHelper = DBHelper(context.applicationContext)
     }
 
     fun close() {
@@ -1070,7 +1068,7 @@ object DB {
         return colours
     }
 
-    fun optimise() {
+    fun optimise(context: Context) {
         val db = dbHelper.writableDatabase
 
         // Get IDs of all unused photos
@@ -1104,7 +1102,7 @@ object DB {
         vacuum()
     }
 
-    fun getDBFileBytes(): ByteArray {
+    fun getDBFileBytes(context: Context): ByteArray {
         close()
         val dbFile = context.getDatabasePath("po.db")
 
@@ -1115,7 +1113,7 @@ object DB {
         return bytes
     }
 
-    fun getOutputStream(): OutputStream {
+    fun getOutputStream(context: Context): OutputStream {
         close()
 
         val dbFile = context.getDatabasePath("po.db")

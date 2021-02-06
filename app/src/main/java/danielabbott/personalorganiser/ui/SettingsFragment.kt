@@ -138,7 +138,7 @@ class SettingsFragment : Fragment() {
 
         root.findViewById<Button>(R.id.optimiseDB).setOnClickListener {
             try {
-                DB.optimise()
+                DB.optimise(context!!)
                 Toast.makeText(context!!, "Database optimised", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 Toast.makeText(context!!, "Error optimising database", Toast.LENGTH_SHORT).show()

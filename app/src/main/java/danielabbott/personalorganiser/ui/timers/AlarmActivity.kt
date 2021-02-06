@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import danielabbott.personalorganiser.NotificationTapped
 import danielabbott.personalorganiser.Notifications
 import danielabbott.personalorganiser.R
-import danielabbott.personalorganiser.data.DB.context
 import danielabbott.personalorganiser.data.Settings
 
 class AlarmActivity : AppCompatActivity() {
@@ -60,7 +59,7 @@ class AlarmActivity : AppCompatActivity() {
 
         if (!alarmDisabled && Settings.getAlarmVibrationEnabled(this)) {
             val vibrator =
-                context.applicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                applicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
             vibrationCounter = 10
             vibrationRepeat = Runnable {
@@ -88,21 +87,21 @@ class AlarmActivity : AppCompatActivity() {
             }, 7000)
         }
 
-        val intent2 = Intent(context.applicationContext, NotificationTapped::class.java)
+        val intent2 = Intent(applicationContext, NotificationTapped::class.java)
         intent2.putExtra("channel", Notifications.Channel.TIMER.id_int)
 
         // Request code = current time
         // https://stackoverflow.com/a/21204851/11498001
 
         val pendingIntent = PendingIntent.getBroadcast(
-            context.applicationContext,
+            applicationContext,
             System.currentTimeMillis().toInt(),
             intent2,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         Notifications.showNotification(
-            context.applicationContext,
+            applicationContext,
             "Timer",
             timerName,
             Notifications.Channel.TIMER,

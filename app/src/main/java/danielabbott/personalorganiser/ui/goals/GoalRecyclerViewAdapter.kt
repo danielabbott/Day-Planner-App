@@ -1,6 +1,7 @@
 package danielabbott.personalorganiser.ui.goals
 
 import android.app.Activity
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +13,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.RecyclerView
 import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
-import danielabbott.personalorganiser.data.DB.context
 import danielabbott.personalorganiser.data.GoalListData
 import danielabbott.personalorganiser.ui.CircleView
 import danielabbott.personalorganiser.ui.LimitedColourPickerView
@@ -69,7 +69,7 @@ class GoalRecyclerViewAdapter(
         }
 
         holder.circle.setOnClickListener {
-            val colourPicker = LimitedColourPickerView(context)
+            val colourPicker = LimitedColourPickerView(activity)
             val builder = AlertDialog.Builder(activity)
                 .setView(colourPicker)
                 .show()
