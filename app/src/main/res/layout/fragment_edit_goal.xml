@@ -39,7 +39,7 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="20dp" />
+                    android:layout_height="30dp" />
 
 
                 <danielabbott.personalorganiser.ui.goals.GoalColourPickerButton
@@ -54,7 +54,7 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="20dp" />
+                    android:layout_height="30dp" />
 
 
                 <EditText
@@ -72,7 +72,7 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="20dp" />
+                    android:layout_height="30dp" />
 
                 <Button
                     android:id="@+id/bAddPicture"
@@ -101,7 +101,7 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="10dp" />
+                    android:layout_height="20dp" />
 
 
                 <Button
@@ -116,7 +116,7 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="10dp" />
+                    android:layout_height="30dp" />
 
 
                 <Button

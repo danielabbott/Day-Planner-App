@@ -19,6 +19,7 @@ import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.TimetableEvent
 import danielabbott.personalorganiser.ui.BetterSwitch
 import danielabbott.personalorganiser.ui.DataEntryFragment
+import danielabbott.personalorganiser.ui.GoalSelector
 import danielabbott.personalorganiser.ui.TimeSelectView
 
 
@@ -62,12 +63,11 @@ class TimetableEditEventFragment(
         val rMorn = root.findViewById<BetterSwitch>(R.id.rMorn)
         val tvStart = root.findViewById<TimeSelectView>(R.id.tvStart)
         val tvEnd = root.findViewById<TimeSelectView>(R.id.tvEnd)
-        val goal = root.findViewById<Spinner>(R.id.goal)
+        val goal = root.findViewById<GoalSelector>(R.id.goal)
 
         picturePreviewsView = root.findViewById<LinearLayout>(R.id.PicturePreviews)
 
         super.init(root)
-        super.initGoals(goal)
 
 
         var startTime: Int
@@ -97,7 +97,7 @@ class TimetableEditEventFragment(
             r2.isChecked = originalEventData.remind2Hrs
             rMorn.isChecked = originalEventData.remindMorning
 
-            super.setGoalSpinner(goal, originalEventData.goal_id)
+            goal.setGoal(originalEventData.goal_id)
 
             startTime = originalEventData.startTime
             endTime = originalEventData.startTime + originalEventData.duration
@@ -207,7 +207,7 @@ class TimetableEditEventFragment(
                         r1.isChecked,
                         r2.isChecked,
                         rMorn.isChecked,
-                        if (goal.selectedItemPosition == 0) null else goals[goal.selectedItemPosition - 1].id
+                        goal.getSelectedGoalID()
                     )
 
                     val eventId2 = DB.updateOrCreateTimetableEvent(newEvent)
@@ -296,8 +296,7 @@ class TimetableEditEventFragment(
                 endTime = endTimes[0].toInt() * 60 + endTimes[1].toInt()
             }
 
-            val new_goal =
-                if (goal.selectedItemPosition == 0) null else goals[goal.selectedItemPosition - 1].id
+            val new_goal = goal.getSelectedGoalID()
 
             if (eventId == null) {
                 notes.text.toString().trim().isNotEmpty() ||

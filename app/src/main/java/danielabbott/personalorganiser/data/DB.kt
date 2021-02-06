@@ -834,6 +834,32 @@ object DB {
 
     }
 
+    fun getGoalForSelector(goalId: Long): Goal {
+        val db = dbHelper.readableDatabase
+
+
+        val cursor = db.rawQuery(
+            "SELECT _id, name, colour FROM TBL_GOAL WHERE _id=?",
+            arrayOf(goalId.toString())
+        )
+
+        if (cursor.moveToNext()) {
+            val g = Goal(
+                cursor.getLong(cursor.getColumnIndexOrThrow("_id")),
+                cursor.getString(cursor.getColumnIndexOrThrow("name")),
+                cursor.getInt(cursor.getColumnIndexOrThrow("colour")),
+                null
+            )
+
+            cursor.close()
+            return g
+        } else {
+            cursor.close()
+            throw Exception("Record not found")
+        }
+
+    }
+
     fun getMilestones(goalId: Long): List<Milestone> {
         val list = ArrayList<Milestone>()
 

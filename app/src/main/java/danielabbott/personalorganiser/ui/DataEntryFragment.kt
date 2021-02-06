@@ -49,22 +49,6 @@ open class DataEntryFragment : DataEntryFragmentBasic() {
         }
     }
 
-    protected fun initGoals(goal: Spinner) {
-        // Populate list of goals
-        goals = DB.getGoals()
-        val testArray = Array<String>(goals.size + 1) { "[No assigned goal]" }
-        var i = 1
-        DB.getGoals().forEach {
-            testArray[i] = it.name
-            i += 1
-        }
-        goal.adapter = ArrayAdapter<String>(
-            context!!,
-            R.layout.spinner_style,
-            testArray
-        )
-    }
-
     // Called when the user has picked an image from the gallery
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == ImagePick.IMAGE_PICK_REQUST_CODE && resultCode == Activity.RESULT_OK && data != null) {
@@ -150,19 +134,6 @@ open class DataEntryFragment : DataEntryFragmentBasic() {
         val msg = Message()
         msg.obj = img
         handler.sendMessage(msg)
-    }
-
-    fun setGoalSpinner(goal: Spinner, goalId: Long?) {
-        goal.setSelection(0)
-        if (goalId != null) {
-            var i = 0
-            goals.forEach {
-                if (it.id == goalId) {
-                    goal.setSelection(i + 1)
-                }
-                i += 1
-            }
-        }
     }
 
 }

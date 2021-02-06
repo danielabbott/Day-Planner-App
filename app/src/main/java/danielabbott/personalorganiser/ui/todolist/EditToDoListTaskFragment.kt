@@ -28,7 +28,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
     private lateinit var notes: EditText
     private lateinit var time: TimeSelectView
     private lateinit var date: DateSelectView
-    private lateinit var repeat: Spinner
+    private lateinit var repeat: RepeatSelector
     private lateinit var rOnTime: BetterSwitch
     private lateinit var r30: BetterSwitch
     private lateinit var r1: BetterSwitch
@@ -47,7 +47,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
 
         notes = root.findViewById<EditText>(R.id.notes)
         name = root.findViewById<EditText>(R.id.name)
-        repeat = root.findViewById<Spinner>(R.id.repeat)
+        repeat = root.findViewById<RepeatSelector>(R.id.repeat)
         rOnTime = root.findViewById<BetterSwitch>(R.id.rOnTime)
         r30 = root.findViewById<BetterSwitch>(R.id.r30)
         r1 = root.findViewById<BetterSwitch>(R.id.r1)
@@ -57,23 +57,10 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
         date = root.findViewById<DateSelectView>(R.id.date)
         dateForwards = root.findViewById<Button>(R.id.dateForwards)
         dateBack = root.findViewById<Button>(R.id.dateBack)
-        val goal = root.findViewById<Spinner>(R.id.goal)
+        val goal = root.findViewById<GoalSelector>(R.id.goal)
 
         super.init(root)
-        super.initGoals(goal)
 
-
-        repeat.adapter = ArrayAdapter<String>(
-            context!!,
-            R.layout.spinner_style,
-            arrayOf(
-                "Don't Repeat",
-                "Repeat Daily",
-                "Repeat Every other day",
-                "Repeat Weekly",
-                "Repeat Monthly"
-            )
-        )
 
         var originalTaskData: ToDoListTask? = null
 
@@ -91,13 +78,13 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
 
             notes.setText(if (originalTaskData.notes == null) "" else originalTaskData.notes!!)
             name.setText(originalTaskData.name)
-            repeat.setSelection(originalTaskData.repeat.n)
+            repeat.repeat = originalTaskData.repeat
             rOnTime.isChecked = originalTaskData.remindOnTime
             r30.isChecked = originalTaskData.remind30Mins
             r1.isChecked = originalTaskData.remind1Hr
             r2.isChecked = originalTaskData.remind2Hrs
             rMorn.isChecked = originalTaskData.remindMorning
-            super.setGoalSpinner(goal, originalTaskData.goal_id)
+            goal.setGoal(originalTaskData.goal_id)
 
             if (originalTaskData.repeat != Repeat.NEVER && originalTaskData.dateTime != null) {
                 dateForwards.visibility = View.VISIBLE
@@ -169,8 +156,8 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                     r1.isChecked,
                     r2.isChecked,
                     rMorn.isChecked,
-                    Repeat.fromInt(repeat.selectedItemPosition),
-                    if (goal.selectedItemPosition == 0) null else goals[goal.selectedItemPosition - 1].id
+                    repeat.repeat,
+                    goal.getSelectedGoalID()
                 )
 
                 val eventId = DB.updateOrCreateToDoListTask(newTask)
@@ -271,7 +258,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
 
 
         dateForwards.setOnClickListener {
-            val rep = Repeat.fromInt(repeat.selectedItemPosition)
+            val rep = repeat.repeat
             if (date.dateSelected && rep != Repeat.NEVER) {
                 var ymd: Triple<Int, Int, Int>
 
@@ -297,7 +284,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
         }
 
         dateBack.setOnClickListener {
-            val rep = Repeat.fromInt(repeat.selectedItemPosition)
+            val rep = repeat.repeat
             if (date.dateSelected && rep != Repeat.NEVER) {
                 var ymd: Triple<Int, Int, Int>
 
@@ -339,7 +326,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
         }
 
         repeat.onItemSelectedListener =
-            SpinnerChangeDetector {
+            {
                 setDateChangeButtonsVisibility()
                 setNotificationCheckboxesEnabledState()
             }
@@ -360,8 +347,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                 dateTime = dateTime!! - dateTime!! % 1000
             }
 
-            val new_goal =
-                if (goal.selectedItemPosition == 0) null else goals[goal.selectedItemPosition - 1].id
+            val new_goal = goal.getSelectedGoalID()
 
             if (taskId == null) {
                 notes.isNotEmpty() || name.text.toString().trim().isNotEmpty() || date.dateSelected || newPhotos.size > 0
@@ -380,7 +366,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             else if (originalTaskData.remind1Hr != r1.isChecked) true
             else if (originalTaskData.remind2Hrs != r2.isChecked) true
             else if (originalTaskData.remindMorning != rMorn.isChecked) true
-            else if (originalTaskData.repeat != Repeat.fromInt(repeat.selectedItemPosition)) true
+            else if (originalTaskData.repeat != repeat.repeat) true
             else if (originalTaskData.goal_id != new_goal) true
             else false
         }
@@ -389,7 +375,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
     }
 
     private fun setNotificationCheckboxesEnabledState() {
-        val rep = Repeat.fromInt(repeat.selectedItemPosition)
+        val rep = repeat.repeat
         if (time.timeSelected) {
             rOnTime.disabled = false
             r30.disabled = false
@@ -415,7 +401,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
     }
 
     private fun setDateChangeButtonsVisibility() {
-        val rep = Repeat.fromInt(repeat.selectedItemPosition)
+        val rep = repeat.repeat
         if (rep == Repeat.NEVER || !date.dateSelected) {
             dateForwards.visibility = View.INVISIBLE
             dateBack.visibility = View.INVISIBLE

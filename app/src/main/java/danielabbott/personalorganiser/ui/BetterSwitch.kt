@@ -79,26 +79,11 @@ class BetterSwitch : AppCompatTextView {
 
     private fun init() {
         setColour()
-    }
 
-    override fun performClick(): Boolean {
-        if (!disabled) {
-            activeState = !activeState
+        setOnClickListener {
+            if (!disabled) {
+                activeState = !activeState
+            }
         }
-        return super.performClick()
     }
-
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (event == null) {
-            return true
-        }
-
-        if (event.actionMasked == MotionEvent.ACTION_UP) {
-            performClick()
-            return true
-        }
-
-        return true
-    }
-
 }

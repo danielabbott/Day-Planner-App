@@ -129,6 +129,7 @@ class TimetableView : View, GestureDetector.OnGestureListener {
 
         textPaint.getTextBounds("44:444", 0, 6, egTextBounds)
         rowHeadersWidth = egTextBounds.width()
+        val sideTimesOffset = egTextBounds.height() * 0.4f
 
         rectPaint.style = Paint.Style.FILL
         rectPaint.isAntiAlias = false
@@ -329,7 +330,7 @@ class TimetableView : View, GestureDetector.OnGestureListener {
         canvas.drawRect(0.0f, 0.0f, rowHeadersWidth.toFloat(), height.toFloat(), rectPaint)
 
         for (i in 0 until totalHours) {
-            val y = startY + columnHeadersHeight + rowHeight * i.toFloat()
+            val y = startY + columnHeadersHeight + rowHeight * i.toFloat() + sideTimesOffset
 
             if (y < -egTextBounds.height() + columnHeadersHeight) {
                 continue

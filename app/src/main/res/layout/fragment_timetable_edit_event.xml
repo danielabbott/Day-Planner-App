@@ -238,12 +238,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp" />
 
-            <Spinner
+            <danielabbott.personalorganiser.ui.GoalSelector
                 android:id="@+id/goal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_rectangle_button"
-                android:spinnerMode="dialog" />
+                style="?android:attr/borderlessButtonStyle"
+                android:textAllCaps="false"
+                android:textColor="#000000"
+                android:textSize="18sp"/>
 
 
             <Space
@@ -372,7 +375,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="10dp" />
+                android:layout_height="20dp" />
 
             <Button
                 android:id="@+id/bDelete"
@@ -383,6 +386,10 @@
                 android:textAllCaps="false"
                 style="?android:attr/borderlessButtonStyle"
                 android:textSize="@dimen/form_text_size" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
         </LinearLayout>
     </ScrollView>
 

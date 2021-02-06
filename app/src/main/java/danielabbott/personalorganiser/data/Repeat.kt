@@ -12,6 +12,16 @@ enum class Repeat(val n: Int) {
             MONTHLY -> -9999
         }
 
+    override fun toString(): String {
+        return arrayOf(
+            "Don't Repeat",
+            "Repeat Daily",
+            "Repeat Every other day",
+            "Repeat Weekly",
+            "Repeat Monthly"
+        )[n]
+    }
+
     companion object {
         fun fromInt(value: Int) = values().first { it.n == value }
 
