@@ -8,24 +8,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="5dp"
         android:orientation="vertical">
 
-        <Spinner
+        <danielabbott.personalorganiser.ui.TagSelector
             android:id="@+id/tagSelect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:spinnerMode="dialog"
-            app:backgroundTint="@color/pageBackground" />
+            android:background="@drawable/rounded_rectangle_button"
+            style="?android:attr/borderlessButtonStyle"
+            android:textAllCaps="false"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list"
             android:name="danielabbott.personalorganiser.NotesFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
             app:layoutManager="LinearLayoutManager"
             tools:context=".ui.notes.NotesFragment"
             tools:listitem="@layout/fragment_notes" />

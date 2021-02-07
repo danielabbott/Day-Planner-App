@@ -2,6 +2,7 @@ package danielabbott.personalorganiser.ui
 
 import android.app.AlertDialog
 import android.content.Context
+import android.graphics.Typeface
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatButton
 import danielabbott.personalorganiser.data.Repeat
@@ -39,6 +40,7 @@ class RepeatSelector : AppCompatButton {
 
 
     private fun init() {
+        setTypeface(null, Typeface.NORMAL)
         repeat = Repeat.NEVER
 
         setOnLongClickListener {

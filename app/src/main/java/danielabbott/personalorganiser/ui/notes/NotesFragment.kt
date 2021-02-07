@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +13,7 @@ import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.Settings
 import danielabbott.personalorganiser.data.Tag
-import danielabbott.personalorganiser.ui.SpinnerChangeDetector
+import danielabbott.personalorganiser.ui.TagSelector
 
 class NotesFragment : Fragment() {
 
@@ -45,51 +43,29 @@ class NotesFragment : Fragment() {
             )
         }
 
+        val tagSelect = view.findViewById<TagSelector>(R.id.tagSelect)
 
         val id = Settings.getSelectedTagID(context!!)
-        var selected_tag: Tag? = null
 
-        var tagsStrings = ArrayList<String>()
-        var tagIDs = ArrayList<Long>()
-        tagsStrings.add("[All]") // -1
-        tagsStrings.add("[Untagged]") // -2
-        DB.getTags().forEach {
-            tagsStrings.add(it.tag)
-            if (it.id == id) {
-                selected_tag = it
-            }
-            tagIDs.add(it.id)
-        }
-
-
-        val tagSelect = view.findViewById<Spinner>(R.id.tagSelect)
-
-        tagSelect.adapter = ArrayAdapter<String>(
-            context!!,
-            R.layout.spinner_style,
-            tagsStrings
-        )
-
-        if (id > 0) {
-            var i: Int = 2
-            for (id_ in tagIDs) {
-                if (id_ == id) {
-                    tagSelect.setSelection(i)
-                    break
-                }
-                i += 1
-            }
+        if (id == -1L) {
+            tagSelect.setSelectAll()
+        } else if (id == -2L) {
+            tagSelect.setSelectUntagged()
         } else {
-            tagSelect.setSelection(-id.toInt() - 1)
+            tagSelect.setTag(id)
         }
 
 
-
-        tagSelect.onItemSelectedListener = SpinnerChangeDetector {
+        tagSelect.onItemSelectedListener = { selectType, tag ->
             Settings.setSelectedTagID(
                 context!!,
-                if (tagSelect.selectedItemPosition > 1) tagIDs[tagSelect.selectedItemPosition - 2]
-                else -(tagSelect.selectedItemPosition.toLong() + 1)
+                if (selectType == TagSelector.SelectedType.All) {
+                    -1
+                } else if (selectType == TagSelector.SelectedType.Untagged) {
+                    -2
+                } else {
+                    tag!!.id
+                }
             )
 
             val fragmentTransaction = fragmentManager!!.beginTransaction()
@@ -100,10 +76,11 @@ class NotesFragment : Fragment() {
 
         // On click listener for the add (+) button
         view.findViewById<FloatingActionButton>(R.id.fab_new).setOnClickListener {
+            val x = tagSelect.get()
             var tagsAutoAdded: ArrayList<Tag>? = null
-            if (selected_tag != null) {
+            if (x.first == TagSelector.SelectedType.Tag) {
                 tagsAutoAdded = ArrayList()
-                tagsAutoAdded.add(selected_tag!!)
+                tagsAutoAdded.add(x.second!!)
             }
             val fragment = EditNoteFragment(null, null, tagsAutoAdded)
             val fragmentTransaction = fragmentManager!!.beginTransaction()

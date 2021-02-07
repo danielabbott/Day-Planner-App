@@ -1413,6 +1413,30 @@ object DB {
         return list
     }
 
+    fun getTag(id: Long): Tag {
+        val db = dbHelper.readableDatabase
+
+
+        val cursor = db.rawQuery(
+            "SELECT tag FROM TBL_TAGS WHERE _id=?",
+            arrayOf(id.toString())
+        )
+
+
+        if (cursor.moveToNext()) {
+            val t = Tag(
+                    id,
+                    cursor.getString(cursor.getColumnIndexOrThrow("tag"))
+                )
+            cursor.close()
+            return t
+        }
+        cursor.close()
+        throw Exception("Not found")
+
+
+    }
+
     fun getNote(id: Long): Note {
         val db = dbHelper.readableDatabase
 

@@ -50,6 +50,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_weight="0.4"
+                    android:textSize="20sp"
                     android:background="@drawable/rounded_rectangle_button"
                     style="?android:attr/borderlessButtonStyle"
                     android:text="&lt;" />
@@ -76,6 +77,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_weight="0.4"
+                    android:textSize="20sp"
                     android:background="@drawable/rounded_rectangle_button"
                     style="?android:attr/borderlessButtonStyle"
                     android:text="&gt;" />
