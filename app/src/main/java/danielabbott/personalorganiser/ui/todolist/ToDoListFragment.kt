@@ -34,8 +34,8 @@ class ToDoListFragment : Fragment() {
             fragmentTransaction.commit()
         }
 
-        recyclerView = root.findViewById<RecyclerView>(R.id.list)
-        noTasksText = root.findViewById<TextView>(R.id.none)
+        recyclerView = root.findViewById(R.id.list)
+        noTasksText = root.findViewById(R.id.none)
 
         (activity as MainActivity).setToolbarTitle("To Do List")
         KB.hideKeyboard(activity!!)

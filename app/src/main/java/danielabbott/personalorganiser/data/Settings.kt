@@ -151,7 +151,7 @@ object Settings {
     }
 
     fun getTimetablePosition(context: Context): Pair<Float, Float> {
-        return Pair<Float, Float>(
+        return Pair(
             getFloat(context, "timetablePosX", 0.0f),
             getFloat(context, "timetablePosY", 0.0f)
         )

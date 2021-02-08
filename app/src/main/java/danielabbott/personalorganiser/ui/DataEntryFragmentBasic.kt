@@ -1,24 +1,18 @@
 package danielabbott.personalorganiser.ui
 
 import android.app.AlertDialog
-import android.content.Context
-import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 
 // Base class for timetable,task,goal edit pages
 // Implements functionality common to multiple pages ^
 open class DataEntryFragmentBasic : Fragment(), OnBackPressed {
 
-    companion object {
-        const val TAG = "DataEntryFragmentBasic"
-    }
-
     var exitWithoutUnsavedChangesWarning: Boolean = false
 
     var anyUnsavedChanges: (() -> Boolean)? = null
 
     override fun onBackPressed(onNoChangesOrDiscardChanges: () -> Unit) {
-        var unsavedData: Boolean = false
+        var unsavedData = false
 
         if (exitWithoutUnsavedChangesWarning) {
             unsavedData = false

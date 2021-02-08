@@ -6,6 +6,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Handler
+import android.os.Looper
 import android.os.Message
 import android.view.View
 import android.widget.*
@@ -19,9 +20,6 @@ import danielabbott.personalorganiser.data.GoalListData
 // Implements functionality common to multiple pages ^
 open class DataEntryFragment : DataEntryFragmentBasic() {
 
-    companion object {
-        const val TAG = "DataEntryFragment"
-    }
 
     protected var newPhotos = ArrayList<String>()
     protected var imagesToRemove = ArrayList<String>()
@@ -33,7 +31,7 @@ open class DataEntryFragment : DataEntryFragmentBasic() {
     protected lateinit var goals: List<GoalListData>
 
     protected fun init(root: View) {
-        handler = Handler {
+        handler = Handler(Looper.getMainLooper()) {
             val img = it.obj as ImageView
             img.alpha = 0.0f
             picturePreviewsView.addView(img)
@@ -81,17 +79,12 @@ open class DataEntryFragment : DataEntryFragmentBasic() {
     // Throws if the image could not be loaded from the cache or from the original file
     protected fun addImage(uri: Uri) {
         // Get/Create entry in database
-        val photoId_ = DB.getPhoto(uri.toString())
-        var photoId: Long
-        if (photoId_ == null) {
-            photoId = DB.addPhoto(uri.toString())
-        } else {
-            photoId = photoId_
-        }
+        val photoIdOriginalValue = DB.getPhoto(uri.toString())
+        val photoId: Long = photoIdOriginalValue ?: DB.addPhoto(uri.toString())
 
         // If we just created the entry in the database then a cache file does not exist
         // (Might not exist even if there was an entry in the DB)
-        val useCacheFile = photoId_ != null
+        val useCacheFile = photoIdOriginalValue != null
 
         // Create image view
 

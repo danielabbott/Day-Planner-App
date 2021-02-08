@@ -2,6 +2,7 @@ package danielabbott.personalorganiser.ui
 
 import android.content.Context
 import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatImageButton
@@ -30,7 +31,7 @@ class HoldableImageButton : AppCompatImageButton {
     private var delay = 500L
 
     private fun init() {
-        mHandler = Handler()
+        mHandler = Handler(Looper.getMainLooper())
         callbackRunner = Runnable {
             if (fingerDown) {
                 super.callOnClick()
@@ -40,6 +41,13 @@ class HoldableImageButton : AppCompatImageButton {
         }
     }
 
+    override fun performClick(): Boolean {
+        fingerDown = true
+        delay = 500L
+        callbackRunner.run()
+        return super.performClick()
+    }
+
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event == null) {
@@ -47,9 +55,7 @@ class HoldableImageButton : AppCompatImageButton {
         }
 
         if (event.action == MotionEvent.ACTION_DOWN) {
-            fingerDown = true
-            delay = 500L
-            callbackRunner.run()
+            performClick()
         } else if (event.action == MotionEvent.ACTION_UP) {
             fingerDown = false
         }

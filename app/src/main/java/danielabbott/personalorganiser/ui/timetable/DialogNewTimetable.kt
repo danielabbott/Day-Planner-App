@@ -1,7 +1,6 @@
 package danielabbott.personalorganiser.ui.timetable
 
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputType
 import android.widget.EditText
@@ -15,27 +14,26 @@ import danielabbott.personalorganiser.data.Settings
 
 // A dialog with a text field
 class DialogNewTimetable(
-    val cloneFrom: Long? = null
+    private val cloneFrom: Long? = null
 ) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        var textBox = EditText(context)
+        val textBox = EditText(context)
         textBox.hint = "Timetable name..."
         textBox.isSingleLine = true
         textBox.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
 
         val builder = AlertDialog.Builder(activity!!)
             .setView(textBox)
-            .setPositiveButton("Create", DialogInterface.OnClickListener { _, _ ->
+            .setPositiveButton("Create") { _, _ ->
 
                 if (textBox.text != null && textBox.text.isNotEmpty()) {
                     val name = textBox.text.toString()
                     try {
-                        var id: Long
-                        if (cloneFrom == null) {
-                            id = DB.createNewTimetable(name)
+                        val id: Long = if (cloneFrom == null) {
+                            DB.createNewTimetable(name)
                         } else {
-                            id = DB.cloneTimetable(cloneFrom, name)
+                            DB.cloneTimetable(cloneFrom, name)
                         }
                         Settings.setActiveTimetable(id, context!!)
                         Notifications.scheduleAllNotifications(context!!)
@@ -48,7 +46,7 @@ class DialogNewTimetable(
                         Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
                     }
                 }
-            })
+            }
             .setNegativeButton("Cancel", null)
         return builder.create()
     }

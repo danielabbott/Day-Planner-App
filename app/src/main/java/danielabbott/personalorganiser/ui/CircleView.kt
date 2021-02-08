@@ -9,12 +9,12 @@ import android.view.View
 // Just a coloured circle
 class CircleView : View {
 
-    private var colour_: Int = 0xffff0000.toInt()
+    private var colourValue: Int = 0xffff0000.toInt()
 
     var colour: Int
-        get() = colour_
+        get() = colourValue
         set(value) {
-            colour_ = value
+            colourValue = value
             invalidate()
         }
 
@@ -28,7 +28,7 @@ class CircleView : View {
         defStyle
     )
 
-    fun min(a: Int, b: Int): Int {
+    private fun min(a: Int, b: Int): Int {
         return if (a < b) a else b
     }
 

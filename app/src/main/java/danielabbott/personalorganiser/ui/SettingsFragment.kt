@@ -45,8 +45,8 @@ class SettingsFragment : Fragment() {
             Notifications.scheduleAllNotifications(context!!)
         }
 
-        timetableFontSize = root.findViewById<Spinner>(R.id.timetableFontSize)
-        timetableFontSize.adapter = ArrayAdapter<String>(
+        timetableFontSize = root.findViewById(R.id.timetableFontSize)
+        timetableFontSize.adapter = ArrayAdapter(
             context!!,
             R.layout.spinner_style,
             arrayOf("16", "18", "20", "22", "24")
@@ -73,8 +73,8 @@ class SettingsFragment : Fragment() {
             timetableFontSize.setSelection(4)
         }
 
-        timetableLineWidth = root.findViewById<Spinner>(R.id.timetableLineWidth)
-        timetableLineWidth.adapter = ArrayAdapter<String>(
+        timetableLineWidth = root.findViewById(R.id.timetableLineWidth)
+        timetableLineWidth.adapter = ArrayAdapter(
             context!!,
             R.layout.spinner_style,
             arrayOf("0.5", "0.75", "1.0", "1.25", "1.5", "1.75", "2.0")
@@ -104,7 +104,7 @@ class SettingsFragment : Fragment() {
             timetableLineWidth.setSelection(6)
         }
 
-        startTime = root.findViewById<TextView>(R.id.startTime)
+        startTime = root.findViewById(R.id.startTime)
         setTimetableStartTime(null)
 
         root.findViewById<Button>(R.id.startTimeBack).setOnClickListener {
@@ -120,7 +120,7 @@ class SettingsFragment : Fragment() {
             }
         }
 
-        endTime = root.findViewById<TextView>(R.id.endTime)
+        endTime = root.findViewById(R.id.endTime)
         setTimetableEndTime(null)
 
         root.findViewById<Button>(R.id.endTimeBack).setOnClickListener {

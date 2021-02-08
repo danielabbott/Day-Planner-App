@@ -88,9 +88,9 @@ class TimetableFragment : Fragment(), OnBackPressed {
             if (eList.size == 1) {
                 eventsUI.add(eList[0])
             } else {
-                eList.forEach {
-                    it.allDays = eList
-                    eventsUI.add(it)
+                eList.forEach { ev ->
+                    ev.allDays = eList
+                    eventsUI.add(ev)
                 }
             }
         }
@@ -108,12 +108,12 @@ class TimetableFragment : Fragment(), OnBackPressed {
         timetableView.invalidate()
     }
 
-    lateinit var openTimetableMenuItem: MenuItem
-    lateinit var newTimetableMenuItem: MenuItem
-    lateinit var clearTimetableMenuItem: MenuItem
-    lateinit var renameTimetableMenuItem: MenuItem
-    lateinit var cloneTimetableMenuItem: MenuItem
-    lateinit var deleteTimetableMenuItem: MenuItem
+    private lateinit var openTimetableMenuItem: MenuItem
+    private lateinit var newTimetableMenuItem: MenuItem
+    private lateinit var clearTimetableMenuItem: MenuItem
+    private lateinit var renameTimetableMenuItem: MenuItem
+    private lateinit var cloneTimetableMenuItem: MenuItem
+    private lateinit var deleteTimetableMenuItem: MenuItem
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()

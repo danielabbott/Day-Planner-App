@@ -45,7 +45,7 @@ class MilestoneRecyclerViewAdapter(
 
     override fun getItemCount(): Int = mValues.size
 
-    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
+    inner class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
         val layout: LinearLayout = mView.findViewById(R.id.linlayout)
         val name: TextView = mView.findViewById(R.id.name)
         val deadline: TextView = mView.findViewById(R.id.deadline)

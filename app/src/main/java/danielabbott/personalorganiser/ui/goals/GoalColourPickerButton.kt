@@ -10,12 +10,12 @@ import danielabbott.personalorganiser.R
 
 class GoalColourPickerButton : AppCompatButton {
 
-    private var colour_: Int = 0xffff0000.toInt()
+    private var colourValue: Int = 0xffff0000.toInt()
 
     var colour: Int
-        get() = colour_
+        get() = colourValue
         set(value) {
-            colour_ = ColourFunctions.lightenRGB(value) or 0xff000000.toInt()
+            colourValue = ColourFunctions.lightenRGB(value) or 0xff000000.toInt()
             setColour()
         }
 

@@ -9,7 +9,7 @@ object DateTimeUtil {
     fun getHoursAndMinutes(dateTime: Long): Pair<Int, Int> {
         Calendar.getInstance().apply {
             timeInMillis = dateTime
-            return Pair<Int, Int>(get(Calendar.HOUR_OF_DAY), get(Calendar.MINUTE))
+            return Pair(get(Calendar.HOUR_OF_DAY), get(Calendar.MINUTE))
         }
     }
 
@@ -18,8 +18,8 @@ object DateTimeUtil {
         Calendar.getInstance().apply {
             timeInMillis = dateTime
             val year = get(Calendar.YEAR)
-            var day: Int = 0 // days since jan 1 1970
-            var yr: Int = 1970
+            var day = 0 // days since jan 1 1970
+            var yr = 1970
             while (yr < year) {
                 day += if (yr % 4 == 0 && (yr % 100 != 0 || yr % 400 == 0)) 366 else 365
                 day += if (yr % 4 != 0) {
@@ -40,8 +40,8 @@ object DateTimeUtil {
     }
 
     // Takes time value as minutes since midnight
-    fun getHoursAndMinutes(time: Int): Pair<Int, Int> {
-        return Pair<Int, Int>(time / 60, time % 60)
+    private fun getHoursAndMinutes(time: Int): Pair<Int, Int> {
+        return Pair(time / 60, time % 60)
     }
 
     fun getDateTimeMillis(year: Int, month: Int, day: Int, hour: Int, minute: Int): Long {
@@ -60,7 +60,7 @@ object DateTimeUtil {
     fun getYearMonthDay(dateTime: Long): Triple<Int, Int, Int> {
         Calendar.getInstance().apply {
             timeInMillis = dateTime
-            return Triple<Int, Int, Int>(
+            return Triple(
                 get(Calendar.YEAR),
                 get(Calendar.MONTH) + 1,
                 get(Calendar.DAY_OF_MONTH)
@@ -92,10 +92,6 @@ object DateTimeUtil {
         val h = hm.first.toString().padStart(2, '0')
         val m = hm.second.toString().padStart(2, '0')
         return "$h:$m"
-    }
-
-    fun getDateTimeString(context: Context, dateTime: Long): String {
-        return "${getDateString(context, dateTime)}  ${getTimeString(dateTime)}"
     }
 
     fun getStartOfDay(dateTime: Long): Long {

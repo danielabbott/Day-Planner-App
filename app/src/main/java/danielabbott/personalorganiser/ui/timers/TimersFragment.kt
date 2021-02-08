@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -97,7 +98,7 @@ class TimersFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mHandler = Handler()
+        mHandler = Handler(Looper.getMainLooper())
         timerChanger = Runnable {
             if (!stopTimerChanger) {
                 updateTimers()
@@ -107,14 +108,14 @@ class TimersFragment : Fragment() {
 
         val root = inflater.inflate(R.layout.fragment_timers_list, container, false)
 
-        linearLayout = root.findViewById<LinearLayout>(R.id.linlayout)
+        linearLayout = root.findViewById(R.id.linlayout)
 
 
 
         root.findViewById<FloatingActionButton>(R.id.fab_new).setOnClickListener {
             DialogNewTimer(true, null, null) { name, hours, minutes, seconds ->
                 val t = hours * 60 * 60 + minutes * 60 + seconds
-                addTimerUI(null, name, t, t, true, false)
+                addTimerUI(null, name, t, t, stopped=true, paused=false)
 
                 val sv = root.findViewById(R.id.scroll) as ScrollView
                 sv.postDelayed({
@@ -144,13 +145,16 @@ class TimersFragment : Fragment() {
                 .inflate(R.layout.timer_list_item, linearLayout, false) as LinearLayout
         linearLayout.addView(layout)
 
+        val timerName: TextView = layout.findViewById(R.id.timerName)
+        val timer: TextView = layout.findViewById(R.id.timer)
+
         val timerObj =
             TimerUI(
                 id,
                 name,
                 layout,
-                layout.findViewById<TextView>(R.id.timer),
-                layout.findViewById<TextView>(R.id.timerName),
+                timer,
+                timerName,
                 t,
                 initialTime,
                 paused,
@@ -163,8 +167,6 @@ class TimersFragment : Fragment() {
             timerObj.lastPlayTimeValue = t
         }
 
-        val timerName: TextView = layout.findViewById(R.id.timerName)
-        val timer: TextView = layout.findViewById(R.id.timer)
         val bPlayPause: ImageView = layout.findViewById(R.id.bPlayPause)
         val bStop: ImageView = layout.findViewById(R.id.bStop)
         val bDelete: ImageView = layout.findViewById(R.id.bDelete)
@@ -243,10 +245,10 @@ class TimersFragment : Fragment() {
                     timerObj.name,
                     timerObj.originalTime
                 ) { name, hours, minutes, seconds ->
-                    val t = hours * 60 * 60 + minutes * 60 + seconds
-                    timerObj.originalTime = t
-                    timerObj.time = t
-                    setTime(timerObj.timer, t)
+                    val t2 = hours * 60 * 60 + minutes * 60 + seconds
+                    timerObj.originalTime = t2
+                    timerObj.time = t2
+                    setTime(timerObj.timer, t2)
                     timerObj.name = name
                     timerObj.tvTimerName.text = name
                 }.show(fragmentManager!!, null)
@@ -285,7 +287,7 @@ class TimersFragment : Fragment() {
                         it.time!!
                     } else {
                         val direction = if (it.initialTime == 0) 1 else -1
-                        MathUtils.clamp(
+                        clamp(
                             it.time!! + ((System.currentTimeMillis() - it.time_saved) / 1000L).toInt() * direction,
                             0,
                             99 * 60 * 60
@@ -306,7 +308,7 @@ class TimersFragment : Fragment() {
     companion object {
         fun clearPendingAlarms(context: Context) {
             var i = -2
-            var minReqCode = Settings.lowestAlarmID(context.applicationContext)
+            val minReqCode = Settings.lowestAlarmID(context.applicationContext)
             while (i >= minReqCode) {
                 val intent =
                     Intent(context.applicationContext, AlarmActivity::class.java)

@@ -14,8 +14,8 @@ class TimetableEventUI(
 ) {
     // ui_x and ui_y are relative to the top left of the timetable cells (add startX/Y to get canvas posiiton)
 
-    var ui_x: Float = 0.0f
-    var ui_y: Float = 0.0f
-    var ui_w: Float = 0.0f
-    var ui_h: Float = 0.0f
+    var uiX: Float = 0.0f
+    var uiY: Float = 0.0f
+    var uiW: Float = 0.0f
+    var uiH: Float = 0.0f
 }

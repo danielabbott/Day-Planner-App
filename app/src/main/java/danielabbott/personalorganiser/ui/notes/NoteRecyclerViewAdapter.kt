@@ -38,7 +38,7 @@ class NoteRecyclerViewAdapter(
 
         for (c in s1) {
             if (c == '\n') {
-                lines++;
+                lines++
 
                 if (lines > 7) {
                     cutShort = true
@@ -96,7 +96,7 @@ class NoteRecyclerViewAdapter(
                     .beginTransaction()
                     .detach(f)
                     .attach(f)
-                    .commit();
+                    .commit()
             }
             .setNegativeButton("Cancel", null)
             .show()

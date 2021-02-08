@@ -1,7 +1,6 @@
 package danielabbott.personalorganiser.ui.goals
 
 import android.content.Context
-import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,14 +9,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.NestedScrollView
-import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import danielabbott.personalorganiser.ColourFunctions
 import danielabbott.personalorganiser.MainActivity
 import danielabbott.personalorganiser.Notifications
 import danielabbott.personalorganiser.R
@@ -50,7 +46,7 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
         val notes = root.findViewById<EditText>(R.id.notes)
         val colourChangeButton = root.findViewById<GoalColourPickerButton>(R.id.setColour)
         val recyclerView = root.findViewById<RecyclerView>(R.id.list)
-        picturePreviewsView = root.findViewById<LinearLayout>(R.id.PicturePreviews)
+        picturePreviewsView = root.findViewById(R.id.PicturePreviews)
 
         var e: Goal? = null
 
@@ -267,7 +263,7 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
         }
 
 
-        anyUnsavedChanges = { ->
+        anyUnsavedChanges = {
             if (goalId == null) {
                 notes.text.toString().trim().isNotEmpty() ||
                         name.text.toString().trim().isNotEmpty() || newPhotos.size > 0
@@ -280,8 +276,7 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
             else if (e!!.name.trim() != name.text.toString().trim()) true
             else if (e.colour != colour) true
             else if ((e.notes == null) != notes.text.toString().trim().isEmpty()) true
-            else if (e.notes != null && e.notes?.trim() != notes.text.toString().trim()) true
-            else false
+            else e.notes != null && e.notes?.trim() != notes.text.toString().trim()
         }
 
         return root
@@ -340,7 +335,7 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
         val colours = DB.allUsedGoalColours()
 
 
-        var i: Int = 0
+        var i = 0
         while (i < LimitedColourPickerView.colours.count() * 3) {
             val c = LimitedColourPickerView.colours[i % LimitedColourPickerView.colours.count()]
             if (!colours.contains(c)) {

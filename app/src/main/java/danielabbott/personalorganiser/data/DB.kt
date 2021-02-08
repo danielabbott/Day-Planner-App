@@ -161,17 +161,6 @@ object DB {
             }
         }
 
-        override fun onDowngrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-            if (oldVersion >= 4 && newVersion < 4) {
-                // sqlite does not support dropping columns
-                //db.execSQL("ALTER TABLE TBL_TIMETABLE_EVENT DROP COLUMN remindOnTime")
-                //db.execSQL("ALTER TABLE TBL_TODO_LIST_TASK DROP COLUMN remindOnTime")
-            }
-            if (oldVersion >= 3 && newVersion < 3) {
-                db.execSQL("DROP TABLE IF EXISTS TBL_NOTIFICATIONS")
-            }
-        }
-
     }
 
 
@@ -188,7 +177,7 @@ object DB {
         dbHelper = DBHelper(context.applicationContext)
     }
 
-    fun close() {
+    private fun close() {
         dbHelper.close()
     }
 
@@ -243,34 +232,6 @@ object DB {
         }
         cursor.close()
         return timetables
-    }
-
-    fun isDBEmpty(): Boolean {
-        val db = dbHelper.readableDatabase
-        arrayOf(
-            "TBL_TIMETABLE",
-            "TBL_TIMETABLE_EVENT",
-            "TBL_TODO_LIST_TASK",
-            "TBL_GOAL",
-            "TBL_MILESTONE",
-            "TBL_NOTES"
-        ).forEach {
-
-            val cursor = db.rawQuery(
-                "SELECT COUNT(*) FROM $it",
-                arrayOf()
-            )
-
-            if (cursor.moveToNext()) {
-                val count = cursor.getInt(cursor.getColumnIndexOrThrow("COUNT(*)"))
-                if (count > 0) {
-                    cursor.close()
-                    return false
-                }
-            }
-            cursor.close()
-        }
-        return true
     }
 
 
@@ -548,25 +509,24 @@ object DB {
 
         // Get event
 
-        val oldEvent = getTimetableEvent(id)
+        val event = getTimetableEvent(id)
 
         // Unset day
 
         val values = ContentValues().apply {
-            put("days", oldEvent.days and (1 shl day).inv())
+            put("days", event.days and (1 shl day).inv())
         }
 
         db.update("TBL_TIMETABLE_EVENT", values, "_id=?", arrayOf(id.toString()))
 
 
-        val newEvent = oldEvent
-        newEvent.days = 1 shl day
-        newEvent.id = -1
+        event.days = 1 shl day
+        event.id = -1
 
 
-        val newID = updateOrCreateTimetableEvent(newEvent)
+        val newID = updateOrCreateTimetableEvent(event)
 
-        newEvent.id = newID
+        event.id = newID
 
         db.execSQL(
             "INSERT INTO TBL_TIMETABLE_EVENT_PHOTOS (event_id, photo_id) " +
@@ -577,7 +537,7 @@ object DB {
             )
         )
 
-        return newEvent
+        return event
 
     }
 
@@ -1214,7 +1174,7 @@ object DB {
         while (cursor.moveToNext()) {
             val content = cursor.getString(cursor.getColumnIndexOrThrow("content"))
             val channel = cursor.getInt(cursor.getColumnIndexOrThrow("channel"))
-            val task_or_event_id = cursor.getLong(cursor.getColumnIndexOrThrow("task_or_event_id"))
+            val taskOrEventID = cursor.getLong(cursor.getColumnIndexOrThrow("task_or_event_id"))
             val time = cursor.getLong(cursor.getColumnIndexOrThrow("time"))
             val reqCode = cursor.getInt(cursor.getColumnIndexOrThrow("reqCode"))
 
@@ -1222,7 +1182,7 @@ object DB {
                 NotificationData(
                     content,
                     Notifications.Channel.fromInt(channel),
-                    task_or_event_id,
+                    taskOrEventID,
                     time,
                     reqCode
                 )
@@ -1243,7 +1203,7 @@ object DB {
         return notifications
     }
 
-    fun getActiveAlarmReqCodesAndRemove(channel: Int, id: Long): List<Int> {
+    private fun getActiveAlarmReqCodesAndRemove(channel: Int, id: Long): List<Int> {
         val db = dbHelper.writableDatabase
 
         val projection =
@@ -1475,7 +1435,7 @@ object DB {
         return Note(id, contents, tags)
     }
 
-    fun getNoteTagIDs(noteId: Long): List<Long> {
+    private fun getNoteTagIDs(noteId: Long): List<Long> {
         val db = dbHelper.readableDatabase
 
         val cursor = db.rawQuery(
@@ -1535,12 +1495,12 @@ object DB {
 
     }
 
-    fun renameTag(id: Long, newTagName: String) {
-        val db = dbHelper.writableDatabase
-        db.update("TBL_TAGS", ContentValues().apply {
-            put("tag", newTagName.trim())
-        }, "_id=?", arrayOf(id.toString()))
-    }
+//    fun renameTag(id: Long, newTagName: String) {
+//        val db = dbHelper.writableDatabase
+//        db.update("TBL_TAGS", ContentValues().apply {
+//            put("tag", newTagName.trim())
+//        }, "_id=?", arrayOf(id.toString()))
+//    }
 
     fun addTagToNote(noteId: Long, tagId: Long) {
         val db = dbHelper.writableDatabase

@@ -10,13 +10,13 @@ import danielabbott.personalorganiser.data.Repeat
 class RepeatSelector : AppCompatButton {
 
 
-    private var repeat_ = Repeat.NEVER
+    private var repeatValue = Repeat.NEVER
 
     var repeat: Repeat
-        get() = repeat_
+        get() = repeatValue
         set(value) {
-            repeat_ = value
-            text = repeat_.toString()
+            repeatValue = value
+            text = repeatValue.toString()
         }
 
     var onItemSelectedListener: ((Repeat) -> Unit)? = null

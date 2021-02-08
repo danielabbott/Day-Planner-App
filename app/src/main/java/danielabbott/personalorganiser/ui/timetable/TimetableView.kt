@@ -205,38 +205,38 @@ class TimetableView : View, GestureDetector.OnGestureListener {
             // Rectangle
 
 
-            it.ui_x = ceil(columnWidth * it.day.toFloat()) + strokeWidth * 0.5f
-            it.ui_y =
+            it.uiX = ceil(columnWidth * it.day.toFloat()) + strokeWidth * 0.5f
+            it.uiY =
                 ceil(rowHeight * (it.e.startTime / 60.0f - startHour.toFloat())) + strokeWidth * 0.5f
 
             val nextX = ceil(columnWidth * (it.day.toFloat() + 1)) + strokeWidth * 0.5f
             val nextY =
                 ceil(rowHeight * ((it.e.startTime + it.e.duration) / 60.0f - startHour.toFloat())) + strokeWidth * 0.5f
 
-            it.ui_w = (nextX - it.ui_x) - strokeWidth
-            it.ui_h = (nextY - it.ui_y) - strokeWidth
+            it.uiW = (nextX - it.uiX) - strokeWidth
+            it.uiH = (nextY - it.uiY) - strokeWidth
 
-            val visible = it.ui_x + startX <= width && it.ui_x + startX + it.ui_w >= 0
-                    && it.ui_y + startY <= height && it.ui_y + startY + it.ui_h >= 0
+            val visible = it.uiX + startX <= width && it.uiX + startX + it.uiW >= 0
+                    && it.uiY + startY <= height && it.uiY + startY + it.uiH >= 0
 
 
             if (visible) {
                 rectPaint.color = ColourFunctions.lightenRGB(it.colour) or 0xff000000.toInt()
-                canvas.drawRect(it.ui_x, it.ui_y, it.ui_x + it.ui_w, it.ui_y + it.ui_h, rectPaint)
+                canvas.drawRect(it.uiX, it.uiY, it.uiX + it.uiW, it.uiY + it.uiH, rectPaint)
 
 
                 // Text
 
                 canvas.save() // push default clip area to stack
-                canvas.clipRect(it.ui_x, it.ui_y, it.ui_x + it.ui_w, it.ui_y + it.ui_h)
+                canvas.clipRect(it.uiX, it.uiY, it.uiX + it.uiW, it.uiY + it.uiH)
 
 
 
                 if (it.hasNotes) {
                     // 3 dots
                     val scale = resources.displayMetrics.density * 0.5f
-                    var x = it.ui_x + it.ui_w - 20 * scale
-                    val y = it.ui_y + 12 * scale
+                    var x = it.uiX + it.uiW - 20 * scale
+                    val y = it.uiY + 12 * scale
                     rectPaint.color = 0xff000000.toInt()
                     canvas.drawCircle(x, y, 5 * scale, circlePaint)
                     x -= 15 * scale
@@ -257,10 +257,10 @@ class TimetableView : View, GestureDetector.OnGestureListener {
                     }
 
                     cameraDrawable!!.setBounds(
-                        it.ui_x.toInt() + scale,
-                        it.ui_y.toInt() + scale,
-                        it.ui_x.toInt() + scale + scale * 16,
-                        it.ui_y.toInt() + scale + scale * 16
+                        it.uiX.toInt() + scale,
+                        it.uiY.toInt() + scale,
+                        it.uiX.toInt() + scale + scale * 16,
+                        it.uiY.toInt() + scale + scale * 16
                     )
                     cameraDrawable!!.draw(canvas)
                 }
@@ -278,13 +278,13 @@ class TimetableView : View, GestureDetector.OnGestureListener {
 
                 val y =
                     if (staticLayout.height - 6 > (rowHeight * (it.e.duration / 60.0f)).toInt()) {
-                        it.ui_y + (2 * resources.displayMetrics.density).toInt()
+                        it.uiY + (2 * resources.displayMetrics.density).toInt()
                     } else {
-                        it.ui_y + rowHeight * (it.e.duration / 60.0f) * 0.5f - staticLayout.height / 2
+                        it.uiY + rowHeight * (it.e.duration / 60.0f) * 0.5f - staticLayout.height / 2
                     }
 
                 canvas.withTranslation(
-                    round(it.ui_x + columnWidth / 2),
+                    round(it.uiX + columnWidth / 2),
                     round(y)
                 ) {
                     staticLayout.draw(canvas)
@@ -296,18 +296,18 @@ class TimetableView : View, GestureDetector.OnGestureListener {
                 // Top and bottom lines for event (to separate events that are between hours)
 
                 canvas.drawLine(
-                    it.ui_x,
-                    it.ui_y - strokeWidth * 0.5f,
-                    it.ui_x + it.ui_w,
-                    it.ui_y - strokeWidth * 0.5f,
+                    it.uiX,
+                    it.uiY - strokeWidth * 0.5f,
+                    it.uiX + it.uiW,
+                    it.uiY - strokeWidth * 0.5f,
                     linePaint
                 )
 
                 canvas.drawLine(
-                    it.ui_x,
-                    it.ui_y + it.ui_h + strokeWidth * 0.5f,
-                    it.ui_x + it.ui_w,
-                    it.ui_y + it.ui_h + strokeWidth * 0.5f,
+                    it.uiX,
+                    it.uiY + it.uiH + strokeWidth * 0.5f,
+                    it.uiX + it.uiW,
+                    it.uiY + it.uiH + strokeWidth * 0.5f,
                     linePaint
                 )
             }
@@ -425,8 +425,8 @@ class TimetableView : View, GestureDetector.OnGestureListener {
 
         // Search for event that was tapped
         events.forEach {
-            if (event.x >= it.ui_x + startX + rowHeadersWidth && event.x < it.ui_x + startX + rowHeadersWidth + it.ui_w
-                && event.y >= it.ui_y + startY + columnHeadersHeight && event.y < it.ui_y + startY + columnHeadersHeight + it.ui_h
+            if (event.x >= it.uiX + startX + rowHeadersWidth && event.x < it.uiX + startX + rowHeadersWidth + it.uiW
+                && event.y >= it.uiY + startY + columnHeadersHeight && event.y < it.uiY + startY + columnHeadersHeight + it.uiH
             ) {
                 tEvent = it
             }
@@ -595,14 +595,12 @@ class TimetableView : View, GestureDetector.OnGestureListener {
             return
         }
 
-        val startHour = Settings.getTimetableStartHour(context)
-
         var tEvent: TimetableEventUI? = null
 
         // Search for event that was tapped
         events.forEach {
-            if (event.x >= it.ui_x + startX + rowHeadersWidth && event.x < it.ui_x + startX + rowHeadersWidth + it.ui_w
-                && event.y >= it.ui_y + startY + columnHeadersHeight && event.y < it.ui_y + startY + columnHeadersHeight + it.ui_h
+            if (event.x >= it.uiX + startX + rowHeadersWidth && event.x < it.uiX + startX + rowHeadersWidth + it.uiW
+                && event.y >= it.uiY + startY + columnHeadersHeight && event.y < it.uiY + startY + columnHeadersHeight + it.uiH
             ) {
                 tEvent = it
             }

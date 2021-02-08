@@ -20,7 +20,7 @@ object ImagePick {
 
     const val EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE = 0
     const val IMAGE_PICK_REQUST_CODE = 0
-    const val TAG = "ImagePick"
+    private const val TAG = "ImagePick"
 
     // Does not open the gallery if permissions had to be requested - call the function
     // again in onRequestPermissionsResult
@@ -66,7 +66,7 @@ object ImagePick {
                 val cacheFile = File("${context.applicationContext.cacheDir}/img$photoId")
                 if (cacheFile.exists()) {
                     val stream = cacheFile.inputStream()
-                    var bitmap = BitmapDrawable(context.resources, stream).bitmap
+                    val bitmap = BitmapDrawable(context.resources, stream).bitmap
                     img.setImageBitmap(bitmap)
                     imageLoaded = true
                     stream.close()

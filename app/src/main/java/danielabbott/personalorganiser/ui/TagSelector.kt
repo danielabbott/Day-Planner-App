@@ -2,15 +2,11 @@ package danielabbott.personalorganiser.ui
 
 import android.app.AlertDialog
 import android.content.Context
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
 import android.graphics.Typeface
 import android.util.AttributeSet
-import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatButton
-import danielabbott.personalorganiser.ColourFunctions
-import danielabbott.personalorganiser.R
-import danielabbott.personalorganiser.data.*
+import danielabbott.personalorganiser.data.DB
+import danielabbott.personalorganiser.data.Tag
 
 class TagSelector : AppCompatButton {
 
@@ -25,17 +21,13 @@ class TagSelector : AppCompatButton {
 
     var onItemSelectedListener: ((SelectedType, Tag?) -> Unit)? = null
 
-    fun getSelectedTagID() : Long? {
-        return selectedTag?.id
-    }
-
     fun setTag(tagID_: Long) {
         selectedType = SelectedType.Tag
         selectedTag = DB.getTag(tagID_)
         setText()
     }
 
-    fun setTag(tag: Tag) {
+    private fun setTag(tag: Tag) {
         selectedType = SelectedType.Tag
         selectedTag = tag
         setText()
@@ -58,14 +50,12 @@ class TagSelector : AppCompatButton {
     }
 
     private fun setText() {
-        if(selectedType == SelectedType.All) {
-            text = "[All]"
-        }
-        else if(selectedType == SelectedType.Untagged) {
-            text = "[Untagged]"
-        }
-        else {
-            text = selectedTag!!.tag
+        text = if(selectedType == SelectedType.All) {
+            "[All]"
+        } else if(selectedType == SelectedType.Untagged) {
+            "[Untagged]"
+        } else {
+            selectedTag!!.tag
         }
     }
 

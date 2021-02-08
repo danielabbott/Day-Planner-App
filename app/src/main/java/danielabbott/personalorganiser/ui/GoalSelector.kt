@@ -6,7 +6,6 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.Typeface
 import android.util.AttributeSet
-import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatButton
 import danielabbott.personalorganiser.ColourFunctions
 import danielabbott.personalorganiser.R
@@ -24,16 +23,15 @@ class GoalSelector : AppCompatButton {
     }
 
     fun setGoal(goalID_: Long?) {
-        if(goalID_ == null) {
-            selectedGoal = null
-        }
-        else {
-            selectedGoal = DB.getGoalForSelector(goalID_)
+        selectedGoal = if(goalID_ == null) {
+            null
+        } else {
+            DB.getGoalForSelector(goalID_)
         }
         setColourAndText()
     }
 
-    fun setGoal(goal: GoalListData) {
+    private fun setGoal(goal: GoalListData) {
         selectedGoal = Goal(goal.id, goal.name, goal.colour, null)
         setColourAndText()
     }

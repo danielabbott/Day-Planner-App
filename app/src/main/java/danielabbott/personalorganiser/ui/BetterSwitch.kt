@@ -5,30 +5,25 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.Typeface
 import android.util.AttributeSet
-import android.util.Log
-import android.view.MotionEvent
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.view.ViewCompat
 import danielabbott.personalorganiser.R
 
 class BetterSwitch : AppCompatTextView {
 
-    private var disabled_ = false
-    private var activeState_ = false
+    private var disabledValue = false
+    private var activeStateValue = false
 
     var disabled: Boolean
-        get() = disabled_
+        get() = disabledValue
         set(value) {
-            disabled_ = value
+            disabledValue = value
             setColour()
         }
 
-    var activeState: Boolean
-        get() = activeState_
+    private var activeState: Boolean
+        get() = activeStateValue
         set(value) {
-            activeState_ = value
+            activeStateValue = value
             setColour()
         }
 

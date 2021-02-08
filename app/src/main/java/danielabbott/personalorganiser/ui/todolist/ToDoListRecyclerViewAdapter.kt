@@ -126,7 +126,7 @@ class ToDoListRecyclerViewAdapter(
         if (position == items.size) {
             // Extra space at bottom (empty View)
             holder.colourLayout.setBackgroundColor(0x00ffffff)
-            holder.name.text = "";
+            holder.name.text = ""
             holder.dateTime?.text = ""
             holder.divider?.visibility = View.INVISIBLE
             holder.dots?.visibility = View.INVISIBLE
@@ -203,7 +203,7 @@ class ToDoListRecyclerViewAdapter(
                             .beginTransaction()
                             .detach(f)
                             .attach(f)
-                            .commit();
+                            .commit()
                     }
                     .setNegativeButton("Cancel", null)
                     .show()
@@ -233,7 +233,7 @@ class ToDoListRecyclerViewAdapter(
         return if (position == items.size || items[position].header_title == null) 0 else 1
     }
 
-    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
+    inner class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
         val colourLayout: LinearLayout = mView.findViewById(R.id.colourLayout)
         val layout: LinearLayout = mView.findViewById(R.id.layout)
         val name: TextView = mView.findViewById(R.id.name)

@@ -11,7 +11,7 @@ import androidx.fragment.app.DialogFragment
 class DialogAddTag(val callback: (String) -> Unit) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        var textBox = EditText(context)
+        val textBox = EditText(context)
         textBox.hint = "Tag name..."
         textBox.isSingleLine = true
         textBox.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_WORDS
@@ -20,12 +20,12 @@ class DialogAddTag(val callback: (String) -> Unit) : DialogFragment() {
 
         val builder = AlertDialog.Builder(activity!!)
             .setView(textBox)
-            .setPositiveButton("Add", DialogInterface.OnClickListener { _, _ ->
+            .setPositiveButton("Add") { _, _ ->
 
                 if (textBox.text != null && textBox.text.isNotEmpty()) {
                     callback(textBox.text.toString())
                 }
-            })
+            }
             .setNegativeButton("Cancel", null)
         return builder.create()
     }

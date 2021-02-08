@@ -13,8 +13,8 @@ import androidx.fragment.app.DialogFragment
 import danielabbott.personalorganiser.data.Settings
 
 class DialogReplace(
-    val original_text: String,
-    val initial_find_val: String?,
+    private val original_text: String,
+    private val initial_find_val: String?,
     val callback: (String) -> Unit
 ) : DialogFragment() {
 
@@ -24,7 +24,7 @@ class DialogReplace(
         find.hint = "Find..."
         find.isSingleLine = true
         find.inputType = InputType.TYPE_CLASS_TEXT
-        var lp = ViewGroup.LayoutParams(
+        val lp = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
@@ -47,7 +47,7 @@ class DialogReplace(
         replace.setText(Settings.getMostRecentReplaceString(context!!))
 
         val ignoreCase = SwitchCompat(context!!)
-        ignoreCase.setText("Ignore case")
+        ignoreCase.text = "Ignore case"
         ignoreCase.layoutParams = lp
 
         val layout = LinearLayout(context)
@@ -58,7 +58,7 @@ class DialogReplace(
 
         val builder = AlertDialog.Builder(activity!!)
             .setView(layout)
-            .setPositiveButton("Replace", DialogInterface.OnClickListener { _, _ ->
+            .setPositiveButton("Replace") { _, _ ->
                 Settings.setMostRecentFindString(context!!, find.text.toString())
                 Settings.setMostRecentReplaceString(context!!, replace.text.toString())
                 if (find.text.isNotEmpty()) {
@@ -70,7 +70,7 @@ class DialogReplace(
                         )
                     )
                 }
-            })
+            }
             .setNegativeButton("Cancel", null)
         return builder.create()
     }

@@ -5,9 +5,9 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.*
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
 import androidx.appcompat.widget.ShareActionProvider
-import androidx.appcompat.widget.SwitchCompat
 import androidx.core.view.MenuItemCompat
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -45,18 +45,18 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
         (activity!! as MainActivity).setToolbarTitle("Edit Task")
         setHasOptionsMenu(true)
 
-        notes = root.findViewById<EditText>(R.id.notes)
-        name = root.findViewById<EditText>(R.id.name)
-        repeat = root.findViewById<RepeatSelector>(R.id.repeat)
-        rOnTime = root.findViewById<BetterSwitch>(R.id.rOnTime)
-        r30 = root.findViewById<BetterSwitch>(R.id.r30)
-        r1 = root.findViewById<BetterSwitch>(R.id.r1)
-        r2 = root.findViewById<BetterSwitch>(R.id.r2)
-        rMorn = root.findViewById<BetterSwitch>(R.id.rMorn)
-        time = root.findViewById<TimeSelectView>(R.id.time)
-        date = root.findViewById<DateSelectView>(R.id.date)
-        dateForwards = root.findViewById<Button>(R.id.dateForwards)
-        dateBack = root.findViewById<Button>(R.id.dateBack)
+        notes = root.findViewById(R.id.notes)
+        name = root.findViewById(R.id.name)
+        repeat = root.findViewById(R.id.repeat)
+        rOnTime = root.findViewById(R.id.rOnTime)
+        r30 = root.findViewById(R.id.r30)
+        r1 = root.findViewById(R.id.r1)
+        r2 = root.findViewById(R.id.r2)
+        rMorn = root.findViewById(R.id.rMorn)
+        time = root.findViewById(R.id.time)
+        date = root.findViewById(R.id.date)
+        dateForwards = root.findViewById(R.id.dateForwards)
+        dateBack = root.findViewById(R.id.dateBack)
         val goal = root.findViewById<GoalSelector>(R.id.goal)
 
         super.init(root)
@@ -109,7 +109,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             dateBack.visibility = View.INVISIBLE
         }
 
-        picturePreviewsView = root.findViewById<LinearLayout>(R.id.PicturePreviews)
+        picturePreviewsView = root.findViewById(R.id.PicturePreviews)
 
         // Save button
         val fab: FloatingActionButton = root.findViewById(R.id.fab_save)
@@ -142,10 +142,10 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                 else null
 
                 if (dateTime != null) {
-                    dateTime = dateTime - dateTime % 1000
+                    dateTime -= dateTime % 1000
                 }
 
-                var newTask = ToDoListTask(
+                val newTask = ToDoListTask(
                     taskId ?: -1,
                     dateTime,
                     time.timeSelected,
@@ -260,7 +260,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
         dateForwards.setOnClickListener {
             val rep = repeat.repeat
             if (date.dateSelected && rep != Repeat.NEVER) {
-                var ymd: Triple<Int, Int, Int>
+                val ymd: Triple<Int, Int, Int>
 
                 if (rep == Repeat.MONTHLY) {
                     var m = date.month + 1 // Add month
@@ -286,7 +286,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
         dateBack.setOnClickListener {
             val rep = repeat.repeat
             if (date.dateSelected && rep != Repeat.NEVER) {
-                var ymd: Triple<Int, Int, Int>
+                val ymd: Triple<Int, Int, Int>
 
                 if (rep == Repeat.MONTHLY) {
                     var m = date.month - 1 // Add month
@@ -331,7 +331,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
                 setNotificationCheckboxesEnabledState()
             }
 
-        anyUnsavedChanges = { ->
+        anyUnsavedChanges = {
             val notes = notes.text.toString().trim()
 
             var dateTime = if (date.dateSelected) DateTimeUtil.getDateTimeMillis(
@@ -344,10 +344,10 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             else null
 
             if (dateTime != null) {
-                dateTime = dateTime!! - dateTime!! % 1000
+                dateTime -= dateTime % 1000
             }
 
-            val new_goal = goal.getSelectedGoalID()
+            val newGoal = goal.getSelectedGoalID()
 
             if (taskId == null) {
                 notes.isNotEmpty() || name.text.toString().trim().isNotEmpty() || date.dateSelected || newPhotos.size > 0
@@ -367,8 +367,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             else if (originalTaskData.remind2Hrs != r2.isChecked) true
             else if (originalTaskData.remindMorning != rMorn.isChecked) true
             else if (originalTaskData.repeat != repeat.repeat) true
-            else if (originalTaskData.goal_id != new_goal) true
-            else false
+            else originalTaskData.goal_id != newGoal
         }
 
         return root
@@ -412,8 +411,8 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
     }
 
 
-    lateinit var shareMenuItem: MenuItem
-    lateinit var shareIntent: Intent
+    private lateinit var shareMenuItem: MenuItem
+    private lateinit var shareIntent: Intent
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()

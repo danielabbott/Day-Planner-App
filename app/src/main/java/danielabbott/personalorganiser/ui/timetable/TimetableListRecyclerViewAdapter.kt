@@ -2,7 +2,6 @@ package danielabbott.personalorganiser.ui.timetable
 
 
 import android.app.Activity
-import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,7 +35,7 @@ class TimetableListRecyclerViewAdapter(
             holder.divider.visibility = View.INVISIBLE
         }
 
-        holder.mView.setOnClickListener(View.OnClickListener {
+        holder.mView.setOnClickListener {
             // Load the timetable
 
             Settings.setActiveTimetable(item.first, activity.applicationContext)
@@ -45,26 +44,26 @@ class TimetableListRecyclerViewAdapter(
             val fragmentTransaction = parentFragmentManager.beginTransaction()
             fragmentTransaction.replace(R.id.fragmentView, fragment)
             fragmentTransaction.commit()
-        })
-        holder.mView.setOnLongClickListener(View.OnLongClickListener {
+        }
+        holder.mView.setOnLongClickListener {
             // Show a dialog to ask the user if they want to delete this timetable
             AlertDialog.Builder(activity)
                 .setMessage("Are you sure you want to delete the timetable named ${item.second}?")
-                .setPositiveButton("Delete",
-                    DialogInterface.OnClickListener { _, _ ->
-                        // Delete data in database
-                        DB.deleteTimetable(item.first)
+                .setPositiveButton("Delete"
+                ) { _, _ ->
+                    // Delete data in database
+                    DB.deleteTimetable(item.first)
 
-                        // Go back to timetable view
-                        val fragment = OpenTimetableListFragment()
-                        val fragmentTransaction = parentFragmentManager.beginTransaction()
-                        fragmentTransaction.replace(R.id.fragmentView, fragment)
-                        fragmentTransaction.commit()
-                    })
+                    // Go back to timetable view
+                    val fragment = OpenTimetableListFragment()
+                    val fragmentTransaction = parentFragmentManager.beginTransaction()
+                    fragmentTransaction.replace(R.id.fragmentView, fragment)
+                    fragmentTransaction.commit()
+                }
                 .setNegativeButton("Cancel", null)
                 .show()
             true
-        })
+        }
     }
 
     override fun getItemCount(): Int = mValues.size

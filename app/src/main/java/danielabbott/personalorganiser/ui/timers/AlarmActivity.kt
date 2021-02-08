@@ -43,16 +43,16 @@ class AlarmActivity : AppCompatActivity() {
             finish()
         }
 
-        var timerName = "";
+        var timerName = ""
         if (intent != null && intent.extras != null) {
             timerName = intent.extras!!.getString("timerName") ?: ""
             findViewById<TextView>(R.id.timerName).text = timerName
         }
 
-        val mHandler = Handler()
+        val mHandler = Handler(Looper.getMainLooper())
 
 
-        var alarmDisabled =
+        val alarmDisabled =
             Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
                     android.provider.Settings.Global.getInt(contentResolver, "zen_mode") == 2
 

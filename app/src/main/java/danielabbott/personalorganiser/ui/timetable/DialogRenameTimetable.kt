@@ -1,7 +1,6 @@
 package danielabbott.personalorganiser.ui.timetable
 
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputType
 import android.widget.EditText
@@ -14,18 +13,18 @@ import danielabbott.personalorganiser.data.Settings
 
 // A dialog with a text field
 class DialogRenameTimetable(
-    val oldText: String
+    private val oldText: String
 ) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        var textBox = EditText(context)
+        val textBox = EditText(context)
         textBox.setText(oldText)
         textBox.isSingleLine = true
         textBox.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_CAP_SENTENCES
 
         val builder = AlertDialog.Builder(activity!!)
             .setView(textBox)
-            .setPositiveButton("Rename", DialogInterface.OnClickListener { _, _ ->
+            .setPositiveButton("Rename") { _, _ ->
 
                 if (textBox.text != null && textBox.text.isNotEmpty()) {
                     val name = textBox.text.toString()
@@ -40,7 +39,7 @@ class DialogRenameTimetable(
                         Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show()
                     }
                 }
-            })
+            }
             .setNegativeButton("Cancel", null)
         return builder.create()
     }

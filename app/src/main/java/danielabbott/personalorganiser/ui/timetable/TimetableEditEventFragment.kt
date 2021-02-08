@@ -9,8 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.Spinner
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import danielabbott.personalorganiser.MainActivity
 import danielabbott.personalorganiser.Notifications
@@ -33,27 +31,27 @@ class TimetableEditEventFragment(
     private val days_: Int = 0
 ) : DataEntryFragment() {
 
-    val dayCheckboxes = ArrayList<BetterSwitch>(7)
+    private val dayCheckboxes = ArrayList<BetterSwitch>(7)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         DB.init(context!!)
-        var root = inflater.inflate(R.layout.fragment_timetable_edit_event, container, false)
+        val root = inflater.inflate(R.layout.fragment_timetable_edit_event, container, false)
         (activity!! as MainActivity).setToolbarTitle("Edit Timetable Event")
 
         val notes = root.findViewById<EditText>(R.id.notes)
         val name = root.findViewById<EditText>(R.id.name)
 
         dayCheckboxes.clear()
-        dayCheckboxes.add(root.findViewById<BetterSwitch>(R.id.monday))
-        dayCheckboxes.add(root.findViewById<BetterSwitch>(R.id.tuesday))
-        dayCheckboxes.add(root.findViewById<BetterSwitch>(R.id.wednesday))
-        dayCheckboxes.add(root.findViewById<BetterSwitch>(R.id.thursday))
-        dayCheckboxes.add(root.findViewById<BetterSwitch>(R.id.friday))
-        dayCheckboxes.add(root.findViewById<BetterSwitch>(R.id.saturday))
-        dayCheckboxes.add(root.findViewById<BetterSwitch>(R.id.sunday))
+        dayCheckboxes.add(root.findViewById(R.id.monday))
+        dayCheckboxes.add(root.findViewById(R.id.tuesday))
+        dayCheckboxes.add(root.findViewById(R.id.wednesday))
+        dayCheckboxes.add(root.findViewById(R.id.thursday))
+        dayCheckboxes.add(root.findViewById(R.id.friday))
+        dayCheckboxes.add(root.findViewById(R.id.saturday))
+        dayCheckboxes.add(root.findViewById(R.id.sunday))
 
 
         val r30 = root.findViewById<BetterSwitch>(R.id.r30)
@@ -65,7 +63,7 @@ class TimetableEditEventFragment(
         val tvEnd = root.findViewById<TimeSelectView>(R.id.tvEnd)
         val goal = root.findViewById<GoalSelector>(R.id.goal)
 
-        picturePreviewsView = root.findViewById<LinearLayout>(R.id.PicturePreviews)
+        picturePreviewsView = root.findViewById(R.id.PicturePreviews)
 
         super.init(root)
 
@@ -154,7 +152,7 @@ class TimetableEditEventFragment(
                 startTime = startTimes[0].toInt() * 60 + startTimes[1].toInt()
                 endTime = endTimes[0].toInt() * 60 + endTimes[1].toInt()
 
-                var nameString = name.text.toString().trim()
+                val nameString = name.text.toString().trim()
 
                 if (startTime == endTime) {
                     AlertDialog.Builder(context)
@@ -194,7 +192,7 @@ class TimetableEditEventFragment(
                         }
                     }
 
-                    var newEvent = TimetableEvent(
+                    val newEvent = TimetableEvent(
                         eventId ?: -1,
                         timetableId,
                         startTime,
@@ -278,7 +276,7 @@ class TimetableEditEventFragment(
         tvStart.setTime(startTime / 60, startTime % 60)
         tvEnd.setTime(endTime / 60, endTime % 60)
 
-        anyUnsavedChanges = { ->
+        anyUnsavedChanges = {
             var daysBitmask = 0
             dayCheckboxes.forEachIndexed { i: Int, checkBox: BetterSwitch ->
                 if (checkBox.isChecked) {
@@ -296,7 +294,7 @@ class TimetableEditEventFragment(
                 endTime = endTimes[0].toInt() * 60 + endTimes[1].toInt()
             }
 
-            val new_goal = goal.getSelectedGoalID()
+            val newGoal = goal.getSelectedGoalID()
 
             if (eventId == null) {
                 notes.text.toString().trim().isNotEmpty() ||
@@ -321,8 +319,7 @@ class TimetableEditEventFragment(
             else if (originalEventData.remind1Hr != r1.isChecked) true
             else if (originalEventData.remind2Hrs != r2.isChecked) true
             else if (originalEventData.remindMorning != rMorn.isChecked) true
-            else if (originalEventData.goal_id != new_goal) true
-            else false
+            else originalEventData.goal_id != newGoal
         }
 
         return root

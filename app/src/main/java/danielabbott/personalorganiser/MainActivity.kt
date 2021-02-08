@@ -165,9 +165,9 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        menu = findViewById<ScrollView>(R.id.menu)
-        menuContainer = findViewById<LinearLayout>(R.id.menuContainer)
-        menuBlack = findViewById<View>(R.id.menuBlack)
+        menu = findViewById(R.id.menu)
+        menuContainer = findViewById(R.id.menuContainer)
+        menuBlack = findViewById(R.id.menuBlack)
 
         menuContainer.translationX = -menu.layoutParams.width.toFloat()
 
@@ -384,7 +384,7 @@ class MainActivity : AppCompatActivity() {
     override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
         if (event != null && menuVisible) {
             val x = event.x
-            var menuPos = IntArray(2)
+            val menuPos = IntArray(2)
             menu.getLocationInWindow(menuPos)
             if (x >= menuPos[0] && x < menuPos[0] + menu.layoutParams.width
             ) {

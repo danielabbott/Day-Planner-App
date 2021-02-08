@@ -9,11 +9,11 @@ import android.view.View
 
 class LimitedColourPickerView : View {
 
-    val columns = 5
+    private val columns = 5
 
     companion object {
         // Size of list must be a multiple of columns
-        val colours = listOf<Int>(
+        val colours = listOf(
             0xff8080,
             0xffbd80,
             0xfffb80,
@@ -48,7 +48,7 @@ class LimitedColourPickerView : View {
     private var rowHeight = 0.0f
     private var columnWidth = 0.0f
 
-    var initDone = false
+    private var initDone = false
     private var onTouch: OnTouchListener? = null
 
     private fun init() {
@@ -63,7 +63,7 @@ class LimitedColourPickerView : View {
                 val i = row * columns + col
 
                 selectedColour = colours[i]
-
+                performClick()
             }
             onTouch?.onTouch(view, motionEvent)
             false
@@ -71,10 +71,11 @@ class LimitedColourPickerView : View {
         initDone = true
     }
 
+    private val paint = Paint()
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        var paint = Paint()
         paint.style = Paint.Style.FILL
         paint.isAntiAlias = false
 
@@ -117,13 +118,13 @@ class LimitedColourPickerView : View {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val minw: Int = paddingLeft + paddingRight + suggestedMinimumWidth
-        val w: Int = View.resolveSizeAndState(minw, widthMeasureSpec, 1)
+        val w: Int = resolveSizeAndState(minw, widthMeasureSpec, 1)
 
         val rows = colours.size / columns
 
         val minh: Int =
-            ((View.MeasureSpec.getSize(w) / columns.toFloat()) * 0.5f * rows).toInt() + paddingBottom + paddingTop
-        val h: Int = View.resolveSizeAndState(
+            ((MeasureSpec.getSize(w) / columns.toFloat()) * 0.5f * rows).toInt() + paddingBottom + paddingTop
+        val h: Int = resolveSizeAndState(
             minh,
             heightMeasureSpec,
             0

@@ -13,9 +13,9 @@ import danielabbott.personalorganiser.ui.DataEntryFragmentBasic
 
 // text_from_share is only used if noteId == null. It is the text provided by a share intent
 class EditNoteFragment(
-    val noteId: Long? = null,
-    val text_from_share: String? = null,
-    var tagsToAdd: ArrayList<Tag>? = null
+    private val noteId: Long? = null,
+    private val text_from_share: String? = null,
+    private var tagsToAdd: ArrayList<Tag>? = null
 ) :
     DataEntryFragmentBasic() {
 
@@ -37,8 +37,8 @@ class EditNoteFragment(
         val root = inflater.inflate(R.layout.fragment_edit_note, container, false)
         (activity!! as MainActivity).setToolbarTitle("Edit Note")
 
-        textArea = root.findViewById<EditText>(R.id.textArea)
-        tagsll = root.findViewById<LinearLayout>(R.id.tagsll)
+        textArea = root.findViewById(R.id.textArea)
+        tagsll = root.findViewById(R.id.tagsll)
 
         var originalNote: Note? = null
 
@@ -71,16 +71,15 @@ class EditNoteFragment(
 
         root.findViewById<Button>(R.id.addTag).setOnClickListener {
             DialogAddTag { tagName ->
-                val tagUpper = tagName.toUpperCase()
                 var tagAlreadyExists = false
                 for (i in 0 until tags.size) {
-                    if (tags[i].tag.toUpperCase().equals(tagUpper)) {
+                    if (tags[i].tag.equals(tagName, ignoreCase = true)) {
                         tagAlreadyExists = true
                         break
                     }
                 }
                 for (i in 0 until newTags.size) {
-                    if (newTags[i].tag.toUpperCase().equals(tagUpper)) {
+                    if (newTags[i].tag.equals(tagName, ignoreCase = true)) {
                         tagAlreadyExists = true
                         break
                     }
@@ -89,7 +88,7 @@ class EditNoteFragment(
                 if (!tagAlreadyExists) {
                     var tag: Tag? = null
                     for (i in 0 until tagsToRemove.size) {
-                        if (tagsToRemove[i].tag.toUpperCase().equals(tagUpper)) {
+                        if (tagsToRemove[i].tag.equals(tagName, ignoreCase = true)) {
                             tag = tagsToRemove[i]
                             tagsToRemove.removeAt(i)
                             tags.add(tag)
@@ -110,7 +109,7 @@ class EditNoteFragment(
         save.setOnClickListener { _ ->
             val notes = textArea.text.toString()
 
-            var e = Note(noteId ?: -1, notes, tags)
+            val e = Note(noteId ?: -1, notes, tags)
             val newNoteId = DB.updateOrCreateNote(e)
 
             newTags.forEach {
@@ -128,24 +127,45 @@ class EditNoteFragment(
             (activity as MainActivity).onBackPressed()
         }
 
-        anyUnsavedChanges = { ->
+        anyUnsavedChanges = {
             if (noteId == null) {
-                textArea.text.toString().trim().isNotEmpty() || (newTags.contains(tagsToAdd!!) && tagsToAdd!!.contains(newTags))
+                textArea.text.toString().trim().isNotEmpty() ||
+                        (tagsToAdd == null && newTags.size > 0)
+                        (tagsToAdd != null && !tagsAreSame(tagsToAdd!!, newTags))
+
             }
             else if (newTags.size > 0) true
             else if (tagsToRemove.size > 0) true
-            else if (originalNote!!.contents.trim() != textArea.text.toString().trim()) true
-            else false
+            else originalNote!!.contents.trim() != textArea.text.toString().trim()
         }
 
         setHasOptionsMenu(true)
         return root
     }
 
+    private fun tagsAreSame(tagsToAdd: ArrayList<Tag>, newTags: ArrayList<Tag>): Boolean {
+        if(tagsToAdd.size != newTags.size) {
+            return false
+        }
+        tagsToAdd.forEach { a ->
+            var found = false
+            for (i in 0 until newTags.size) {
+                if(a.tag.equals(newTags[i].tag, ignoreCase = true)) {
+                    found = true
+                    break
+                }
+            }
+            if(!found) {
+                return false
+            }
+        }
+        return true
+    }
+
     private fun addTagTV(tagObj: Tag) {
-        var tv = LayoutInflater.from(context!!).inflate(R.layout.tag, tagsll, false) as TextView
+        val tv = LayoutInflater.from(context!!).inflate(R.layout.tag, tagsll, false) as TextView
         tv.text = tagObj.tag
-        tv.setOnLongClickListener { _ ->
+        tv.setOnLongClickListener {
             // Remove tag
             tagsll.removeView(tv)
 
@@ -162,16 +182,16 @@ class EditNoteFragment(
         tagsll.addView(tv)
     }
 
-    lateinit var qieMenuItem: MenuItem
-    lateinit var replaceMenuItem: MenuItem
-    var deleteNoteMenuItem: MenuItem? = null
+    private lateinit var qieMenuItem: MenuItem
+    private lateinit var replaceMenuItem: MenuItem
+    private var deleteNoteMenuItem: MenuItem? = null
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
 
         val qit = Settings.getQIT(context!!)
 
-        qieMenuItem = menu.add(qit.substring(0, Math.min(qit.length, 4)))
+        qieMenuItem = menu.add(qit.substring(0, qit.length.coerceAtMost(4)))
         qieMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
 
 

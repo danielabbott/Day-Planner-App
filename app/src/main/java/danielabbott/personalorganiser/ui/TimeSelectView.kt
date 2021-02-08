@@ -27,7 +27,7 @@ class TimeSelectView : AppCompatTextView {
         init()
     }
 
-    var initDone = false
+    private var initDone = false
     private var onClick: OnClickListener? = null
     private var onLongClick: OnLongClickListener? = null
     var onTimeChanged: ((Int, Int) -> Unit)? = null

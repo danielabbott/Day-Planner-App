@@ -49,7 +49,7 @@ object Notifications {
         channel: Channel,
         pendingIntent: PendingIntent?
     ) {
-        var builder = NotificationCompat.Builder(context.applicationContext, channel.id)
+        val builder = NotificationCompat.Builder(context.applicationContext, channel.id)
             .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(title)
             .setContentText(content)
@@ -128,7 +128,7 @@ object Notifications {
 
     private fun scheduleAllNotificationsForTimetableEvent(context: Context, it: TimetableEvent) {
         // Minutes before, -1 = morning of
-        val times = listOf<Int>(0, 30, 60, 120, -1)
+        val times = listOf(0, 30, 60, 120, -1)
         times.forEach { timeBefore ->
             if ((timeBefore == 0 && it.remindOnTime) ||
                 (timeBefore == 30 && it.remind30Mins) ||
@@ -137,12 +137,10 @@ object Notifications {
                 (timeBefore == -1 && it.remindMorning)
             ) {
 
-                var time: Int
-
-                if (timeBefore == -1) {
-                    time = Settings.getMorningReminderTime(context.applicationContext)
+                val time: Int = if (timeBefore == -1) {
+                    Settings.getMorningReminderTime(context.applicationContext)
                 } else {
-                    time = it.startTime - timeBefore
+                    it.startTime - timeBefore
                 }
 
 
@@ -180,7 +178,7 @@ object Notifications {
         val taskDateTime = if (it.repeat == Repeat.DAILY) it.dateTime
             ?: System.currentTimeMillis() - dayMillis else it.dateTime
         if (taskDateTime != null) {
-            val times = listOf<Int>(0, 30, 60, 120, -1)
+            val times = listOf(0, 30, 60, 120, -1)
             times.forEach { timeBefore ->
                 if ((timeBefore == 0 && it.hasTime && it.remindOnTime) ||
                     (timeBefore == 30 && it.hasTime && it.remind30Mins) ||
