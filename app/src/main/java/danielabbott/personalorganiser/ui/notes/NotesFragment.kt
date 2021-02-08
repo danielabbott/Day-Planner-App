@@ -13,6 +13,7 @@ import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.Settings
 import danielabbott.personalorganiser.data.Tag
+import danielabbott.personalorganiser.ui.KB
 import danielabbott.personalorganiser.ui.TagSelector
 
 class NotesFragment : Fragment() {
@@ -90,6 +91,7 @@ class NotesFragment : Fragment() {
 
 
         (activity as MainActivity).setToolbarTitle("Notes")
+        KB.hideKeyboard(activity!!)
 
         return view
     }

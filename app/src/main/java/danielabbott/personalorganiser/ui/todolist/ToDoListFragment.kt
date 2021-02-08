@@ -12,6 +12,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import danielabbott.personalorganiser.MainActivity
 import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
+import danielabbott.personalorganiser.ui.KB
 
 
 class ToDoListFragment : Fragment() {
@@ -37,6 +38,7 @@ class ToDoListFragment : Fragment() {
         noTasksText = root.findViewById<TextView>(R.id.none)
 
         (activity as MainActivity).setToolbarTitle("To Do List")
+        KB.hideKeyboard(activity!!)
 
         loadList()
 

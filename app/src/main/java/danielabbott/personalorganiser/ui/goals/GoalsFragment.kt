@@ -11,6 +11,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import danielabbott.personalorganiser.MainActivity
 import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
+import danielabbott.personalorganiser.ui.KB
 
 
 class GoalsFragment : Fragment() {
@@ -38,6 +39,7 @@ class GoalsFragment : Fragment() {
         }
 
         (activity as MainActivity).setToolbarTitle("Goals")
+        KB.hideKeyboard(activity!!)
 
         return root
     }

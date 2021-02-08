@@ -22,6 +22,7 @@ import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.Settings
 import danielabbott.personalorganiser.data.Timer
+import danielabbott.personalorganiser.ui.KB
 
 class TimersFragment : Fragment() {
 
@@ -125,6 +126,7 @@ class TimersFragment : Fragment() {
         }
 
         (activity as MainActivity).setToolbarTitle("Timers")
+        KB.hideKeyboard(activity!!)
         return root
     }
 

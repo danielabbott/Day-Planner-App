@@ -42,19 +42,4 @@ open class DataEntryFragmentBasic : Fragment(), OnBackPressed {
         }
     }
 
-    // https://stackoverflow.com/a/26911627/11498001
-    fun hideKeyboard() {
-        val inputManager: InputMethodManager =
-            activity!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-
-        // check if no view has focus:
-        val currentFocusedView = activity!!.currentFocus
-        if (currentFocusedView != null) {
-            inputManager.hideSoftInputFromWindow(
-                currentFocusedView.windowToken,
-                InputMethodManager.HIDE_NOT_ALWAYS
-            )
-        }
-    }
-
 }

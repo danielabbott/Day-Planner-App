@@ -8,7 +8,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
+        android:layout_margin="10dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <danielabbott.personalorganiser.ui.TagSelector
@@ -17,6 +19,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_rectangle_button"
             style="?android:attr/borderlessButtonStyle"
+            android:textSize="20sp"
             android:textAllCaps="false"/>
 
         <androidx.recyclerview.widget.RecyclerView

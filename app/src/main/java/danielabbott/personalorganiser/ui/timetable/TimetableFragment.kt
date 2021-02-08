@@ -9,6 +9,7 @@ import danielabbott.personalorganiser.Notifications
 import danielabbott.personalorganiser.R
 import danielabbott.personalorganiser.data.DB
 import danielabbott.personalorganiser.data.Settings
+import danielabbott.personalorganiser.ui.KB
 import danielabbott.personalorganiser.ui.OnBackPressed
 
 class TimetableFragment : Fragment(), OnBackPressed {
@@ -28,6 +29,7 @@ class TimetableFragment : Fragment(), OnBackPressed {
         loadTimetable(root)
 
         setHasOptionsMenu(true)
+        KB.hideKeyboard(activity!!)
 
 
         return root

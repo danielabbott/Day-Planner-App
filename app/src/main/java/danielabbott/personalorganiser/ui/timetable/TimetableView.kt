@@ -329,7 +329,7 @@ class TimetableView : View, GestureDetector.OnGestureListener {
         rectPaint.color = 0xffffffff.toInt()
         canvas.drawRect(0.0f, 0.0f, rowHeadersWidth.toFloat(), height.toFloat(), rectPaint)
 
-        for (i in 0 until totalHours) {
+        for (i in 1 until totalHours) {
             val y = startY + columnHeadersHeight + rowHeight * i.toFloat() + sideTimesOffset
 
             if (y < -egTextBounds.height() + columnHeadersHeight) {
