@@ -9,7 +9,9 @@ import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.view.View
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.core.content.PermissionChecker
 import danielabbott.personalorganiser.ImagePick
 import danielabbott.personalorganiser.R

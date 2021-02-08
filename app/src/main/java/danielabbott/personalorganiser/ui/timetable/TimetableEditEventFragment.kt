@@ -299,8 +299,7 @@ class TimetableEditEventFragment(
             if (eventId == null) {
                 notes.text.toString().trim().isNotEmpty() ||
                         name.text.toString().trim().isNotEmpty() || newPhotos.size > 0
-            }
-            else if (!tvStart.timeSelected || !tvEnd.timeSelected) true
+            } else if (!tvStart.timeSelected || !tvEnd.timeSelected) true
             else if (newPhotos.size > 0) true
             else if (imagesToRemove.size > 0) true
             else if (originalEventData!!.name.trim() != name.text.toString().trim()) true

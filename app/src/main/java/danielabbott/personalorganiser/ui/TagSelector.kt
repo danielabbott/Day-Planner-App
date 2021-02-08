@@ -45,14 +45,14 @@ class TagSelector : AppCompatButton {
         setText()
     }
 
-    fun get() : Pair<SelectedType, Tag?> {
+    fun get(): Pair<SelectedType, Tag?> {
         return Pair(selectedType, selectedTag)
     }
 
     private fun setText() {
-        text = if(selectedType == SelectedType.All) {
+        text = if (selectedType == SelectedType.All) {
             "[All]"
-        } else if(selectedType == SelectedType.Untagged) {
+        } else if (selectedType == SelectedType.Untagged) {
             "[Untagged]"
         } else {
             selectedTag!!.tag
@@ -93,14 +93,12 @@ class TagSelector : AppCompatButton {
                 .setItems(
                     tagNames.toTypedArray()
                 ) { _, which ->
-                    if(which == 0) {
+                    if (which == 0) {
                         setSelectAll()
-                    }
-                    else if(which == 1) {
+                    } else if (which == 1) {
                         setSelectUntagged()
-                    }
-                    else {
-                        setTag(tags[which-2])
+                    } else {
+                        setTag(tags[which - 2])
                     }
                     if (onItemSelectedListener != null) {
                         onItemSelectedListener!!(selectedType, selectedTag)

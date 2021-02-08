@@ -41,13 +41,15 @@ class BetterSwitch : AppCompatTextView {
             setBackgroundResource(R.drawable.rounded_corners_no_shadow)
             setPadding(padding, padding, padding, padding)
             setTypeface(null, Typeface.NORMAL)
-            background!!.colorFilter = PorterDuffColorFilter(0xffc0c0c0.toInt(), PorterDuff.Mode.MULTIPLY)
+            background!!.colorFilter =
+                PorterDuffColorFilter(0xffc0c0c0.toInt(), PorterDuff.Mode.MULTIPLY)
         } else {
             setBackgroundResource(R.drawable.rounded_corners)
             setPadding(padding, padding, padding, padding)
             if (activeState) {
                 setTypeface(null, Typeface.BOLD)
-                background!!.colorFilter = PorterDuffColorFilter(0xffc2ffc4.toInt(), PorterDuff.Mode.MULTIPLY)
+                background!!.colorFilter =
+                    PorterDuffColorFilter(0xffc2ffc4.toInt(), PorterDuff.Mode.MULTIPLY)
             } else {
                 setTypeface(null, Typeface.NORMAL)
                 background!!.colorFilter = null

@@ -350,9 +350,9 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
             val newGoal = goal.getSelectedGoalID()
 
             if (taskId == null) {
-                notes.isNotEmpty() || name.text.toString().trim().isNotEmpty() || date.dateSelected || newPhotos.size > 0
-            }
-            else if (newPhotos.size > 0) true
+                notes.isNotEmpty() || name.text.toString().trim()
+                    .isNotEmpty() || date.dateSelected || newPhotos.size > 0
+            } else if (newPhotos.size > 0) true
             else if (imagesToRemove.size > 0) true
             else if (originalTaskData!!.dateTime != dateTime) true
             else if (originalTaskData.hasTime != time.timeSelected) true

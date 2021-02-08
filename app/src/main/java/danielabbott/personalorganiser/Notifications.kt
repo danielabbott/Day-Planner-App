@@ -151,7 +151,7 @@ object Notifications {
                             scheduleNotification(
                                 context.applicationContext,
                                 EventSchedule.getTime(day, time) + j * 7 * 24 * 60 * 60 * 1000,
-                                if(it.name.trim().isEmpty()) "Unnamed Event" else it.name,
+                                if (it.name.trim().isEmpty()) "Unnamed Event" else it.name,
                                 Channel.TIMETABLE,
                                 it.id
                             )

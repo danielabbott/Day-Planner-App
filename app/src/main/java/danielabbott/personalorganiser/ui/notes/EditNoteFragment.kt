@@ -131,10 +131,9 @@ class EditNoteFragment(
             if (noteId == null) {
                 textArea.text.toString().trim().isNotEmpty() ||
                         (tagsToAdd == null && newTags.size > 0)
-                        (tagsToAdd != null && !tagsAreSame(tagsToAdd!!, newTags))
+                (tagsToAdd != null && !tagsAreSame(tagsToAdd!!, newTags))
 
-            }
-            else if (newTags.size > 0) true
+            } else if (newTags.size > 0) true
             else if (tagsToRemove.size > 0) true
             else originalNote!!.contents.trim() != textArea.text.toString().trim()
         }
@@ -144,18 +143,18 @@ class EditNoteFragment(
     }
 
     private fun tagsAreSame(tagsToAdd: ArrayList<Tag>, newTags: ArrayList<Tag>): Boolean {
-        if(tagsToAdd.size != newTags.size) {
+        if (tagsToAdd.size != newTags.size) {
             return false
         }
         tagsToAdd.forEach { a ->
             var found = false
             for (i in 0 until newTags.size) {
-                if(a.tag.equals(newTags[i].tag, ignoreCase = true)) {
+                if (a.tag.equals(newTags[i].tag, ignoreCase = true)) {
                     found = true
                     break
                 }
             }
-            if(!found) {
+            if (!found) {
                 return false
             }
         }

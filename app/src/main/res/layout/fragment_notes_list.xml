@@ -15,12 +15,12 @@
 
         <danielabbott.personalorganiser.ui.TagSelector
             android:id="@+id/tagSelect"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_rectangle_button"
-            style="?android:attr/borderlessButtonStyle"
-            android:textSize="20sp"
-            android:textAllCaps="false"/>
+            android:textAllCaps="false"
+            android:textSize="20sp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list"

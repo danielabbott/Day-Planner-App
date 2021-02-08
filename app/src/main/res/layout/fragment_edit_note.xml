@@ -39,11 +39,11 @@
 
             <Button
                 android:id="@+id/addTag"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_margin="5dp"
                 android:background="@drawable/circle_button"
-                style="?android:attr/borderlessButtonStyle"
                 android:text="+"
                 android:textSize="22dp" />
 

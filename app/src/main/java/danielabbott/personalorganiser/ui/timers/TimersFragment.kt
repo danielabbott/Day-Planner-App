@@ -13,7 +13,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
-import androidx.core.math.MathUtils
 import androidx.core.math.MathUtils.clamp
 import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -115,7 +114,7 @@ class TimersFragment : Fragment() {
         root.findViewById<FloatingActionButton>(R.id.fab_new).setOnClickListener {
             DialogNewTimer(true, null, null) { name, hours, minutes, seconds ->
                 val t = hours * 60 * 60 + minutes * 60 + seconds
-                addTimerUI(null, name, t, t, stopped=true, paused=false)
+                addTimerUI(null, name, t, t, stopped = true, paused = false)
 
                 val sv = root.findViewById(R.id.scroll) as ScrollView
                 sv.postDelayed({

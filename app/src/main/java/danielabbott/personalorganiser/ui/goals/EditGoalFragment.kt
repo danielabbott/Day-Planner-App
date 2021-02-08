@@ -79,7 +79,8 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
         with(recyclerView) {
             layoutManager = LinearLayoutManager(context)
 
-            adapter = MilestoneRecyclerViewAdapter(milestonesArray,
+            adapter = MilestoneRecyclerViewAdapter(
+                milestonesArray,
 
                 // ON CLICK
                 {
@@ -117,7 +118,8 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
                         }
                         .setNegativeButton("Cancel", null)
                         .show()
-                }, context!!)
+                }, context!!
+            )
         }
 
         if (goalId == null) {
@@ -267,8 +269,7 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
             if (goalId == null) {
                 notes.text.toString().trim().isNotEmpty() ||
                         name.text.toString().trim().isNotEmpty() || newPhotos.size > 0
-            }
-            else if (newMilestones.size > 0) true
+            } else if (newMilestones.size > 0) true
             else if (milestonesToRemove.size > 0) true
             else if (milestonesChanged.size > 0) true
             else if (newPhotos.size > 0) true

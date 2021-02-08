@@ -1385,9 +1385,9 @@ object DB {
 
         if (cursor.moveToNext()) {
             val t = Tag(
-                    id,
-                    cursor.getString(cursor.getColumnIndexOrThrow("tag"))
-                )
+                id,
+                cursor.getString(cursor.getColumnIndexOrThrow("tag"))
+            )
             cursor.close()
             return t
         }

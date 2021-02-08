@@ -18,12 +18,12 @@ class GoalSelector : AppCompatButton {
 
     private var selectedGoal: Goal? = null
 
-    fun getSelectedGoalID() : Long? {
+    fun getSelectedGoalID(): Long? {
         return selectedGoal?.id
     }
 
     fun setGoal(goalID_: Long?) {
-        selectedGoal = if(goalID_ == null) {
+        selectedGoal = if (goalID_ == null) {
             null
         } else {
             DB.getGoalForSelector(goalID_)
@@ -38,11 +38,10 @@ class GoalSelector : AppCompatButton {
 
     private fun setColourAndText() {
         setBackgroundResource(R.drawable.rounded_rectangle_button)
-        if(selectedGoal == null) {
+        if (selectedGoal == null) {
             background!!.colorFilter = null
             text = "[No Goal Selected]"
-        }
-        else {
+        } else {
             val c = ColourFunctions.lightenRGB(selectedGoal!!.colour) or 0xff000000.toInt()
             background!!.colorFilter = PorterDuffColorFilter(c, PorterDuff.Mode.MULTIPLY)
             text = selectedGoal!!.name

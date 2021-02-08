@@ -1,7 +1,6 @@
 package danielabbott.personalorganiser.ui.notes
 
 import android.app.Dialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.text.InputType
 import android.view.ViewGroup

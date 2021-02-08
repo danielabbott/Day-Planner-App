@@ -68,7 +68,7 @@ class DateSelectView : AppCompatTextView {
     }
 
     private fun setTextToBlank() {
-        text = DateTimeUtil.getDateString(context, 2000, 12,22)
+        text = DateTimeUtil.getDateString(context, 2000, 12, 22)
             .replace('0', '-').replace('1', '-').replace('2', '-')
     }
 
