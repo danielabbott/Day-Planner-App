@@ -37,7 +37,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="30dp" />
+                android:layout_height="20dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -109,7 +109,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="30dp" />
+                android:layout_height="20dp" />
 
             <danielabbott.personalorganiser.ui.RepeatSelector
                 android:id="@+id/repeat"
@@ -118,12 +118,12 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/rounded_rectangle_button"
                 android:textAllCaps="false"
-                android:textSize="18sp" />
+                android:textSize="@dimen/form_text_size" />
 
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="30dp" />
+                android:layout_height="20dp" />
 
             <danielabbott.personalorganiser.ui.GoalSelector
                 android:id="@+id/goal"
@@ -133,11 +133,11 @@
                 android:background="@drawable/rounded_rectangle_button"
                 android:textAllCaps="false"
                 android:textColor="#000000"
-                android:textSize="18sp" />
+                android:textSize="@dimen/form_text_size" />
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="30dp" />
+                android:layout_height="20dp" />
 
             <danielabbott.personalorganiser.ui.BetterSwitch
                 android:id="@+id/rOnTime"
@@ -152,7 +152,7 @@
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="#000000"
-                android:textSize="16sp" />
+                android:textSize="@dimen/form_smaller_text_size" />
 
             <danielabbott.personalorganiser.ui.BetterSwitch
                 android:id="@+id/r30"
@@ -167,7 +167,7 @@
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="#000000"
-                android:textSize="16sp" />
+                android:textSize="@dimen/form_smaller_text_size" />
 
             <danielabbott.personalorganiser.ui.BetterSwitch
                 android:id="@+id/r1"
@@ -182,7 +182,7 @@
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="#000000"
-                android:textSize="16sp" />
+                android:textSize="@dimen/form_smaller_text_size" />
 
             <danielabbott.personalorganiser.ui.BetterSwitch
                 android:id="@+id/r2"
@@ -197,7 +197,7 @@
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="#000000"
-                android:textSize="16sp" />
+                android:textSize="@dimen/form_smaller_text_size" />
 
             <danielabbott.personalorganiser.ui.BetterSwitch
                 android:id="@+id/rMorn"
@@ -211,11 +211,11 @@
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="#000000"
-                android:textSize="16sp" />
+                android:textSize="@dimen/form_smaller_text_size" />
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="30dp" />
+                android:layout_height="20dp" />
 
 
             <EditText
@@ -232,7 +232,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="30dp" />
+                android:layout_height="20dp" />
 
             <Button
                 android:id="@+id/bAddPicture"
@@ -261,7 +261,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="20dp" />
+                android:layout_height="10dp" />
 
             <Button
                 android:id="@+id/bDelete"

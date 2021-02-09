@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="form_smaller_text_size">16sp</dimen>
     <dimen name="form_text_size">18sp</dimen>
-    <dimen name="form_text_size_date_time">20sp</dimen>
-    <dimen name="form_label_text_size">16sp</dimen>
+    <dimen name="form_text_size_date_time">22sp</dimen>
 </resources>
