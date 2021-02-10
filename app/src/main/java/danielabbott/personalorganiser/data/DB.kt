@@ -334,6 +334,7 @@ object DB {
         )
 
         while (cursor.moveToNext()) {
+            val oldEventID = cursor.getInt(cursor.getColumnIndexOrThrow("_id"))
             val values = ContentValues().apply {
                 put("timetable_id", newId)
                 put("startTime", cursor.getInt(cursor.getColumnIndexOrThrow("startTime")))
@@ -348,7 +349,12 @@ object DB {
                 put("remindMorning", cursor.getInt(cursor.getColumnIndexOrThrow("remindMorning")))
                 put("goal_id", cursor.getIntOrNull(cursor.getColumnIndexOrThrow("goal_id")))
             }
-            db?.insert("TBL_TIMETABLE_EVENT", null, values)
+            val newEventID = db?.insert("TBL_TIMETABLE_EVENT", null, values)
+
+            // Copy photos
+            db.execSQL("INSERT INTO TBL_TIMETABLE_EVENT_PHOTOS (event_id, photo_id) " +
+                    "SELECT ?, photo_id FROM TBL_TIMETABLE_EVENT_PHOTOS WHERE event_id=?",
+                arrayOf(newEventID.toString(), oldEventID.toString()))
         }
 
         cursor.close()

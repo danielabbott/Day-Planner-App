@@ -48,7 +48,7 @@ class TimetableListRecyclerViewAdapter(
         holder.mView.setOnLongClickListener {
             // Show a dialog to ask the user if they want to delete this timetable
             AlertDialog.Builder(activity)
-                .setMessage("Are you sure you want to delete the timetable named ${item.second}?")
+                .setMessage("Are you sure you want to delete the timetable '${item.second}'?")
                 .setPositiveButton(
                     "Delete"
                 ) { _, _ ->
