@@ -37,6 +37,7 @@ open class DataEntryFragment : DataEntryFragmentBasic() {
             val img = it.obj as ImageView
             img.alpha = 0.0f
             picturePreviewsView.addView(img)
+            picturePreviewsView.visibility = View.VISIBLE
             ObjectAnimator.ofFloat(img, "alpha", 0.0f, 1.0f).apply {
                 duration = 250
                 start()
@@ -110,6 +111,9 @@ open class DataEntryFragment : DataEntryFragmentBasic() {
 
                     override fun onAnimationEnd(animation: Animator?) {
                         picturePreviewsView.removeView(img)
+                        if(picturePreviewsView.childCount == 0) {
+                            picturePreviewsView.visibility = View.GONE
+                        }
                     }
 
                     override fun onAnimationCancel(animation: Animator?) {

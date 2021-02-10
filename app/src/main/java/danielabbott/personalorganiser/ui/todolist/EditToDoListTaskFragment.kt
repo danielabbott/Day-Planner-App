@@ -202,7 +202,7 @@ class EditToDoListTaskFragment(val taskId: Long?) : DataEntryFragment() {
         }
 
         val deleteButton = root.findViewById(R.id.bDelete) as Button
-        deleteButton.visibility = if (taskId != null) View.VISIBLE else View.INVISIBLE
+        deleteButton.visibility = if (taskId != null) View.VISIBLE else View.GONE
         if (taskId != null) {
             deleteButton.setOnClickListener {
                 AlertDialog.Builder(context)

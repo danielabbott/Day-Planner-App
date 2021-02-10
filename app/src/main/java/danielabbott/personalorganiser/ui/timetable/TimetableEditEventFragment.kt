@@ -251,7 +251,7 @@ class TimetableEditEventFragment(
         }
 
         val deleteButton = root.findViewById(R.id.bDelete) as Button
-        deleteButton.visibility = if (eventId != null) View.VISIBLE else View.INVISIBLE
+        deleteButton.visibility = if (eventId != null) View.VISIBLE else View.GONE
         if (eventId != null) {
             deleteButton.setOnClickListener {
                 AlertDialog.Builder(context)

@@ -222,7 +222,7 @@ class EditGoalFragment(private val goalId: Long?) : DataEntryFragment() {
         }
 
         val deleteButton = root.findViewById(R.id.bDelete) as Button
-        deleteButton.visibility = if (goalId != null) View.VISIBLE else View.INVISIBLE
+        deleteButton.visibility = if (goalId != null) View.VISIBLE else View.GONE
 
 
         if (goalId != null) {
