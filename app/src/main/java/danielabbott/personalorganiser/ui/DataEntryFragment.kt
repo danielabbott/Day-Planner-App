@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -97,8 +98,12 @@ open class DataEntryFragment : DataEntryFragmentBasic() {
         // Set tap (view) and long tap (delete) handlers
 
         img.setOnLongClickListener {
-            imagesToRemove.add(uri.toString())
-            newPhotos.remove(uri.toString())
+            if(newPhotos.contains(uri.toString())) {
+                newPhotos.remove(uri.toString())
+            }
+            else {
+                imagesToRemove.add(uri.toString())
+            }
 
             img.setOnLongClickListener(null)
 
