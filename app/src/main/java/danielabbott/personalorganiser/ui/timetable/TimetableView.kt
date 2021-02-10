@@ -12,6 +12,7 @@ import android.text.Layout
 import android.text.StaticLayout
 import android.text.TextPaint
 import android.util.AttributeSet
+import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
@@ -668,9 +669,19 @@ class TimetableView : View, GestureDetector.OnGestureListener {
                         // SPLIT
 
                         val newEvent = DB.splitTTEvent(tEvent!!.e.id, tEvent!!.day)
-                        tEvent!!.allDays!!.remove(tEvent!!)
+                        val allDays = tEvent!!.allDays!!
+                        allDays.remove(tEvent!!)
                         tEvent!!.allDays = null
                         tEvent!!.e = newEvent
+
+                        // Remove this day from the bitmap
+                        allDays.forEach {
+                            it.e.days = it.e.days and (1 shl tEvent!!.day).inv()
+                        }
+                        
+                        if(allDays.size == 1) {
+                            allDays[0].allDays = null
+                        }
 
                     } else {
                         // DELETE
