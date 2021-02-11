@@ -86,7 +86,7 @@ class ToDoListRecyclerViewAdapter(
                 }
             }
             val colour = if (it.colour != null) {
-                ColourFunctions.lightenRGB(it.colour!!)
+                ColourFunctions.lightenRGB(it.colour!!, true)
             } else {
                 0xffffff
             }
@@ -97,7 +97,7 @@ class ToDoListRecyclerViewAdapter(
                     it.name,
                     it.dateTime,
                     it.hasTime,
-                    (colour and 0xffffff) or 0x80000000.toInt(),
+                    (colour and 0xffffff) or 0xff000000.toInt(),
                     it.hasNotes,
                     it.hasImages
                 )

@@ -32,15 +32,15 @@ class CircleView : View {
         return if (a < b) a else b
     }
 
+    private val paint = Paint()
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        var paint = Paint()
+
         paint.style = Paint.Style.FILL
         paint.isAntiAlias = true
         paint.color = colour or 0xff000000.toInt()
-
-//        canvas.drawPaint(paint)
 
         val x = paddingLeft
         val y = paddingTop
