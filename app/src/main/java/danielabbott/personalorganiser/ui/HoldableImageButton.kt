@@ -41,13 +41,6 @@ class HoldableImageButton : AppCompatImageButton {
         }
     }
 
-    override fun performClick(): Boolean {
-        fingerDown = true
-        delay = 500L
-        callbackRunner.run()
-        return super.performClick()
-    }
-
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event == null) {
@@ -55,7 +48,9 @@ class HoldableImageButton : AppCompatImageButton {
         }
 
         if (event.action == MotionEvent.ACTION_DOWN) {
-            performClick()
+            fingerDown = true
+            delay = 500L
+            callbackRunner.run()
         } else if (event.action == MotionEvent.ACTION_UP) {
             fingerDown = false
         }
