@@ -130,7 +130,7 @@ class EditNoteFragment(
         anyUnsavedChanges = {
             if (noteId == null) {
                 textArea.text.toString().trim().isNotEmpty() ||
-                        (tagsToAdd == null && newTags.size > 0)
+                        (tagsToAdd == null && newTags.size > 0) ||
                 (tagsToAdd != null && !tagsAreSame(tagsToAdd!!, newTags))
 
             } else if (newTags.size > 0) true
